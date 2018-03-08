@@ -34,7 +34,8 @@ public class PlayerController : MonoBehaviour
         _anim.SetFloat("Input_X", _move.x);
         _anim.SetFloat("Input_Y", _move.y);
 
-        _move = _move.normalized * _walkSpeed * Time.deltaTime;
+        _move.Normalize();
+        _move *= _walkSpeed * Time.deltaTime;
 
         _rb.MovePosition(_rb.position + _move);
     }
