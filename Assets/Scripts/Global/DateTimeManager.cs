@@ -1,18 +1,17 @@
 ﻿using Framework;
+using Framework.Messaging;
 using UnityEngine;
 
 public class DateTimeManager : SingletonAsObject<DateTimeManager>
 {
     #region Variables
 
-    private const uint _SCALE = 2;
+    private const float _SCALE = 2f;
 
     private float _delta;
-
-    [SerializeField]
     private uint _seconds;
-    [SerializeField]
     private uint _minutes;
+    private string dateTime;
 
     #endregion
 
@@ -22,18 +21,6 @@ public class DateTimeManager : SingletonAsObject<DateTimeManager>
     {
         get { return (DateTimeManager)_Instance; }
     }
-
-    public uint Seconds
-    {
-        get { return _seconds; }
-    }
-
-    public uint Minutes
-    {
-        get { return _minutes; }
-    }
-
-    public string DateTimeString { get; private set; }
 
     #endregion
 
@@ -47,28 +34,24 @@ public class DateTimeManager : SingletonAsObject<DateTimeManager>
             ++_seconds;
         }
 
-        if (_seconds == 60)
-        {
-            _seconds = 0;
-            ++_minutes;
-        }
+        _minutes = _seconds / 60;
 
         GenerateDateTimeString();
     }
 
     private void GenerateDateTimeString()
     {
-        uint scaledSeconds = _seconds / _SCALE;
-        uint scaledMinutes = _minutes / _SCALE;
+        uint scaledMinutes = (uint)(_seconds / _SCALE) % 60;
+        uint scaledHours = (uint)(_minutes / _SCALE) % 24;
 
         string format = string.Format(
-            "Hours: {0:00}, Minutes: {1:00}\n",
-            scaledMinutes, scaledSeconds);
+            "{0:00} : {1:00}\n",
+            scaledHours, scaledMinutes);
 
-        if (DateTimeString != format)
+        if (string.CompareOrdinal(dateTime, format) != 0)
         {
-            DateTimeString = format;
-            Debug.Log(DateTimeString);
+            dateTime = format;
+            MessagingSystem.Instance.QueueMessage(new TimeTextMessage(dateTime));
         }
     }
 }

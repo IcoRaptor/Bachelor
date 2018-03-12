@@ -25,7 +25,7 @@ public class FollowCamera : MonoBehaviour
         _cam = GetComponent<Camera>();
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         _cam.orthographicSize = (Screen.height / 100f) / _SCALE;
 
