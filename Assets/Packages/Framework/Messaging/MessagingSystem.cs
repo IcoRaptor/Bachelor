@@ -13,7 +13,8 @@ namespace Framework.Messaging
         #region Variables
 
         private static bool _trigger;
-        private const float _MAX_PROCESSING_TIME = 1f / 60f;
+
+        private const float _MAX_PROCESSING_TIME = -1f;
 
         private Dictionary<string, List<MessageHandler>> _listenerDict
             = new Dictionary<string, List<MessageHandler>>();
@@ -46,6 +47,7 @@ namespace Framework.Messaging
             float timer = 0;
 
             // Iterate the messages or return early if it takes too long
+
             while (_messageQueue.Count > 0)
             {
 #pragma warning disable 0162

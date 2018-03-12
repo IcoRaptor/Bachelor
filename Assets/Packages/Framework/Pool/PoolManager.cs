@@ -17,10 +17,6 @@ namespace Framework.Pool
         private Dictionary<int, int[]> _activeObjects =
             new Dictionary<int, int[]>();
 
-#if UNITY_EDITOR
-        private Transform _poolHolderTransform;
-#endif
-
         #endregion
 
         #region Properties
@@ -50,16 +46,16 @@ namespace Framework.Pool
             {
                 _activeObjects.Add(poolKey, new int[2]);
                 _pool.Add(poolKey, new LinkedList<ObjectInstance>());
+
+                GameObject poolHolder = null;
 #if UNITY_EDITOR
                 // Create a GameObject as parent of the objects
-                GameObject poolHolder = new GameObject(
-                    string.Concat(prefab.name, " Pool"));
-                _poolHolderTransform = poolHolder.transform;
-                _poolHolderTransform.SetParent(PoolObjectManager.Instance.gameObject.transform);
+                poolHolder = new GameObject(string.Concat(prefab.name, " Pool"));
+                poolHolder.transform.SetParent(PoolObjectManager.Instance.gameObject.transform);
 #endif
                 // Instatiate pool objects
                 for (int i = 0; i < size; ++i)
-                    InstantiateObjectInstance(prefab, poolKey);
+                    InstantiateObjectInstance(prefab, poolKey, poolHolder.transform);
             }
             else
             {
@@ -105,7 +101,7 @@ namespace Framework.Pool
         {
             int poolKey = prefab.GetInstanceID();
 
-            if (!_pool[poolKey].First.Value.CanReuse)
+            if (!_pool[poolKey].First.Value.HasPoolObjInterface)
             {
                 Debugger.LogFormat(LOG_TYPE.WARNING, "{0} doesn't implement IPoolObject!\n",
                     _pool[poolKey].First.Value.Object.name);
@@ -148,17 +144,16 @@ namespace Framework.Pool
         /// </summary>
         /// <param name="prefab">Prefab</param>
         /// <param name="poolKey">InstanceID</param>
-        private void InstantiateObjectInstance(GameObject prefab, int poolKey)
+        private void InstantiateObjectInstance(GameObject prefab, int poolKey, Transform poolHolder = null)
         {
             ++_activeObjects[poolKey][0];
 
 #if UNITY_EDITOR
-            ObjectInstance newObject = new ObjectInstance(
-                Instantiate(prefab, _poolHolderTransform));
+            ObjectInstance newObject = new ObjectInstance(Instantiate(prefab, poolHolder));
 #else
-                ObjectInstance newObject = new ObjectInstance(Instantiate(prefab));
+            ObjectInstance newObject = new ObjectInstance(Instantiate(prefab));
 #endif
-            if (newObject.CanReuse)
+            if (newObject.HasPoolObjInterface)
                 newObject.PoolObj.InstanceID = poolKey;
 
             _pool[poolKey].AddFirst(newObject);
@@ -174,7 +169,7 @@ namespace Framework.Pool
             private readonly GameObject _obj;
             private readonly Transform _tf;
             private readonly IPoolObject _poolObj;
-            private readonly bool _canReuse;
+            private readonly bool _hasPoolObjInterface;
 
             #endregion
 
@@ -190,9 +185,9 @@ namespace Framework.Pool
                 get { return _poolObj; }
             }
 
-            public bool CanReuse
+            public bool HasPoolObjInterface
             {
-                get { return _canReuse; }
+                get { return _hasPoolObjInterface; }
             }
 
             #endregion
@@ -205,9 +200,9 @@ namespace Framework.Pool
                 _tf = _obj.transform;
                 _poolObj = _obj.GetComponent<IPoolObject>();
 
-                _canReuse = _poolObj != null;
+                _hasPoolObjInterface = _poolObj != null;
 
-                if (_canReuse)
+                if (_hasPoolObjInterface)
                     _poolObj.IncreaseObjectCount(_obj);
 
                 _obj.SetActive(false);
@@ -226,7 +221,7 @@ namespace Framework.Pool
                 _tf.position = position;
                 _tf.rotation = rotation;
 
-                if (_canReuse)
+                if (_hasPoolObjInterface)
                 {
                     _poolObj.IncreaseObjectCount(_obj);
                     _poolObj.OnObjectReuse();

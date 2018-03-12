@@ -7,18 +7,9 @@ namespace Framework
     /// </summary>
     public static class Locator
     {
-        #region Variables
-
-        private static IAudio _audio;
-
-        #endregion
-
         #region Properties
 
-        public static IAudio Audio
-        {
-            get { return _audio; }
-        }
+        public static IAudio Audio { get; private set; }
 
         #endregion
 
@@ -28,7 +19,7 @@ namespace Framework
         /// <param name="audio">Provided audio</param>
         public static void Provide(IAudio audio)
         {
-            _audio = audio;
+            Audio = audio;
         }
     }
 }

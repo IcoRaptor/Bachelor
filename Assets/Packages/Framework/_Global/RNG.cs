@@ -13,10 +13,10 @@ public sealed class RNG
 
     #region Constructors
 
-    public RNG(int seed, bool seedInBuild)
+    public RNG(int seed, SEED_TYPE type)
     {
 #if !UNITY_EDITOR
-        if (!seedInBuild)
+        if (type == SEED_TYPE.NOT_IN_BUILD)
             seed = (int)(DateTime.Now.Ticks & 0x0000FFFF);
 #endif
         _rand = new Random(seed);

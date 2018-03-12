@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 /// <summary>
@@ -13,8 +14,8 @@ public static class CustomExtensions
     /// </summary>
     public static T RemoveLast<T>(this List<T> list)
     {
-        if (list == null || list.Count == 0)
-            return default(T);
+        if (list.Count == 0)
+            throw new Exception("There are no elements in the list!\n");
 
         int last = list.Count - 1;
 
@@ -29,8 +30,8 @@ public static class CustomExtensions
     /// </summary>
     public static T RemoveFirst<T>(this List<T> list)
     {
-        if (list == null || list.Count == 0)
-            return default(T);
+        if (list.Count == 0)
+            throw new Exception("There are no elements in the list!\n");
 
         T value = list[0];
         list.RemoveAt(0);
@@ -77,8 +78,8 @@ public static class CustomExtensions
     /// </summary>
     public static T RemoveFirstAndAppend<T>(this LinkedList<T> list)
     {
-        if (list == null || list.Count == 0)
-            return default(T);
+        if (list.Count == 0)
+            throw new Exception("There are no elements in the list!\n");
 
         T value = list.First.Value;
 

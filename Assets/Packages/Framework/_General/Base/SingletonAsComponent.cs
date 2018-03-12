@@ -27,6 +27,7 @@ namespace Framework
                 if (!_instance)
                 {
                     T[] managers = FindObjectsOfType(typeof(T)) as T[];
+
                     if (managers != null)
                     {
                         if (managers.Length == 1)
@@ -39,6 +40,7 @@ namespace Framework
                             Debugger.LogFormat(LOG_TYPE.WARNING,
                                 "More than one instance of {0} exists!",
                                 _instance.name);
+
                             for (int i = 0; i < managers.Length; ++i)
                             {
                                 T manager = managers[i];

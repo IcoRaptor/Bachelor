@@ -7,19 +7,9 @@ namespace Framework.Pool
     /// </summary>
     public class PoolObject : MonoBehaviour, IPoolObject
     {
-        #region Variables
-
-        private int _instanceID;
-
-        #endregion
-
         #region Properties
 
-        public int InstanceID
-        {
-            get { return _instanceID; }
-            set { _instanceID = value; }
-        }
+        public int InstanceID { get; set; }
 
         #endregion
 
@@ -33,8 +23,8 @@ namespace Framework.Pool
         /// <param name="poolObj">PoolObject</param>
         public void IncreaseObjectCount(GameObject poolObj)
         {
-            if (PoolManager.Instance.ActiveObjects.ContainsKey(_instanceID))
-                ++PoolManager.Instance.ActiveObjects[_instanceID][1];
+            if (PoolManager.Instance.ActiveObjects.ContainsKey(InstanceID))
+                ++PoolManager.Instance.ActiveObjects[InstanceID][1];
         }
 
         /// <summary>
@@ -43,8 +33,8 @@ namespace Framework.Pool
         /// <param name="poolObj">PoolObject</param>
         public void DecreaseObjectCount(GameObject poolObj)
         {
-            if (PoolManager.Instance.ActiveObjects.ContainsKey(_instanceID))
-                --PoolManager.Instance.ActiveObjects[_instanceID][1];
+            if (PoolManager.Instance.ActiveObjects.ContainsKey(InstanceID))
+                --PoolManager.Instance.ActiveObjects[InstanceID][1];
         }
 
         private void OnDisable()
