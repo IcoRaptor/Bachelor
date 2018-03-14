@@ -10,10 +10,9 @@ public class TimeText : MonoBehaviour
 
     #endregion
 
-    private void Start()
+    private void Awake()
     {
         _text = GetComponent<Text>();
-
         MessagingSystem.Instance.AttachListener(typeof(TimeTextMessage), TimeTextHandler);
     }
 

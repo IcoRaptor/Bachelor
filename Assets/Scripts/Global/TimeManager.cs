@@ -2,13 +2,11 @@
 using Framework.Messaging;
 using UnityEngine;
 
-public class TimeManager : SingletonAsObject<TimeManager>
+public class TimeManager : SingletonAsComponent<TimeManager>
 {
     #region Variables
 
-    [SerializeField]
-    [Range(0.1f, 10f)]
-    private float _scale = 10;
+    private float _scale = 2f; // 1 second = 2 minutes
 
     private float _delta;
     private int _seconds;
@@ -23,6 +21,12 @@ public class TimeManager : SingletonAsObject<TimeManager>
         get { return (TimeManager)_Instance; }
     }
 
+    public float TimeScale
+    {
+        get { return _scale; }
+        set { _scale = value; }
+    }
+
     public int ScaledMinutes { get; private set; }
 
     public int ScaledHours { get; private set; }
@@ -34,6 +38,7 @@ public class TimeManager : SingletonAsObject<TimeManager>
     private void Start()
     {
         ScaledMinutes = -1;
+        _seconds = 60 * 12 - 1; // Start at 12:00
     }
 
     private void Update()
@@ -44,7 +49,7 @@ public class TimeManager : SingletonAsObject<TimeManager>
 
     private void Tick()
     {
-        _delta += Time.unscaledDeltaTime * _scale;
+        _delta += Time.unscaledDeltaTime * TimeScale;
 
         if (_delta >= 1.0f)
         {
@@ -57,19 +62,29 @@ public class TimeManager : SingletonAsObject<TimeManager>
 
     private void GenerateTimeString()
     {
+        // Skip if delta is too small
+
+        if (_delta < 0.1f)
+            return;
+
         int newScaledMinutes = _seconds % 60;
+
+        // Skip if time hasn't changed
 
         if (newScaledMinutes == ScaledMinutes)
             return;
+
+        // Calculate new time and generate string for UI
 
         ScaledMinutes = newScaledMinutes;
         ScaledHours = _minutes % 24;
         ScaledDays = 1 + _minutes / 24;
 
         string time = string.Format(
-            "Day {0}\t{1:00}:{2:00}\n",
+            "Day {0} - {1:00}h {2:00}\n",
             ScaledDays, ScaledHours, ScaledMinutes);
 
-        MessagingSystem.Instance.QueueMessage(new TimeTextMessage(time));
+        if (GameManager.Instance.GameState == GAME_STATE.PLAYING)
+            MessagingSystem.Instance.QueueMessage(new TimeTextMessage(time));
     }
 }

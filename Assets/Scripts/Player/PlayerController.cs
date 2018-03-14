@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
         _anim = GetComponent<Animator>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Move();
     }
@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
         _anim.SetFloat("Input_Y", _move.y);
 
         _move.Normalize();
-        _move *= _walkSpeed * Time.deltaTime;
+        _move *= _walkSpeed * Time.fixedDeltaTime;
 
         _rb.MovePosition(_rb.position + _move);
     }

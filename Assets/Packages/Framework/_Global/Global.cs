@@ -8,7 +8,9 @@ public static class Global { }
 /// </summary>
 public enum GAME_STATE
 {
-    DEFAULT = -1
+    DEFAULT = -1,
+    PLAYING,
+    END_GAME
 }
 
 /// <summary>

@@ -1,14 +1,13 @@
 ﻿using Framework.Messaging;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameStart : MonoBehaviour
 {
     private void Start()
     {
-        GameManager.Instance.WakeUp();
+        TimeManager.Instance.WakeUp();
         MessagingSystem.Instance.WakeUp();
 
-        SceneManager.LoadSceneAsync(1);
+        GameManager.Instance.SetGameState(GAME_STATE.PLAYING);
     }
 }

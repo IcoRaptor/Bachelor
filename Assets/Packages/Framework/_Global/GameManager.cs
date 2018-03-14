@@ -1,5 +1,6 @@
 ﻿using Framework;
 using Framework.Debugging;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Contains game logic
@@ -59,6 +60,18 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
     {
         switch (newState)
         {
+            case GAME_STATE.PLAYING:
+                SceneManager.LoadScene(1);
+                break;
+
+            case GAME_STATE.END_GAME:
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                UnityEngine.Application.Quit();
+#endif
+                break;
+
             default:
                 Debugger.LogFormat(LOG_TYPE.WARNING, "Unknown GameState: {0}\n",
                     newState);
