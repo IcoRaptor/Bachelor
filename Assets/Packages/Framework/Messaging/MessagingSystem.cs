@@ -14,7 +14,7 @@ namespace Framework.Messaging
 
         private static bool _trigger;
 
-        private const float _MAX_PROCESSING_TIME = -1f;
+        private const float _MAX_PROCESSING_TIME = 1f / 60f;
 
         private Dictionary<string, List<MessageHandler>> _listenerDict
             = new Dictionary<string, List<MessageHandler>>();

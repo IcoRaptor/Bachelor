@@ -7,8 +7,8 @@ public class TimeManager : SingletonAsObject<TimeManager>
     #region Variables
 
     [SerializeField]
-    [Range(0.1f, 3f)]
-    private float _scale = 0.5f;
+    [Range(0.1f, 10f)]
+    private float _scale = 10;
 
     private float _delta;
     private int _seconds;
@@ -27,15 +27,22 @@ public class TimeManager : SingletonAsObject<TimeManager>
 
     public int ScaledHours { get; private set; }
 
+    public int ScaledDays { get; private set; }
+
     #endregion
+
+    private void Start()
+    {
+        ScaledMinutes = -1;
+    }
 
     private void Update()
     {
-        CalculateTime();
+        Tick();
         GenerateTimeString();
     }
 
-    private void CalculateTime()
+    private void Tick()
     {
         _delta += Time.unscaledDeltaTime * _scale;
 
@@ -51,17 +58,17 @@ public class TimeManager : SingletonAsObject<TimeManager>
     private void GenerateTimeString()
     {
         int newScaledMinutes = _seconds % 60;
-        int newScaledHours = _minutes % 24;
 
-        if (newScaledHours == ScaledHours && newScaledMinutes == ScaledMinutes)
+        if (newScaledMinutes == ScaledMinutes)
             return;
 
-        ScaledHours = newScaledHours;
         ScaledMinutes = newScaledMinutes;
+        ScaledHours = _minutes % 24;
+        ScaledDays = 1 + _minutes / 24;
 
         string time = string.Format(
-            "{0:00} : {1:00}\n",
-            ScaledHours, ScaledMinutes);
+            "Day {0}\t{1:00}:{2:00}\n",
+            ScaledDays, ScaledHours, ScaledMinutes);
 
         MessagingSystem.Instance.QueueMessage(new TimeTextMessage(time));
     }
