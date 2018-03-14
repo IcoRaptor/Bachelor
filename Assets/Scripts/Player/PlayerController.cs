@@ -19,12 +19,7 @@ public class PlayerController : MonoBehaviour
         _anim = GetComponent<Animator>();
     }
 
-    private void FixedUpdate()
-    {
-        Move();
-    }
-
-    private void Move()
+    private void Update()
     {
         _move.x = Input.GetAxisRaw("Horizontal");
         _move.y = Input.GetAxisRaw("Vertical");
@@ -40,8 +35,11 @@ public class PlayerController : MonoBehaviour
         _anim.SetFloat("Input_Y", _move.y);
 
         _move.Normalize();
-        _move *= _walkSpeed * Time.fixedDeltaTime;
+        _move *= _walkSpeed * Time.deltaTime;
+    }
 
+    private void FixedUpdate()
+    {
         _rb.MovePosition(_rb.position + _move);
     }
 }

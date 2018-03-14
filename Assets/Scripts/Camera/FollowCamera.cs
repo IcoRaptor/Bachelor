@@ -4,6 +4,8 @@ public class FollowCamera : MonoBehaviour
 {
     #region Variables
 
+    private const float _SCALE = 3f;
+
     [SerializeField]
     private Transform _target = null;
     [SerializeField]
@@ -13,9 +15,8 @@ public class FollowCamera : MonoBehaviour
 
     private Camera _cam;
     private Rigidbody _rb;
+    private Vector3 _pos;
     private Vector3 _velocity;
-
-    private const float _SCALE = 4f;
 
     #endregion
 
@@ -29,10 +30,13 @@ public class FollowCamera : MonoBehaviour
     {
         _cam.orthographicSize = (Screen.height / 100f) / _SCALE;
 
-        Vector3 pos = Vector3.SmoothDamp(_rb.position,
+        _pos = Vector3.SmoothDamp(_rb.position,
             _target.position, ref _velocity, _smoothTime) +
             _offset;
+    }
 
-        _rb.MovePosition(pos);
+    private void FixedUpdate()
+    {
+        _rb.MovePosition(_pos);
     }
 }

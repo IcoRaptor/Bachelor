@@ -6,7 +6,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 {
     #region Variables
 
-    private float _scale = 2f; // 1 second = 2 minutes
+    private float _scale = 2f; // 2 in-game minutes per second
 
     private float _delta;
     private int _seconds;
@@ -19,12 +19,6 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     public static TimeManager Instance
     {
         get { return (TimeManager)_Instance; }
-    }
-
-    public float TimeScale
-    {
-        get { return _scale; }
-        set { _scale = value; }
     }
 
     public int ScaledMinutes { get; private set; }
@@ -47,9 +41,14 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         GenerateTimeString();
     }
 
+    public void AdjustTimeScale(float val)
+    {
+        _scale = Mathf.Clamp(_scale + val, 1f, 60f);
+    }
+
     private void Tick()
     {
-        _delta += Time.unscaledDeltaTime * TimeScale;
+        _delta += Time.unscaledDeltaTime * _scale;
 
         if (_delta >= 1.0f)
         {
@@ -64,7 +63,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     {
         // Skip if delta is too small
 
-        if (_delta < 0.1f)
+        if (_delta < 0.05f)
             return;
 
         int newScaledMinutes = _seconds % 60;
