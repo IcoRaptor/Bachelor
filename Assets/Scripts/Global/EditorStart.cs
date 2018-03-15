@@ -4,7 +4,8 @@ public class EditorStart : MonoBehaviour
 {
 #if UNITY_EDITOR
 
-    // Necessary setup if the main scene is started from the editor
+    // Necessary setup if the scene is started from the editor
+
     private void Awake()
     {
         if (!TimeManager.IsAlive)

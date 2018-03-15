@@ -7,7 +7,6 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     #region Variables
 
     private float _scale = 2f; // 2 in-game minutes per second
-
     private float _delta;
     private uint _seconds;
     private uint _minutes;
@@ -80,7 +79,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         ScaledDays = 1 + _minutes / 24;
 
         string time = string.Format(
-            "Day {0} - {1:00}h {2:00}\n",
+            "Day {0} - {1:00}h {2:00}",
             ScaledDays, ScaledHours, ScaledMinutes);
 
         if (GameManager.Instance.GameState == GAME_STATE.PLAYING)
