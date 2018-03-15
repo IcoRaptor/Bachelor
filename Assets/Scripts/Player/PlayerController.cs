@@ -25,14 +25,13 @@ public class PlayerController : MonoBehaviour
         _move.y = Input.GetAxisRaw("Vertical");
 
         bool isWalking = _move != Vector2.zero;
-
-        _anim.SetBool("IsWalking", isWalking);
+        _anim.SetBool("isWalking", isWalking);
 
         if (!isWalking)
             return;
 
-        _anim.SetFloat("Input_X", _move.x);
-        _anim.SetFloat("Input_Y", _move.y);
+        _anim.SetFloat("inputX", _move.x);
+        _anim.SetFloat("inputY", _move.y);
 
         _move.Normalize();
         _move *= _walkSpeed * Time.deltaTime;

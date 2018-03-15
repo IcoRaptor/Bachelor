@@ -9,8 +9,8 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     private float _scale = 2f; // 2 in-game minutes per second
 
     private float _delta;
-    private int _seconds;
-    private int _minutes;
+    private uint _seconds;
+    private uint _minutes;
 
     #endregion
 
@@ -21,17 +21,17 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         get { return (TimeManager)_Instance; }
     }
 
-    public int ScaledMinutes { get; private set; }
+    public uint ScaledMinutes { get; private set; }
 
-    public int ScaledHours { get; private set; }
+    public uint ScaledHours { get; private set; }
 
-    public int ScaledDays { get; private set; }
+    public uint ScaledDays { get; private set; }
 
     #endregion
 
     private void Start()
     {
-        ScaledMinutes = -1;
+        ScaledMinutes = uint.MaxValue;
         _seconds = 60 * 12 - 1; // Start at 12:00
     }
 
@@ -66,7 +66,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         if (_delta < 0.05f)
             return;
 
-        int newScaledMinutes = _seconds % 60;
+        uint newScaledMinutes = _seconds % 60;
 
         // Skip if time hasn't changed
 

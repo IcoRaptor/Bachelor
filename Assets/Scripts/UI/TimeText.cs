@@ -1,10 +1,13 @@
 ﻿using Framework.Messaging;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TimeText : MonoBehaviour
 {
     #region Variables
+
+    private Type _msgType = typeof(TimeTextMessage);
 
     private Text _text;
 
@@ -13,7 +16,7 @@ public class TimeText : MonoBehaviour
     private void Awake()
     {
         _text = GetComponent<Text>();
-        MessagingSystem.Instance.AttachListener(typeof(TimeTextMessage), TimeTextHandler);
+        MessagingSystem.Instance.AttachListener(_msgType, TimeTextHandler);
     }
 
     private bool TimeTextHandler(BaseMessage msg)
@@ -27,6 +30,6 @@ public class TimeText : MonoBehaviour
     private void OnDestroy()
     {
         if (MessagingSystem.IsAlive)
-            MessagingSystem.Instance.DetachListener(typeof(TimeTextMessage), TimeTextHandler);
+            MessagingSystem.Instance.DetachListener(_msgType, TimeTextHandler);
     }
 }
