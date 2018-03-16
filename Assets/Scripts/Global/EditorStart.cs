@@ -12,7 +12,7 @@ public class EditorStart : MonoBehaviour
             TimeManager.Instance.WakeUp();
 
         if (!GameManager.IsAlive)
-            GameManager.Instance.SetGameState(GAME_STATE.PLAYING);
+            GameManager.Instance.SetGameState(GAME_STATE.MAIN_SCENE);
     }
 
 #endif

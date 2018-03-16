@@ -5,16 +5,16 @@ public class GlobalInput : MonoBehaviour
     private void Update()
     {
         if (_Input_ESC_Down)
-            GameManager.Instance.SetGameState(GAME_STATE.END_GAME);
+            GameManager.Instance.SetGameState(GAME_STATE.SHUTDOWN);
 
         if (_Input_Plus_Down)
             TimeManager.Instance.AdjustTimeScale(1);
 
-        if (_Input_Shift_Plus)
-            TimeManager.Instance.AdjustTimeScale(Time.deltaTime * 10f);
-
         if (_Input_Minus_Down)
             TimeManager.Instance.AdjustTimeScale(-1);
+
+        if (_Input_Shift_Plus)
+            TimeManager.Instance.AdjustTimeScale(Time.deltaTime * 10f);
 
         if (_Input_Shift_Minus)
             TimeManager.Instance.AdjustTimeScale(Time.deltaTime * -10f);

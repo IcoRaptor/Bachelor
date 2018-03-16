@@ -8,7 +8,6 @@ public class TimeText : MonoBehaviour
     #region Variables
 
     private Type _msgType = typeof(TimeTextMessage);
-
     private Text _text;
 
     #endregion

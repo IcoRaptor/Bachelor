@@ -17,6 +17,11 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
+
+        Timer.StartNew(12, 0, () =>
+        {
+            Debug.Log("RAMA LAMA DING DONG!\n");
+        });
     }
 
     private void Update()

@@ -8,6 +8,6 @@ public class GameStart : MonoBehaviour
         TimeManager.Instance.WakeUp();
         MessagingSystem.Instance.WakeUp();
 
-        GameManager.Instance.SetGameState(GAME_STATE.PLAYING);
+        GameManager.Instance.SetGameState(GAME_STATE.MAIN_SCENE);
     }
 }

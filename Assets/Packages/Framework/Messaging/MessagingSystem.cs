@@ -1,7 +1,8 @@
-﻿using Framework.Debugging;
+﻿//#define ENABLE_PROCESSING_TIME
+
+using Framework.Debugging;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Framework.Messaging
 {
@@ -12,9 +13,10 @@ namespace Framework.Messaging
     {
         #region Variables
 
+#if ENABLE_PROCESSING_TIME
+        private const float _MAX_PROCESSING_TIME = 1f / 60f;
+#endif
         private static bool _trigger;
-
-        private const float _MAX_PROCESSING_TIME = -1f;
 
         private Dictionary<string, List<MessageHandler>> _listenerDict
             = new Dictionary<string, List<MessageHandler>>();
@@ -44,23 +46,25 @@ namespace Framework.Messaging
 
         private void Update()
         {
+#if ENABLE_PROCESSING_TIME
             float timer = 0;
-
-            // Iterate the messages or return early if it takes too long
+#endif
+            // Iterate the messages
 
             while (_messageQueue.Count > 0)
             {
-#pragma warning disable 0162
+#if ENABLE_PROCESSING_TIME
                 if (_MAX_PROCESSING_TIME > 0)
                     if (timer > _MAX_PROCESSING_TIME)
                         return;
-
+#endif
                 BaseMessage msg = _messageQueue.Dequeue();
                 TriggerMessage(msg);
 
+#if ENABLE_PROCESSING_TIME
                 if (_MAX_PROCESSING_TIME > 0)
                     timer += Time.unscaledDeltaTime;
-#pragma warning restore 0162
+#endif
             }
         }
 

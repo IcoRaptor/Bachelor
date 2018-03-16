@@ -60,11 +60,7 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
     {
         switch (newState)
         {
-            case GAME_STATE.PLAYING:
-                SceneManager.LoadScene(1);
-                break;
-
-            case GAME_STATE.END_GAME:
+            case GAME_STATE.SHUTDOWN:
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -72,8 +68,14 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
 #endif
                 break;
 
+            case GAME_STATE.MAIN_SCENE:
+                SceneManager.LoadScene(1);
+                break;
+
             default:
-                Debugger.LogFormat(LOG_TYPE.WARNING, "Unknown GameState: {0}\n",
+                Debugger.LogFormat(
+                    LOG_TYPE.WARNING,
+                    "GameState: {0} not implemented!\n",
                     newState);
                 break;
         }
