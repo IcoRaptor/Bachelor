@@ -30,8 +30,11 @@ public class FollowCamera : MonoBehaviour
     {
         _cam.orthographicSize = (Screen.height / 100f) / _SCALE;
 
-        _pos = Vector3.SmoothDamp(_rb.position,
-            _target.position, ref _velocity, _smoothTime);
+        _pos = Vector3.SmoothDamp(
+            _rb.position,
+            _target.position,
+            ref _velocity,
+            _smoothTime);
     }
 
     private void FixedUpdate()

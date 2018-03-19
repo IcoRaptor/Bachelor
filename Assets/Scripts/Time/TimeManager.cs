@@ -10,11 +10,11 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     private const float _MIN_SCALE = 2f;
     private const float _MAX_SCALE = 30f;
 
-    private float _scale = 2f; // 2 in-game minutes per second
+    private float _scale = 24f / 5f; // 1 in-game day per 5 minutes
 
-    private List<TimerDelegate> _timers = new List<TimerDelegate>();
-    private Stack<TimerDelegate> _timersToAdd = new Stack<TimerDelegate>();
-    private Stack<TimerDelegate> _timersToRemove = new Stack<TimerDelegate>();
+    private List<TimerInstance> _timers = new List<TimerInstance>();
+    private Stack<TimerInstance> _timersToAdd = new Stack<TimerInstance>();
+    private Stack<TimerInstance> _timersToRemove = new Stack<TimerInstance>();
 
     private float _delta;
     private uint _timeUnit;
@@ -60,17 +60,19 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     /// <summary>
     /// Adds a timer. The timer will be added before the next tick
     /// </summary>
-    public void RegisterTimer(TimerDelegate timer)
+    public void RegisterTimer(TimerInstance timer)
     {
-        _timersToAdd.Push(timer);
+        if (!_timers.Contains(timer))
+            _timersToAdd.Push(timer);
     }
 
     /// <summary>
     /// Removes a timer. The timer will be removed before the next tick
     /// </summary>
-    public void UnregisterTimer(TimerDelegate timer)
+    public void UnregisterTimer(TimerInstance timer)
     {
-        _timersToRemove.Push(timer);
+        if (_timers.Contains(timer))
+            _timersToRemove.Push(timer);
     }
 
     /// <summary>
@@ -82,7 +84,6 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 
         if (_delta >= 1.0f)
         {
-            _delta = 0f;
             ++_timeUnit;
             _timeUnitLarge = _timeUnit / 60;
 
@@ -94,6 +95,8 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 
             foreach (var timer in _timers)
                 timer.Tick();
+
+            _delta = 0f;
         }
     }
 
@@ -102,16 +105,11 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     /// </summary>
     private void GenerateTimeString()
     {
-        // Skip if delta is too small
-
-        if (_delta < 0.05f)
-            return;
-
         uint newScaledUnit = _timeUnit % 60;
 
-        // Skip if time hasn't changed
+        // Skip if delta is too small or the time hasn't changed
 
-        if (newScaledUnit == ScaledMinutes)
+        if (_delta < 0.05f || newScaledUnit == ScaledMinutes)
             return;
 
         // Calculate new time and generate string for UI

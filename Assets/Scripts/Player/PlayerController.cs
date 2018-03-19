@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
     #region Variables
@@ -7,9 +8,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float _walkSpeed = 0;
 
+    private Vector2 _move = new Vector2();
     private Rigidbody2D _rb;
     private Animator _anim;
-    private Vector2 _move = new Vector2();
 
     #endregion
 
@@ -18,9 +19,15 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
 
-        Timer.StartNew(12, 0, () =>
+        // Timer test
+
+        Timer.StartNew(0, 15, () =>
         {
-            Debug.Log("RAMA LAMA DING DONG!\n");
+            Debug.LogFormat(
+                "PlayerTimer:\nDay {0} - {1:00}h {2:00}",
+                TimeManager.Instance.ScaledDays,
+                TimeManager.Instance.ScaledHours,
+                TimeManager.Instance.ScaledMinutes);
         });
     }
 
