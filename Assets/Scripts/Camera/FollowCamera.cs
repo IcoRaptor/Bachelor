@@ -29,6 +29,7 @@ public class FollowCamera : MonoBehaviour
     private void LateUpdate()
     {
         _cam.orthographicSize = (Screen.height / 100f) / _SCALE;
+        Debug.Log(_cam.orthographicSize);
 
         _pos = Vector3.SmoothDamp(
             _rb.position,
@@ -39,6 +40,11 @@ public class FollowCamera : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _rb.MovePosition(_pos);
+        Vector2 dist = _rb.position - (Vector2)_pos;
+
+        // Move the camera while avoiding the mini shake
+
+        if (dist.sqrMagnitude > 0.0001f)
+            _rb.MovePosition(_pos);
     }
 }
