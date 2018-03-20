@@ -1,7 +1,7 @@
 ﻿using Framework.Debugging;
 
 /// <summary>
-/// Class used for the management of timers
+/// Class used for the management of timer instances
 /// </summary>
 public static class Timer
 {
@@ -38,7 +38,7 @@ public class TimerInstance
 
     public TimerInstance(int hours, int minutes, TimerAction action)
     {
-        _timeUnit = -1;
+        _timeUnit = 0;
         _targetTime = minutes % 60 + hours * 60;
         _action = action;
 
@@ -46,7 +46,7 @@ public class TimerInstance
     }
 
     /// <summary>
-    /// Advances the timer. Executes the action when it reaches the target time
+    /// Advances the timer and executes the action
     /// </summary>
     public void Tick()
     {

@@ -78,14 +78,6 @@ namespace Framework.Messaging
             _trigger = true;
             string msgName = msg.name;
 
-            if (!_listenerDict.ContainsKey(msgName))
-            {
-                Debugger.LogFormat(LOG_TYPE.WARNING, "\"{0}\" is not registered!\n",
-                    msgName);
-                _trigger = false;
-                return;
-            }
-
             // Add listeners
             while (_addTypeStack.Count > 0)
                 _listenerDict[_addTypeStack.Pop()].Add(_addHandlerStack.Pop());
@@ -93,6 +85,14 @@ namespace Framework.Messaging
             // Remove listeners
             while (_removeTypeStack.Count > 0)
                 _listenerDict[_removeTypeStack.Pop()].Remove(_removeHandlerStack.Pop());
+
+            if (!_listenerDict.ContainsKey(msgName))
+            {
+                Debugger.LogFormat(LOG_TYPE.WARNING, "\"{0}\" is not registered!\n",
+                    msgName);
+                _trigger = false;
+                return;
+            }
 
             // Iterate the handler functions
             for (int i = 0; i < _listenerDict[msgName].Count; ++i)

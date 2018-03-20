@@ -45,8 +45,30 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 
     private void Update()
     {
-        Tick();
-        GenerateTimeString();
+        _delta += Time.unscaledDeltaTime * _scale;
+
+        if (_delta >= 1.0f)
+        {
+            _delta = 0f;
+
+            ++_timeUnit;
+            _timeUnitLarge = _timeUnit / 60;
+
+            ScaledMinutes = _timeUnit % 60;
+            ScaledHours = _timeUnitLarge % 24;
+            ScaledDays = 1 + _timeUnitLarge / 24;
+
+            while (_timersToAdd.Count > 0)
+                _timers.Add(_timersToAdd.Pop());
+
+            while (_timersToRemove.Count > 0)
+                _timers.Remove(_timersToRemove.Pop());
+
+            foreach (var timer in _timers)
+                timer.Tick();
+        }
+
+        UpdateUI();
     }
 
     /// <summary>
@@ -76,53 +98,20 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     }
 
     /// <summary>
-    /// Advances the time simulation
-    /// </summary>
-    private void Tick()
-    {
-        _delta += Time.unscaledDeltaTime * _scale;
-
-        if (_delta >= 1.0f)
-        {
-            ++_timeUnit;
-            _timeUnitLarge = _timeUnit / 60;
-
-            while (_timersToAdd.Count > 0)
-                _timers.Add(_timersToAdd.Pop());
-
-            while (_timersToRemove.Count > 0)
-                _timers.Remove(_timersToRemove.Pop());
-
-            foreach (var timer in _timers)
-                timer.Tick();
-
-            _delta = 0f;
-        }
-    }
-
-    /// <summary>
     /// Generates a string for the UI
     /// </summary>
-    private void GenerateTimeString()
+    private void UpdateUI()
     {
-        uint newScaledUnit = _timeUnit % 60;
+        bool timePassed = _delta < 0.05f || ScaledMinutes != _timeUnit % 60;
+        bool town = GameManager.Instance.GameState == GAME_STATE.TOWN_3;
 
-        // Skip if delta is too small or the time hasn't changed
-
-        if (_delta < 0.05f || newScaledUnit == ScaledMinutes)
+        if (timePassed || town)
             return;
-
-        // Calculate new time and generate string for UI
-
-        ScaledMinutes = newScaledUnit;
-        ScaledHours = _timeUnitLarge % 24;
-        ScaledDays = 1 + _timeUnitLarge / 24;
 
         string time = string.Format(
             "Day {0} - {1:00}h {2:00}",
             ScaledDays, ScaledHours, ScaledMinutes);
 
-        if (GameManager.Instance.GameState >= GAME_STATE.MAIN_SCENE)
-            MessagingSystem.Instance.QueueMessage(new TimeTextMessage(time));
+        MessagingSystem.Instance.QueueMessage(new TimeTextMessage(time));
     }
 }
