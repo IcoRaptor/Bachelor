@@ -7,9 +7,6 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 {
     #region Variables
 
-    private const float _MIN_SCALE = 2f;
-    private const float _MAX_SCALE = 30f;
-
     private float _scale = 24f / 5f; // 1 in-game day per 5 minutes
 
     private List<TimerInstance> _timers = new List<TimerInstance>();
@@ -37,7 +34,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 
     #endregion
 
-    private void Start()
+    private void Awake()
     {
         ScaledMinutes = uint.MaxValue;
         _timeUnit = 60 * 12 - 1; // Start at 12:00
@@ -76,7 +73,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     /// </summary>
     public void AdjustTimeScale(float val)
     {
-        _scale = Mathf.Clamp(_scale + val, _MIN_SCALE, _MAX_SCALE);
+        _scale = Mathf.Clamp(_scale + val, 2f, 30f);
     }
 
     /// <summary>
@@ -102,10 +99,11 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     /// </summary>
     private void UpdateUI()
     {
-        bool timePassed = _delta < 0.05f || ScaledMinutes != _timeUnit % 60;
+        bool delta = _delta < 0.01f;
+        bool timePassed = ScaledMinutes != _timeUnit % 60;
         bool town = GameManager.Instance.GameState == GAME_STATE.TOWN_3;
 
-        if (timePassed || town)
+        if (delta || timePassed || town)
             return;
 
         string time = string.Format(

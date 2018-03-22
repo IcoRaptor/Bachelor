@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Camera))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class FollowCamera : MonoBehaviour
 {
     #region Variables
-
-    private const float _SCALE = 3f;
 
     [SerializeField]
     private Transform _target = null;
@@ -13,7 +11,6 @@ public class FollowCamera : MonoBehaviour
     [Range(0f, 1f)]
     private float _smoothTime = 0f;
 
-    private Camera _cam;
     private Rigidbody2D _rb;
     private Vector3 _pos;
     private Vector3 _velocity;
@@ -23,14 +20,10 @@ public class FollowCamera : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _cam = GetComponent<Camera>();
     }
 
     private void LateUpdate()
     {
-        _cam.orthographicSize = (Screen.height / 100f) / _SCALE;
-        Debug.Log(_cam.orthographicSize);
-
         _pos = Vector3.SmoothDamp(
             _rb.position,
             _target.position,
