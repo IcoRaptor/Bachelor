@@ -8,9 +8,6 @@ public class EditorStart : MonoBehaviour
 
     private void Awake()
     {
-        if (!TimeManager.IsAlive)
-            TimeManager.Instance.WakeUp();
-
         if (!GameManager.IsAlive)
             GameManager.Instance.SetGameState(GAME_STATE.MAIN_SCENE);
     }

@@ -38,7 +38,7 @@ public class TimerInstance
 
     public TimerInstance(int hours, int minutes, TimerAction action)
     {
-        _timeUnit = 0;
+        _timeUnit = -1;
         _targetTime = minutes % 60 + hours * 60;
         _action = action;
 

@@ -1,5 +1,6 @@
 ﻿using Framework;
 using Framework.Debugging;
+using Framework.Messaging;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -69,6 +70,9 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
                 break;
 
             case GAME_STATE.MAIN_SCENE:
+                MessagingSystem.Instance.WakeUp();
+                TimeManager.Instance.WakeUp();
+
                 SceneManager.LoadScene(1);
                 break;
 
