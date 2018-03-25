@@ -70,18 +70,30 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
                 break;
 
             case GAME_STATE.MAIN_SCENE:
-                MessagingSystem.Instance.WakeUp();
-                TimeManager.Instance.WakeUp();
-
+                WakeUpSystems();
                 SceneManager.LoadScene(1);
                 break;
 
+            case GAME_STATE.FADING:
+
+            case GAME_STATE.TOWN_1:
+
+            case GAME_STATE.TOWN_2:
+
             default:
-                Debugger.LogFormat(
-                    LOG_TYPE.WARNING,
+                Debugger.LogFormat(LOG_TYPE.WARNING,
                     "GameState: {0} not implemented!\n",
                     newState);
                 break;
         }
+    }
+
+    private void WakeUpSystems()
+    {
+        if (!MessagingSystem.IsAlive)
+            MessagingSystem.Instance.WakeUp();
+
+        if (!TimeManager.IsAlive)
+            TimeManager.Instance.WakeUp();
     }
 }

@@ -21,7 +21,7 @@ public class FollowCamera : MonoBehaviour
     private Camera _cam;
     private Vector3 _pos;
     private Vector3 _velocity;
-    private float _previousHeight;
+    private float _height;
 
     #endregion
 
@@ -40,12 +40,12 @@ public class FollowCamera : MonoBehaviour
         _cam = GetComponent<Camera>();
 
         _cam.orthographicSize = _ScaledSize;
-        _previousHeight = Screen.height;
+        _height = Screen.height;
     }
 
     private void LateUpdate()
     {
-        if (_previousHeight != Screen.height)
+        if (_height != Screen.height)
             _cam.orthographicSize = _ScaledSize;
 
         _pos = Vector3.SmoothDamp(
@@ -54,14 +54,14 @@ public class FollowCamera : MonoBehaviour
             ref _velocity,
             _smoothTime);
 
-        _previousHeight = Screen.height;
+        _height = Screen.height;
     }
 
     private void FixedUpdate()
     {
         Vector2 dist = _rb.position - (Vector2)_pos;
 
-        // Move the camera while avoiding the mini shake
+        // Move the camera and avoid the mini shake
 
         if (dist.sqrMagnitude > 0.00005f)
             _rb.MovePosition(_pos);

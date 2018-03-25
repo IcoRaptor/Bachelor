@@ -101,9 +101,8 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     {
         bool delta = _delta < 0.01f;
         bool timePassed = ScaledMinutes != _timeUnit % 60;
-        bool town = GameManager.Instance.GameState == GAME_STATE.TOWN_3;
 
-        if (delta || timePassed || town)
+        if (delta || timePassed)
             return;
 
         string time = string.Format(

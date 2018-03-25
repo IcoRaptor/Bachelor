@@ -14,7 +14,6 @@ public enum GAME_STATE
     MAIN_SCENE,
     TOWN_1,
     TOWN_2,
-    TOWN_3
 }
 
 /// <summary>
