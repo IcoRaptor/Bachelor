@@ -5,8 +5,5 @@
     /// </summary>
     public sealed class GOAPModule : AIModule
     {
-        public override void UpdateAI()
-        {
-        }
     }
 }

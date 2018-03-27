@@ -14,25 +14,19 @@ namespace AI
 
         #endregion
 
-        public void ExecuteAction()
-        {
-        }
-
         private void Start()
         {
             _machine = new AStarMachine();
-            _machine.RunAStar(new AStarGoal(), new AStarMap());
         }
 
         private void Update()
         {
-            _machine.CheckFinished(() => OnFinished());
+            _machine.Update();
         }
 
         private void OnFinished()
         {
-            Debug.Log(transform.position);
-            _machine.RunAStar(new AStarGoal(), new AStarMap());
+            Debug.Log("OnFinished\n");
         }
     }
 }

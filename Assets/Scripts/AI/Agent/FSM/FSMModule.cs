@@ -5,8 +5,5 @@
     /// </summary>
     public sealed class FSMModule : AIModule
     {
-        public override void UpdateAI()
-        {
-        }
     }
 }

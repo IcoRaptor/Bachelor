@@ -24,7 +24,5 @@ namespace AI
                     gameObject.name, _blackboard.GetType().Name);
             }
         }
-
-        public abstract void UpdateAI();
     }
 }
