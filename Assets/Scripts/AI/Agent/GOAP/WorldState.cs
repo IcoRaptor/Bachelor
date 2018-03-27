@@ -5,9 +5,9 @@
     /// </summary>
     public sealed class WorldState
     {
-        #region Variables
+        #region Properties
 
-        private STATE[] _symbols;
+        public STATE_SYMBOL[] Symbols { get; private set; }
 
         #endregion
 
@@ -15,15 +15,10 @@
 
         public WorldState(int num)
         {
-            _symbols = new STATE[num];
+            Symbols = new STATE_SYMBOL[num];
         }
 
         #endregion
-
-        public STATE[] GetSymbols()
-        {
-            return _symbols;
-        }
 
         /// <summary>
         /// Returns the number of unsatisfied symbols
@@ -32,8 +27,8 @@
         {
             int num = 0;
 
-            foreach (var symbol in _symbols)
-                if (symbol == STATE.UNSATISFIED)
+            foreach (var symbol in Symbols)
+                if (symbol == STATE_SYMBOL.UNSATISFIED)
                     ++num;
 
             return num;
@@ -45,10 +40,10 @@
         public int GetSymbolDifference(WorldState other)
         {
             int num = 0;
-            STATE[] otherSymbols = other.GetSymbols();
+            STATE_SYMBOL[] otherSymbols = other.Symbols;
 
-            for (int i = 0; i < _symbols.Length; i++)
-                if (_symbols[i] != otherSymbols[i])
+            for (int i = 0; i < Symbols.Length; i++)
+                if (Symbols[i] != otherSymbols[i])
                     ++num;
 
             return num;
@@ -58,12 +53,32 @@
 
         public static bool operator ==(WorldState a, WorldState b)
         {
-            return false;
+            STATE_SYMBOL[] aSymbols = a.Symbols;
+            STATE_SYMBOL[] bSymbols = b.Symbols;
+
+            if (aSymbols.Length != bSymbols.Length)
+                return false;
+
+            for (int i = 0; i < aSymbols.Length;)
+                if (aSymbols[i] != bSymbols[i])
+                    return false;
+
+            return true;
         }
 
         public static bool operator !=(WorldState a, WorldState b)
         {
-            return true;
+            STATE_SYMBOL[] aSymbols = a.Symbols;
+            STATE_SYMBOL[] bSymbols = b.Symbols;
+
+            if (aSymbols.Length != bSymbols.Length)
+                return true;
+
+            for (int i = 0; i < aSymbols.Length;)
+                if (aSymbols[i] != bSymbols[i])
+                    return true;
+
+            return false;
         }
 
         #endregion
@@ -79,7 +94,10 @@
         }
     }
 
-    public enum STATE
+    /// <summary>
+    /// Represents a world state symbol
+    /// </summary>
+    public enum STATE_SYMBOL
     {
         UNSET = -1,
         SATISFIED,

@@ -1,20 +1,24 @@
 ﻿using Framework.Debugging;
+using Pathfinding;
 using UnityEngine;
 
 namespace AI
 {
-    public abstract class AIModule : MonoBehaviour
+    [RequireComponent(typeof(Seeker))]
+    public class NavigationManager : MonoBehaviour
     {
         #region Variables
 
 #pragma warning disable 0414
-        protected Blackboard _blackboard;
+        private Blackboard _blackboard;
+        private Seeker _seeker;
 #pragma warning restore
 
         #endregion
 
         private void Awake()
         {
+            _seeker = GetComponent<Seeker>();
             _blackboard = GetComponentInParent<Blackboard>();
 
             if (!_blackboard)
@@ -24,7 +28,5 @@ namespace AI
                     gameObject.name, _blackboard.GetType().Name);
             }
         }
-
-        public abstract void UpdateAI();
     }
 }
