@@ -11,14 +11,12 @@ namespace AI
 
 #pragma warning disable 0414
         private Blackboard _blackboard;
-        private Seeker _seeker;
 #pragma warning restore
 
         #endregion
 
         private void Awake()
         {
-            _seeker = GetComponent<Seeker>();
             _blackboard = GetComponentInParent<Blackboard>();
 
             if (!_blackboard)

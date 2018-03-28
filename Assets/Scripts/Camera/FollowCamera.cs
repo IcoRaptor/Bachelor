@@ -29,12 +29,12 @@ public class FollowCamera : MonoBehaviour
 
     private float _ScaledSize
     {
-        get { return (Screen.height / 100f) / _scale; }
+        get { return Screen.height / 100f / _scale; }
     }
 
     #endregion
 
-    private void Start()
+    private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _cam = GetComponent<Camera>();

@@ -8,7 +8,7 @@ namespace AStar
 
 #pragma warning disable 0414
         private WorldState _target;
-        private WorldState _current;
+        private WorldState _temp;
 #pragma warning restore
 
         #endregion

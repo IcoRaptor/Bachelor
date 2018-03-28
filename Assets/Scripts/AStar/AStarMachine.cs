@@ -8,7 +8,7 @@ namespace AStar
     {
         #region Variables
 
-        private OnAStarFinished _onFinished = null;
+        private AStarCallback _onFinished = null;
         private volatile bool _running = false;
         private volatile bool _wasRunning = false;
         private bool _hasRun = false;
@@ -17,7 +17,7 @@ namespace AStar
 
         #region Properties
 
-        private bool _CanUpdate
+        private bool _Finished
         {
             get
             {
@@ -35,7 +35,7 @@ namespace AStar
         /// </summary>
         public void Update()
         {
-            if (_CanUpdate)
+            if (_Finished)
                 _onFinished();
 
             _wasRunning = _running;
@@ -44,11 +44,11 @@ namespace AStar
         /// <summary>
         /// Queues an execution of A*
         /// </summary>
-        public bool RunAStar(AStarGoal goal, AStarMap map, OnAStarFinished onFinished)
+        public bool RunAStar(AStarGoal goal, AStarMap map, AStarCallback callback)
         {
             if (_hasRun && _running)
             {
-                PrintError(onFinished);
+                PrintError(callback);
                 return false;
             }
 
@@ -57,13 +57,13 @@ namespace AStar
                 if (!ThreadPool.QueueUserWorkItem((e) => Run(goal, map)))
                     throw new Exception();
 
-                _onFinished = onFinished;
+                _onFinished = callback;
                 _running = true;
                 _hasRun = true;
             }
             catch
             {
-                PrintError(onFinished);
+                PrintError(callback);
                 return false;
             }
 
@@ -75,8 +75,8 @@ namespace AStar
         /// </summary>
         private void Run(AStarGoal goal, AStarMap map)
         {
-            // Test, waits for 2 seconds
-            Thread.Sleep(2000);
+            // Test, waits for 1 second
+            Thread.Sleep(1000);
 
             _running = false;
         }
@@ -84,21 +84,22 @@ namespace AStar
         /// <summary>
         /// Prints an error message
         /// </summary>
-        private void PrintError(OnAStarFinished onFinished)
+        private void PrintError(AStarCallback callback)
         {
-            if (onFinished == null)
+            if (callback == null)
             {
                 Debugger.Log(LOG_TYPE.WARNING,
-                    "Item could not be queued!\n");
+                    "Item could not be queued!\n" +
+                    "OnAStarFinished (null)");
             }
             else
             {
                 Debugger.LogFormat(LOG_TYPE.WARNING,
                     "Item could not be queued!\n{0}",
-                    onFinished.Target.ToString());
+                    callback.Target.ToString());
             }
         }
     }
 
-    public delegate void OnAStarFinished();
+    public delegate void AStarCallback();
 }

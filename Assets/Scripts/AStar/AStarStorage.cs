@@ -2,6 +2,9 @@
 
 namespace AStar
 {
+    /// <summary>
+    /// Holds the open and closed lists
+    /// </summary>
     public class AStarStorage
     {
         #region Variables
