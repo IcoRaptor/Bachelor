@@ -8,9 +8,12 @@ namespace AStar
     {
         #region Variables
 
+        private object _lock = new object();
+
         private AStarCallback _onFinished = null;
-        private volatile bool _running = false;
-        private volatile bool _wasRunning = false;
+
+        private bool _running = false;
+        private bool _wasRunning = false;
         private bool _hasRun = false;
 
         #endregion
@@ -22,8 +25,8 @@ namespace AStar
             get
             {
                 return !_running &&
-                    (_running != _wasRunning) &&
-                    _onFinished != null;
+                (_running != _wasRunning) &&
+                _onFinished != null;
             }
         }
 
@@ -35,10 +38,13 @@ namespace AStar
         /// </summary>
         public void Update()
         {
-            if (_Finished)
-                _onFinished();
+            lock (_lock)
+            {
+                if (_Finished)
+                    _onFinished();
 
-            _wasRunning = _running;
+                _wasRunning = _running;
+            }
         }
 
         /// <summary>
@@ -46,10 +52,13 @@ namespace AStar
         /// </summary>
         public bool RunAStar(AStarGoal goal, AStarMap map, AStarCallback callback)
         {
-            if (_hasRun && _running)
+            lock (_lock)
             {
-                PrintError(callback);
-                return false;
+                if (_hasRun && _running)
+                {
+                    PrintError(callback);
+                    return false;
+                }
             }
 
             try
@@ -57,9 +66,12 @@ namespace AStar
                 if (!ThreadPool.QueueUserWorkItem((e) => Run(goal, map)))
                     throw new Exception();
 
-                _onFinished = callback;
-                _running = true;
-                _hasRun = true;
+                lock (_lock)
+                {
+                    _onFinished = callback;
+                    _hasRun = true;
+                    _running = true;
+                }
             }
             catch
             {
@@ -78,7 +90,8 @@ namespace AStar
             // Test, waits for 1 second
             Thread.Sleep(1000);
 
-            _running = false;
+            lock (_lock)
+                _running = false;
         }
 
         /// <summary>
