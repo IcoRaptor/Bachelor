@@ -64,8 +64,8 @@ namespace AStar
 
                 try
                 {
-                    if (goal == null || map == null)
-                        throw new ArgumentNullException("Goal/Map");
+                    if (goal == null)
+                        throw new ArgumentNullException("AStarGoal");
 
                     if (!ThreadPool.QueueUserWorkItem(e => Run(goal, map)))
                         throw new Exception("Item could not be queued!");
@@ -123,15 +123,15 @@ namespace AStar
                 ((MonoBehaviour)callback.Target).transform.parent.name;
 
             var ex = e == null ?
-                "Item could not be queued!" :
+                "Item could not be queued!\n" :
                 e.Message;
 
             if (callbackNull)
-                Debugger.Log(LOG_TYPE.WARNING, ex + "\n" + cb);
+                Debugger.Log(LOG_TYPE.WARNING, ex + cb);
             else
             {
                 Debugger.LogFormat(LOG_TYPE.WARNING,
-                    "{0}\nCallback: {1}, GO: {2}",
+                    "{0}Callback: {1}, GO: {2}",
                     ex, cb, go);
             }
         }
@@ -162,12 +162,8 @@ namespace AStar
             try
             {
 #endif
-                _storage.AddNodeToOpenList(new GOAPNode());
-                var start = _map.GetNextNode(_storage);
-
-                Debug.LogFormat(
-                    "Open: {0}\nClosed: {1}",
-                    start.OnOpenList, start.OnClosedList);
+                /*_storage.AddNodeToOpenList(new GOAPNode());
+                var start = _storage.GetNextBestNode();*/
 
                 // Test, waits for 2 seconds
                 Thread.Sleep(2000);
@@ -175,7 +171,8 @@ namespace AStar
             }
             catch (Exception e)
             {
-                Debug.Log(e.Message);
+                Debug.Log(e.ToString());
+                return RETURN_CODE.ERROR;
             }
 #endif
 

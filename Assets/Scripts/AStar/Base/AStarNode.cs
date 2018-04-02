@@ -1,9 +1,11 @@
-﻿namespace AStar
+﻿using Priority_Queue;
+
+namespace AStar
 {
     /// <summary>
     /// Represents a node on the AStarMap
     /// </summary>
-    public abstract class AStarNode
+    public abstract class AStarNode : FastPriorityQueueNode
     {
         #region Variables
 

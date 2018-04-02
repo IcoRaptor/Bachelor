@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Priority_Queue;
+using System.Collections.Generic;
 
 namespace AStar
 {
@@ -10,13 +11,16 @@ namespace AStar
         #region Variables
 
 #pragma warning disable 0414
+        private FastPriorityQueue<AStarNode> _openList2 =
+            new FastPriorityQueue<AStarNode>(20);
+        private FastPriorityQueue<AStarNode> _closedList2 =
+            new FastPriorityQueue<AStarNode>(20);
+
         private static Dictionary<string, object> _actionCache =
             new Dictionary<string, object>();
 
         private List<AStarNode> _openList = new List<AStarNode>();
         private List<AStarNode> _closedList = new List<AStarNode>();
-
-        private int _openIndex = 0;
 #pragma warning restore
 
         #endregion
@@ -52,7 +56,6 @@ namespace AStar
                 return false;
 
             _openList.Add(node);
-
             node.OnOpenList = true;
 
             return true;
@@ -68,15 +71,20 @@ namespace AStar
 
             _openList.Remove(node);
             _closedList.Add(node);
-
             node.OnClosedList = true;
 
             return true;
         }
 
-        public AStarNode GetNextNode()
+        /// <summary>
+        /// Returns the node with the lowest f value from the open list
+        /// </summary>
+        public AStarNode GetNextBestNode()
         {
-            return _openList[_openIndex++];
+            if (!IsOpenListEmpty)
+                return _openList[0];
+            else
+                return null;
         }
     }
 }

@@ -17,10 +17,7 @@ namespace AI.GOAP
         private void Start()
         {
             _machine = new AStarMachine();
-            _machine.RunAStar(
-                new GOAPGoal(),
-                new AStarMap(),
-                OnFinished);
+            _machine.RunAStar(new GOAPGoal(), null, OnFinished);
         }
 
         private void Update()

@@ -6,7 +6,7 @@ namespace AStar
     {
         #region Variables
 
-#pragma warning disable 0414
+#pragma warning disable 0169
         private WorldState _target;
         private WorldState _temp;
 #pragma warning restore
