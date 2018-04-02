@@ -1,6 +1,7 @@
 ﻿using Framework.Debugging;
 using System;
 using System.Threading;
+using UnityEngine;
 
 namespace AStar
 {
@@ -8,9 +9,10 @@ namespace AStar
     {
         #region Variables
 
-        private object _lock = new object();
+        private readonly object _lock = new object();
 
-        private AStarCallback _onFinished = null;
+        private AStarCallback _callback = null;
+        private RETURN_CODE _code = RETURN_CODE.DEFAULT;
 
         private bool _running = false;
         private bool _wasRunning = false;
@@ -22,12 +24,7 @@ namespace AStar
 
         private bool _Finished
         {
-            get
-            {
-                return !_running &&
-                (_running != _wasRunning) &&
-                _onFinished != null;
-            }
+            get { return _hasRun && !_running && (_running != _wasRunning); }
         }
 
         #endregion
@@ -41,7 +38,12 @@ namespace AStar
             lock (_lock)
             {
                 if (_Finished)
-                    _onFinished();
+                {
+                    if (_callback != null)
+                        _callback(_code);
+
+                    _code = RETURN_CODE.DEFAULT;
+                }
 
                 _wasRunning = _running;
             }
@@ -59,27 +61,27 @@ namespace AStar
                     PrintError(callback);
                     return false;
                 }
-            }
 
-            try
-            {
-                if (!ThreadPool.QueueUserWorkItem((e) => Run(goal, map)))
-                    throw new Exception();
-
-                lock (_lock)
+                try
                 {
-                    _onFinished = callback;
+                    if (goal == null || map == null)
+                        throw new ArgumentNullException("Goal/Map");
+
+                    if (!ThreadPool.QueueUserWorkItem(e => Run(goal, map)))
+                        throw new Exception("Item could not be queued!");
+
+                    _callback = callback;
                     _hasRun = true;
                     _running = true;
                 }
-            }
-            catch
-            {
-                PrintError(callback);
-                return false;
-            }
+                catch (Exception e)
+                {
+                    PrintError(callback, e);
+                    return false;
+                }
 
-            return true;
+                return true;
+            }
         }
 
         /// <summary>
@@ -87,32 +89,97 @@ namespace AStar
         /// </summary>
         private void Run(AStarGoal goal, AStarMap map)
         {
-            // Test, waits for 1 second
-            Thread.Sleep(1000);
+            var solver = new AStarSolver(goal, map);
+            RETURN_CODE code = solver.Solve();
 
+            Terminate(code);
+        }
+
+        /// <summary>
+        /// Exit function for Run
+        /// </summary>
+        private void Terminate(RETURN_CODE code)
+        {
             lock (_lock)
+            {
+                _code = code;
                 _running = false;
+            }
         }
 
         /// <summary>
         /// Prints an error message
         /// </summary>
-        private void PrintError(AStarCallback callback)
+        private void PrintError(AStarCallback callback, Exception e = null)
         {
-            if (callback == null)
-            {
-                Debugger.Log(LOG_TYPE.WARNING,
-                    "Item could not be queued!\n" +
-                    "OnAStarFinished (null)");
-            }
+            var callbackNull = callback == null;
+
+            var cb = callbackNull ?
+                "No callback defined" :
+                callback.Method.Name;
+
+            var go = callbackNull ?
+                string.Empty :
+                ((MonoBehaviour)callback.Target).transform.parent.name;
+
+            var ex = e == null ?
+                "Item could not be queued!" :
+                e.Message;
+
+            if (callbackNull)
+                Debugger.Log(LOG_TYPE.WARNING, ex + "\n" + cb);
             else
             {
                 Debugger.LogFormat(LOG_TYPE.WARNING,
-                    "Item could not be queued!\n{0}",
-                    callback.Target.ToString());
+                    "{0}\nCallback: {1}, GO: {2}",
+                    ex, cb, go);
             }
         }
     }
 
-    public delegate void AStarCallback();
+    internal class AStarSolver
+    {
+        #region Variables
+
+#pragma warning disable 0414
+        private readonly AStarGoal _goal;
+        private readonly AStarMap _map;
+        private readonly AStarStorage _storage;
+#pragma warning restore
+
+        #endregion
+
+        public AStarSolver(AStarGoal goal, AStarMap map)
+        {
+            _goal = goal;
+            _map = map;
+            _storage = new AStarStorage();
+        }
+
+        public RETURN_CODE Solve()
+        {
+#if UNITY_EDITOR
+            try
+            {
+#endif
+                _storage.AddNodeToOpenList(new GOAPNode());
+                var start = _map.GetNextNode(_storage);
+
+                Debug.LogFormat(
+                    "Open: {0}\nClosed: {1}",
+                    start.OnOpenList, start.OnClosedList);
+
+                // Test, waits for 2 seconds
+                Thread.Sleep(2000);
+#if UNITY_EDITOR
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+            }
+#endif
+
+            return RETURN_CODE.SUCCESS;
+        }
+    }
 }

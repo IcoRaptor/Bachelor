@@ -7,7 +7,7 @@ public class FollowCamera : MonoBehaviour
 
     [Header("Scale")]
     [SerializeField]
-    [Range(1f, 5f)]
+    [Range(0.5f, 2f)]
     private float _scale = 0;
 
     [Header("Follow")]

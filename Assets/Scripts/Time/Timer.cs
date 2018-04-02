@@ -12,14 +12,14 @@ public static class Timer
     {
         if (hours < 0 || minutes < 0)
         {
-            Debugger.Log(
-                LOG_TYPE.ERROR,
+            Debugger.Log(LOG_TYPE.ERROR,
                 "Time < 0\nNo timer was started!");
 
             return;
         }
 
-        new TimerInstance(hours, minutes, action);
+        TimerInstance timer = new TimerInstance(hours, minutes, action);
+        TimeManager.Instance.RegisterTimer(timer);
     }
 }
 
@@ -41,8 +41,6 @@ public class TimerInstance
         _timeUnit = -1;
         _targetTime = minutes % 60 + hours * 60;
         _action = action;
-
-        TimeManager.Instance.RegisterTimer(this);
     }
 
     /// <summary>

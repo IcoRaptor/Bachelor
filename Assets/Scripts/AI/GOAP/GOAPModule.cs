@@ -17,6 +17,10 @@ namespace AI.GOAP
         private void Start()
         {
             _machine = new AStarMachine();
+            _machine.RunAStar(
+                new GOAPGoal(),
+                new AStarMap(),
+                OnFinished);
         }
 
         private void Update()
@@ -24,9 +28,9 @@ namespace AI.GOAP
             _machine.Update();
         }
 
-        private void OnFinished()
+        private void OnFinished(RETURN_CODE code)
         {
-            Debug.Log("OnFinished\n");
+            Debug.LogFormat("OnFinished\n{0}", code);
         }
     }
 }

@@ -7,7 +7,10 @@
     {
         public AStarNode GetNextNode(AStarStorage storage)
         {
-            return null;
+            if (storage.IsOpenListEmpty)
+                return null;
+
+            return storage.GetNextNode();
         }
     }
 }

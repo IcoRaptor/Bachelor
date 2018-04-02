@@ -2,7 +2,7 @@
 
 namespace AStar
 {
-    public class AStarGoal
+    public class GOAPGoal : AStarGoal
     {
         #region Variables
 

@@ -26,17 +26,16 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         get { return (TimeManager)_Instance; }
     }
 
-    public uint ScaledMinutes { get; private set; }
-
-    public uint ScaledHours { get; private set; }
-
-    public uint ScaledDays { get; private set; }
+    public GameTime ScaledTime { get; private set; }
 
     #endregion
 
     private void Awake()
     {
-        ScaledMinutes = uint.MaxValue;
+        ScaledTime = new GameTime
+        {
+            ScaledMinutes = uint.MaxValue
+        };
         _timeUnit = 60 * 12 - 1; // Start at 12:00
     }
 
@@ -51,9 +50,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
             ++_timeUnit;
             _timeUnitLarge = _timeUnit / 60;
 
-            ScaledMinutes = _timeUnit % 60;
-            ScaledHours = _timeUnitLarge % 24;
-            ScaledDays = 1 + _timeUnitLarge / 24;
+            ScaledTime.Update(_timeUnit, _timeUnitLarge);
 
             while (_timersToAdd.Count > 0)
                 _timers.Add(_timersToAdd.Pop());
@@ -100,15 +97,12 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     private void UpdateUI()
     {
         bool delta = _delta < 0.01f;
-        bool timePassed = ScaledMinutes != _timeUnit % 60;
+        bool timePassed = ScaledTime.ScaledMinutes != _timeUnit % 60;
 
         if (delta || timePassed)
             return;
 
-        string time = string.Format(
-            "Day {0} - {1:00}h {2:00}",
-            ScaledDays, ScaledHours, ScaledMinutes);
-
+        string time = ScaledTime.ToString();
         MessagingSystem.Instance.QueueMessage(new TimeTextMessage(time));
     }
 }

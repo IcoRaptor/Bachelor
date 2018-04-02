@@ -1,5 +1,4 @@
-﻿using Framework.Debugging;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class PlayerController : MonoBehaviour
@@ -24,11 +23,9 @@ public class PlayerController : MonoBehaviour
 
         Timer.StartNew(0, 15, () =>
         {
-            Debugger.LogFormat(LOG_TYPE.LOG,
-                "PlayerTimer:\nDay {0} - {1:00}h {2:00}",
-                TimeManager.Instance.ScaledDays,
-                TimeManager.Instance.ScaledHours,
-                TimeManager.Instance.ScaledMinutes);
+            Debug.LogFormat(
+                "PlayerTimer:\n{0}",
+                TimeManager.Instance.ScaledTime.ToString());
         });
     }
 

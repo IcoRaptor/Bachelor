@@ -93,14 +93,4 @@
             return base.Equals(obj);
         }
     }
-
-    /// <summary>
-    /// Represents a world state symbol
-    /// </summary>
-    public enum STATE_SYMBOL
-    {
-        UNSET = -1,
-        SATISFIED,
-        UNSATISFIED
-    }
 }
