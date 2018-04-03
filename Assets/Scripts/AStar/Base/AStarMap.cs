@@ -3,7 +3,8 @@
     /// <summary>
     /// Represents a graph of AStarNodes
     /// </summary>
-    public class AStarMap
+    public abstract class AStarMap
     {
+        public abstract void CreateNewNode(int id);
     }
 }
