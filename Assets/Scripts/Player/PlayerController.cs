@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float _walkSpeed = 0;
 
-    private Vector2 _move = new Vector2();
+    private Vector2 _move;
     private Rigidbody2D _rb;
     private Animator _anim;
 
@@ -16,17 +16,9 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        _move = new Vector2();
         _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
-
-        // Timer test
-
-        Timer.StartNew(0, 15, () =>
-        {
-            Debug.LogFormat(
-                "PlayerTimer:\n{0}",
-                TimeManager.Instance.ScaledTime.ToString());
-        });
     }
 
     private void Update()

@@ -16,6 +16,31 @@ namespace AStar
 
         #region Properties
 
+        public int ID { get; private set; }
+
+        /// <summary>
+        /// The root of this node
+        /// </summary>
+        public AStarNode Root { get; set; }
+
+        /// <summary>
+        /// Fitness (G + H)
+        /// </summary>
+        public float F { get { return Priority; } }
+
+        /// <summary>
+        /// Cost from start node
+        /// </summary>
+        public float G { get; set; }
+
+        /// <summary>
+        /// Heuristic (Cost to goal)
+        /// </summary>
+        public float H { get; set; }
+
+        /// <summary>
+        /// Is this node on the open list?
+        /// </summary>
         public bool OnOpenList
         {
             get { return _onOpenList; }
@@ -28,6 +53,9 @@ namespace AStar
             }
         }
 
+        /// <summary>
+        /// Is this node on the closed list?
+        /// </summary>
         public bool OnClosedList
         {
             get { return _onClosedList; }
@@ -41,5 +69,26 @@ namespace AStar
         }
 
         #endregion
+
+        #region Constructors
+
+        public AStarNode(float g, float h, AStarNode root = null)
+        {
+            Root = root;
+
+            G = g;
+            H = h;
+            Priority = G + H;
+        }
+
+        #endregion
+
+        public void Update(float g, float h, AStarStorage storage)
+        {
+            G = g;
+            H = h;
+
+            storage.UpdateLists(this, G + H);
+        }
     }
 }

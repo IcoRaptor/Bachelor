@@ -52,7 +52,7 @@ namespace AStar
         /// <summary>
         /// Queues an execution of A*
         /// </summary>
-        public bool RunAStar(AStarGoal goal, AStarMap map, AStarCallback callback)
+        public bool RunAStar(AStarGoal goal, AStarCallback callback)
         {
             lock (_lock)
             {
@@ -67,7 +67,7 @@ namespace AStar
                     if (goal == null)
                         throw new ArgumentNullException("AStarGoal");
 
-                    if (!ThreadPool.QueueUserWorkItem(e => Run(goal, map)))
+                    if (!ThreadPool.QueueUserWorkItem(e => Run(goal)))
                         throw new Exception("Item could not be queued!");
 
                     _callback = callback;
@@ -87,9 +87,9 @@ namespace AStar
         /// <summary>
         /// Runs A* on the ThreadPool
         /// </summary>
-        private void Run(AStarGoal goal, AStarMap map)
+        private void Run(AStarGoal goal)
         {
-            var solver = new AStarSolver(goal, map);
+            var solver = new AStarSolver(goal);
             RETURN_CODE code = solver.Solve();
 
             Terminate(code);
@@ -141,40 +141,61 @@ namespace AStar
     {
         #region Variables
 
-#pragma warning disable 0414
         private readonly AStarGoal _goal;
-        private readonly AStarMap _map;
         private readonly AStarStorage _storage;
-#pragma warning restore
 
         #endregion
 
-        public AStarSolver(AStarGoal goal, AStarMap map)
+        public AStarSolver(AStarGoal goal)
         {
             _goal = goal;
-            _map = map;
             _storage = new AStarStorage();
         }
 
         public RETURN_CODE Solve()
         {
-#if UNITY_EDITOR
             try
             {
-#endif
-                /*_storage.AddNodeToOpenList(new GOAPNode());
-                var start = _storage.GetNextBestNode();*/
+                // 1. Let P = starting node
+                // 2. Assign f, g, h to P
+                // 3. Add P to open list
+                // 4. Let B = node from open list with lowest f value
+                //      a. If B is goal then quit
+                //      b. If open list is empty quit
+                // 5. Let C = a valid node connected to B
+                //      a. Assign f, g, h to C
+                //      b. Check wheter C is on a list
+                //          i. If so, check if new path is better
+                //          ii. Else add C to open list
+                //      c. Repeat 5 for all valid children of B
+                // 6. Repeat from step 4
+
+                // 1-3:
+                var p = _goal.GetStartNode();
+                _storage.AddNodeToOpenList(p);
+
+                // 6:
+                while (!_storage.OpenListEmpty)
+                {
+                    // 4:
+                    var b = _storage.GetNextBestNode();
+
+                    if (_goal.IsGoalNode(b))
+                        break;
+
+                    // 5: TODO
+                }
 
                 // Test, waits for 2 seconds
                 Thread.Sleep(2000);
-#if UNITY_EDITOR
             }
             catch (Exception e)
             {
-                Debug.Log(e.ToString());
+                Debugger.Log(LOG_TYPE.ERROR,
+                    e.ToString());
+
                 return RETURN_CODE.ERROR;
             }
-#endif
 
             return RETURN_CODE.SUCCESS;
         }

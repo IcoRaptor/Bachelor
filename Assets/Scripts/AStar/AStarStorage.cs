@@ -1,5 +1,4 @@
 ﻿using Priority_Queue;
-using System.Collections.Generic;
 
 namespace AStar
 {
@@ -10,42 +9,29 @@ namespace AStar
     {
         #region Variables
 
-#pragma warning disable 0414
-        private FastPriorityQueue<AStarNode> _openList2 =
-            new FastPriorityQueue<AStarNode>(20);
-        private FastPriorityQueue<AStarNode> _closedList2 =
-            new FastPriorityQueue<AStarNode>(20);
-
-        private static Dictionary<string, object> _actionCache =
-            new Dictionary<string, object>();
-
-        private List<AStarNode> _openList = new List<AStarNode>();
-        private List<AStarNode> _closedList = new List<AStarNode>();
-#pragma warning restore
+        private FastPriorityQueue<AStarNode> _openList;
+        private FastPriorityQueue<AStarNode> _closedList;
 
         #endregion
 
         #region Properties
 
-        public bool IsOpenListEmpty
+        public bool OpenListEmpty
         {
             get { return _openList.Count == 0; }
         }
 
         #endregion
 
-        /// <summary>
-        /// Adds an action to the action cache
-        /// </summary>
-        public static bool AddAction(object action)
+        #region Constructors
+
+        public AStarStorage()
         {
-            if (_actionCache.ContainsKey(action.ToString()))
-                return false;
-
-            _actionCache.Add(action.ToString(), action);
-
-            return true;
+            _openList = new FastPriorityQueue<AStarNode>(10);
+            _closedList = new FastPriorityQueue<AStarNode>(10);
         }
+
+        #endregion
 
         /// <summary>
         /// Adds a node to the open list
@@ -55,7 +41,7 @@ namespace AStar
             if (node.OnOpenList || node.OnClosedList)
                 return false;
 
-            _openList.Add(node);
+            _openList.Enqueue(node, node.Priority);
             node.OnOpenList = true;
 
             return true;
@@ -70,7 +56,7 @@ namespace AStar
                 return false;
 
             _openList.Remove(node);
-            _closedList.Add(node);
+            _closedList.Enqueue(node, node.Priority);
             node.OnClosedList = true;
 
             return true;
@@ -81,10 +67,24 @@ namespace AStar
         /// </summary>
         public AStarNode GetNextBestNode()
         {
-            if (!IsOpenListEmpty)
-                return _openList[0];
+            if (!OpenListEmpty)
+                return _openList.First;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Updates the open and closed lists
+        /// </summary>
+        public void UpdateLists(AStarNode node, float f)
+        {
+            if (!node.OnOpenList && !node.OnClosedList)
+                return;
+
+            if (node.OnOpenList)
+                _openList.UpdatePriority(node, f);
             else
-                return null;
+                _closedList.UpdatePriority(node, f);
         }
     }
 }

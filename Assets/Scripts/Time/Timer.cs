@@ -18,7 +18,7 @@ public static class Timer
             return;
         }
 
-        TimerInstance timer = new TimerInstance(hours, minutes, action);
+        var timer = new TimerInstance(hours, minutes, action);
         TimeManager.Instance.RegisterTimer(timer);
     }
 }
@@ -41,6 +41,8 @@ public class TimerInstance
         _timeUnit = -1;
         _targetTime = minutes % 60 + hours * 60;
         _action = action;
+
+        Tick();
     }
 
     /// <summary>
@@ -57,5 +59,3 @@ public class TimerInstance
         }
     }
 }
-
-public delegate void TimerAction();

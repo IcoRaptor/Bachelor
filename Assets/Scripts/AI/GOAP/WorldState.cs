@@ -5,6 +5,12 @@
     /// </summary>
     public sealed class WorldState
     {
+        #region Variables
+
+        private const int _NUM_SYMBOLS = 5;
+
+        #endregion
+
         #region Properties
 
         public STATE_SYMBOL[] Symbols { get; private set; }
@@ -13,9 +19,9 @@
 
         #region Constructors
 
-        public WorldState(int num)
+        public WorldState()
         {
-            Symbols = new STATE_SYMBOL[num];
+            Symbols = new STATE_SYMBOL[_NUM_SYMBOLS];
         }
 
         #endregion
@@ -53,6 +59,12 @@
 
         public static bool operator ==(WorldState a, WorldState b)
         {
+            var aNull = Equals(a, null);
+            var bNull = Equals(b, null);
+
+            if (aNull || bNull)
+                return aNull == bNull;
+
             STATE_SYMBOL[] aSymbols = a.Symbols;
             STATE_SYMBOL[] bSymbols = b.Symbols;
 

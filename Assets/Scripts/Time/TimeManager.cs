@@ -26,16 +26,17 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         get { return (TimeManager)_Instance; }
     }
 
-    public GameTime ScaledTime { get; private set; }
+    public GameTime GTime { get; private set; }
 
     #endregion
 
     private void Awake()
     {
-        ScaledTime = new GameTime
+        GTime = new GameTime
         {
-            ScaledMinutes = uint.MaxValue
+            Minutes = uint.MaxValue
         };
+
         _timeUnit = 60 * 12 - 1; // Start at 12:00
     }
 
@@ -47,19 +48,12 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         {
             _delta = 0f;
 
-            ++_timeUnit;
+            _timeUnit++;
             _timeUnitLarge = _timeUnit / 60;
 
-            ScaledTime.Update(_timeUnit, _timeUnitLarge);
+            GTime.Update(_timeUnit, _timeUnitLarge);
 
-            while (_timersToAdd.Count > 0)
-                _timers.Add(_timersToAdd.Pop());
-
-            while (_timersToRemove.Count > 0)
-                _timers.Remove(_timersToRemove.Pop());
-
-            foreach (var timer in _timers)
-                timer.Tick();
+            UpdateTimers();
         }
 
         UpdateUI();
@@ -91,18 +85,30 @@ public class TimeManager : SingletonAsComponent<TimeManager>
             _timersToRemove.Push(timer);
     }
 
+    private void UpdateTimers()
+    {
+        while (_timersToAdd.Count > 0)
+            _timers.Add(_timersToAdd.Pop());
+
+        while (_timersToRemove.Count > 0)
+            _timers.Remove(_timersToRemove.Pop());
+
+        foreach (var timer in _timers)
+            timer.Tick();
+    }
+
     /// <summary>
     /// Generates a string for the UI
     /// </summary>
     private void UpdateUI()
     {
         bool delta = _delta < 0.01f;
-        bool timePassed = ScaledTime.ScaledMinutes != _timeUnit % 60;
+        bool timePassed = GTime.Minutes != _timeUnit % 60;
 
         if (delta || timePassed)
             return;
 
-        string time = ScaledTime.ToString();
+        string time = GTime.TimeString;
         MessagingSystem.Instance.QueueMessage(new TimeTextMessage(time));
     }
 }
