@@ -8,17 +8,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float _walkSpeed = 0;
 
-    private Vector2 _move;
     private Rigidbody2D _rb;
     private Animator _anim;
+    private Vector2 _move;
 
     #endregion
 
     private void Start()
     {
-        _move = new Vector2();
         _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
+        _move = new Vector2();
     }
 
     private void Update()

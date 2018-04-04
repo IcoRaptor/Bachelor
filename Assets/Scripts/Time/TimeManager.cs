@@ -32,19 +32,17 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 
     private void Awake()
     {
-        GTime = new GameTime
-        {
-            Minutes = uint.MaxValue
-        };
-
         _timeUnit = 60 * 12 - 1; // Start at 12:00
+
+        GTime = new GameTime();
+        GTime.Update(_timeUnit, _timeUnitLarge);
     }
 
     private void Update()
     {
         _delta += Time.unscaledDeltaTime * _scale;
 
-        if (_delta >= 1.0f)
+        if (_delta >= 1f)
         {
             _delta = 0f;
 
@@ -52,11 +50,9 @@ public class TimeManager : SingletonAsComponent<TimeManager>
             _timeUnitLarge = _timeUnit / 60;
 
             GTime.Update(_timeUnit, _timeUnitLarge);
-
             UpdateTimers();
+            UpdateUI();
         }
-
-        UpdateUI();
     }
 
     /// <summary>
@@ -64,7 +60,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     /// </summary>
     public void AdjustTimeScale(float val)
     {
-        _scale = Mathf.Clamp(_scale + val, 2f, 30f);
+        _scale = Mathf.Clamp(_scale + val, 1f, 30f);
     }
 
     /// <summary>
@@ -85,6 +81,9 @@ public class TimeManager : SingletonAsComponent<TimeManager>
             _timersToRemove.Push(timer);
     }
 
+    /// <summary>
+    /// Adds, removes and updates registered timers
+    /// </summary>
     private void UpdateTimers()
     {
         while (_timersToAdd.Count > 0)
@@ -98,14 +97,11 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     }
 
     /// <summary>
-    /// Generates a string for the UI
+    /// Sends a message to the UI if the time changed
     /// </summary>
     private void UpdateUI()
     {
-        bool delta = _delta < 0.01f;
-        bool timePassed = GTime.Minutes != _timeUnit % 60;
-
-        if (delta || timePassed)
+        if (!(GameManager.Instance.GameState >= GAME_STATE.MAIN_SCENE))
             return;
 
         string time = GTime.TimeString;

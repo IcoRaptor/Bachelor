@@ -1,9 +1,21 @@
-﻿namespace AI
+﻿using UnityEngine;
+
+namespace AI
 {
-    /// <summary>
-    /// Controls the agent
-    /// </summary>
-    public sealed class AIAgent : BaseAgent
+    [RequireComponent(typeof(Blackboard))]
+    public class AIAgent : MonoBehaviour
     {
+        #region Variables
+
+#pragma warning disable 0414
+        private Blackboard _blackboard;
+#pragma warning restore
+
+        #endregion
+
+        private void Awake()
+        {
+            _blackboard = GetComponent<Blackboard>();
+        }
     }
 }

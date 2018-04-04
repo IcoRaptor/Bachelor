@@ -7,9 +7,7 @@ namespace AI
     {
         #region Variables
 
-#pragma warning disable 0414
         protected Blackboard _blackboard;
-#pragma warning restore
 
         #endregion
 
