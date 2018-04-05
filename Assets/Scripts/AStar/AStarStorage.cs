@@ -68,7 +68,7 @@ namespace AStar
         public AStarNode GetNextBestNode()
         {
             if (!OpenListEmpty)
-                return _openList.First;
+                return _openList.Dequeue();
 
             return null;
         }

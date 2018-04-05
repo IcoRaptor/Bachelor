@@ -112,17 +112,17 @@ namespace AStar
         /// </summary>
         private void PrintError(AStarCallback callback, Exception e = null)
         {
-            var callbackNull = callback == null;
+            bool callbackNull = callback == null;
 
-            var cb = callbackNull ?
+            string cb = callbackNull ?
                 "No callback defined" :
                 callback.Method.Name;
 
-            var go = callbackNull ?
+            string go = callbackNull ?
                 string.Empty :
                 ((MonoBehaviour)callback.Target).transform.parent.name;
 
-            var ex = e == null ?
+            string ex = e == null ?
                 "Item could not be queued!\n" :
                 e.Message;
 

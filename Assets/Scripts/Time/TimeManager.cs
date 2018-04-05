@@ -40,6 +40,9 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 
     private void Update()
     {
+        if (!(GameManager.Instance.GameState >= GAME_STATE.MAIN_SCENE))
+            return;
+
         _delta += Time.unscaledDeltaTime * _scale;
 
         if (_delta >= 1f)
@@ -101,9 +104,6 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     /// </summary>
     private void UpdateUI()
     {
-        if (!(GameManager.Instance.GameState >= GAME_STATE.MAIN_SCENE))
-            return;
-
         string time = GTime.TimeString;
         MessagingSystem.Instance.QueueMessage(new TimeTextMessage(time));
     }
