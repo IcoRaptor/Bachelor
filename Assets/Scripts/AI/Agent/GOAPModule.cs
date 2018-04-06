@@ -16,10 +16,7 @@ namespace AI.GOAP
 
         private void Start()
         {
-            var goal = new AStarGoalPlanning(null, null, null);
-
             _machine = new AStarMachine();
-            _machine.RunAStar(goal, OnFinished);
         }
 
         private void Update()

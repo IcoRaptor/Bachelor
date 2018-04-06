@@ -5,6 +5,6 @@
     /// </summary>
     public abstract class AStarMap
     {
-        public abstract void CreateNewNode(int id);
+        public abstract AStarNode CreateNewNode(string id);
     }
 }

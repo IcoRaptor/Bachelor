@@ -31,7 +31,7 @@ namespace AStar
 
         /// <summary>
         /// Checks if an A* search has finished.
-        ///  Calls OnAStarFinished
+        ///  Calls the AStarCallback
         /// </summary>
         public void Update()
         {
@@ -141,10 +141,15 @@ namespace AStar
     {
         #region Variables
 
+#pragma warning disable 0414
         private readonly AStarGoal _goal;
+        private readonly AStarMap _map;
         private readonly AStarStorage _storage;
+#pragma warning restore
 
         #endregion
+
+        #region Constructors
 
         public AStarSolver(AStarGoal goal)
         {
@@ -152,40 +157,26 @@ namespace AStar
             _storage = new AStarStorage();
         }
 
+        #endregion
+
         public RETURN_CODE Solve()
         {
+            // 1. Let P = starting node
+            // 2. Assign f, g, h to P
+            // 3. Add P to open list
+            // 4. Let B = node from open list with lowest f value
+            //      a. If B is goal then quit
+            //      b. If open list is empty quit
+            // 5. Let C = a valid node connected to B
+            //      a. Assign f, g, h to C
+            //      b. Check wheter C is on a list
+            //          i. If so, check if new path is better
+            //          ii. Else add C to open list
+            //      c. Repeat 5 for all valid children of B
+            // 6. Repeat from step 4
+
             try
             {
-                // 1. Let P = starting node
-                // 2. Assign f, g, h to P
-                // 3. Add P to open list
-                // 4. Let B = node from open list with lowest f value
-                //      a. If B is goal then quit
-                //      b. If open list is empty quit
-                // 5. Let C = a valid node connected to B
-                //      a. Assign f, g, h to C
-                //      b. Check wheter C is on a list
-                //          i. If so, check if new path is better
-                //          ii. Else add C to open list
-                //      c. Repeat 5 for all valid children of B
-                // 6. Repeat from step 4
-
-                // 1-3:
-                var p = _goal.GetStartNode();
-                _storage.AddNodeToOpenList(p);
-
-                // 6:
-                while (!_storage.OpenListEmpty)
-                {
-                    // 4:
-                    var b = _storage.GetNextBestNode();
-
-                    if (_goal.IsGoalNode(b))
-                        break;
-
-                    // 5: TODO
-                }
-
                 // Test, waits for 2 seconds
                 Thread.Sleep(2000);
             }

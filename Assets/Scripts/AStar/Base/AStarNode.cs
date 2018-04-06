@@ -16,7 +16,7 @@ namespace AStar
 
         #region Properties
 
-        public int ID { get; private set; }
+        public string ID { get; private set; }
 
         /// <summary>
         /// The root of this node
@@ -72,9 +72,9 @@ namespace AStar
 
         #region Constructors
 
-        public AStarNode(float g, float h, AStarNode root = null)
+        public AStarNode(float g, float h)
         {
-            Root = root;
+            Root = null;
 
             G = g;
             H = h;

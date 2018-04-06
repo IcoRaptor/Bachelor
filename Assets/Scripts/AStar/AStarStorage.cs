@@ -65,7 +65,7 @@ namespace AStar
         /// <summary>
         /// Returns the node with the lowest f value from the open list
         /// </summary>
-        public AStarNode GetNextBestNode()
+        public AStarNode GetBestNode()
         {
             if (!OpenListEmpty)
                 return _openList.Dequeue();

@@ -36,6 +36,8 @@ public class TimerInstance
 
     #endregion
 
+    #region Constructors
+
     public TimerInstance(int hours, int minutes, TimerAction action)
     {
         _timeUnit = -1;
@@ -44,6 +46,8 @@ public class TimerInstance
 
         Tick();
     }
+
+    #endregion
 
     /// <summary>
     /// Advances the timer and executes the action

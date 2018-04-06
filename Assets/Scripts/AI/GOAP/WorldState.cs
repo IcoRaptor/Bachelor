@@ -24,6 +24,14 @@
             Symbols = new STATE_SYMBOL[_NUM_SYMBOLS];
         }
 
+        public WorldState(STATE_SYMBOL[] symbols)
+        {
+            if (symbols.Length == _NUM_SYMBOLS)
+                Symbols = symbols;
+            else
+                Symbols = new STATE_SYMBOL[_NUM_SYMBOLS];
+        }
+
         #endregion
 
         /// <summary>
@@ -94,6 +102,11 @@
         }
 
         #endregion
+
+        public WorldState Copy()
+        {
+            return new WorldState(Symbols);
+        }
 
         public override int GetHashCode()
         {

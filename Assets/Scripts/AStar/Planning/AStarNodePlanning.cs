@@ -15,7 +15,7 @@ namespace AStar
 
         public AStarNodePlanning(WorldState state,
             float g, float h, AStarNode root = null)
-            : base(g, h, root)
+            : base(g, h)
         {
             State = state;
         }
