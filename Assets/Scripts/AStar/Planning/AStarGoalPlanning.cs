@@ -28,27 +28,20 @@ namespace AStar
 
         #endregion
 
-        public override void CalcValues(AStarNode node, out float g, out float h)
+        public override void CalculateValues(AStarNode node, out float g, out float h)
         {
             var action = Container.GetAction(node.ID);
             bool root = action == null;
 
             g = root ? 0 : action.Cost;
             h = _target.GetSymbolDifference(_current);
-
-            UnityEngine.Debug.LogFormat("g: {0}\nh: {1}", g, h);
         }
 
         public override bool IsGoalNode(AStarNode node)
         {
-            var castNode = node as AStarNodePlanning;
+            var nodePlanning = (AStarNodePlanning)node;
 
-            return castNode.Current == _target;
-        }
-
-        public override bool Validate()
-        {
-            return false;
+            return nodePlanning.Current == _target;
         }
     }
 }

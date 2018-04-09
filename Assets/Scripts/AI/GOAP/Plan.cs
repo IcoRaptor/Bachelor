@@ -2,6 +2,9 @@
 
 namespace AI.GOAP
 {
+    /// <summary>
+    /// Represents a list of valid actions
+    /// </summary>
     public class Plan
     {
         #region Variables

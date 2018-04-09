@@ -16,13 +16,18 @@
             };
 
             float g, h;
-            goal.CalcValues(node, out g, out h);
+            goal.CalculateValues(node, out g, out h);
 
             node.G = g;
             node.H = h;
             node.Priority = g + h;
 
             return node;
+        }
+
+        public override AStarNode[] GetNeighbours(string id)
+        {
+            return new AStarNode[0];
         }
     }
 }

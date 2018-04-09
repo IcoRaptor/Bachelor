@@ -1,4 +1,5 @@
 ﻿using Priority_Queue;
+using System.Collections.Generic;
 
 namespace AStar
 {
@@ -9,8 +10,10 @@ namespace AStar
     {
         #region Variables
 
+        private const int _MAX_SIZE = 20;
+
         private FastPriorityQueue<AStarNode> _openList;
-        private FastPriorityQueue<AStarNode> _closedList;
+        private LinkedList<AStarNode> _closedList;
 
         #endregion
 
@@ -27,8 +30,8 @@ namespace AStar
 
         public AStarStorage()
         {
-            _openList = new FastPriorityQueue<AStarNode>(10);
-            _closedList = new FastPriorityQueue<AStarNode>(10);
+            _openList = new FastPriorityQueue<AStarNode>(_MAX_SIZE);
+            _closedList = new LinkedList<AStarNode>();
         }
 
         #endregion
@@ -56,7 +59,7 @@ namespace AStar
                 return false;
 
             _openList.Remove(node);
-            _closedList.Enqueue(node, node.Priority);
+            _closedList.AddLast(node);
             node.OnClosedList = true;
 
             return true;
@@ -78,13 +81,8 @@ namespace AStar
         /// </summary>
         public void UpdateLists(AStarNode node, float f)
         {
-            if (!node.OnOpenList && !node.OnClosedList)
-                return;
-
             if (node.OnOpenList)
                 _openList.UpdatePriority(node, f);
-            else
-                _closedList.UpdatePriority(node, f);
         }
     }
 }

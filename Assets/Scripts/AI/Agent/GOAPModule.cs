@@ -18,10 +18,10 @@ namespace AI.GOAP
 
         private void Start()
         {
+            var test = new WorldState();
+
             _map = new AStarMapPlanning();
-            _goal = new AStarGoalPlanning(new TestGoal(
-                    new WorldState(),
-                    new WorldState()));
+            _goal = new AStarGoalPlanning(new TestGoal(test, test));
 
             _machine = new AStarMachine();
             _machine.RunAStar(_goal, _map, OnFinished);

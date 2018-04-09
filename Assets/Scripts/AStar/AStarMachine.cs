@@ -65,7 +65,7 @@ namespace AStar
                 try
                 {
                     if (goal == null || map == null)
-                        throw new ArgumentNullException("Goal/Map is null!");
+                        throw new ArgumentNullException("Goal/Map");
 
                     if (!ThreadPool.QueueUserWorkItem(e => Run(goal, map)))
                         throw new Exception("Item could not be queued!");
@@ -141,13 +141,11 @@ namespace AStar
     {
         #region Variables
 
-#pragma warning disable 0414
         private readonly AStarGoal _goal;
         private readonly AStarMap _map;
         private readonly AStarStorage _storage;
 
         private AStarResult _result;
-#pragma warning restore
 
         #endregion
 
@@ -182,21 +180,31 @@ namespace AStar
 
             try
             {
-                // 1-3:
                 var p = _map.CreateNewNode(_goal, "root");
                 _storage.AddNodeToOpenList(p);
 
-                // 6:
                 while (!_storage.OpenListEmpty)
                 {
                     var b = _storage.GetBestNode();
 
                     if (_goal.IsGoalNode(b))
                     {
-                        Debug.Log("Goal node reached!\n");
                         _result.Code = RETURN_CODE.SUCCESS;
+                        break;
                     }
+
+                    var neighbours = _map.GetNeighbours(b.ID);
+
+                    foreach (var c in neighbours)
+                    {
+                        if (!c.OnOpenList && !c.OnClosedList)
+                            _storage.AddNodeToOpenList(c);
+                    }
+
+                    _storage.AddNodeToClosedList(b);
                 }
+
+                Thread.Sleep(1000);
             }
             catch (Exception e)
             {

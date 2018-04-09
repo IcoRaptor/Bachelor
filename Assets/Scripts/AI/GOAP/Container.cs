@@ -46,10 +46,5 @@ namespace AI.GOAP
                 return null;
             }
         }
-
-        public static BaseAction[] GetNeighbours(string id)
-        {
-            return null;
-        }
     }
 }

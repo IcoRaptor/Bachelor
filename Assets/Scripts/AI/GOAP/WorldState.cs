@@ -26,10 +26,16 @@
 
         public WorldState(STATE_SYMBOL[] symbols)
         {
-            if (symbols.Length == _NUM_SYMBOLS)
-                Symbols = symbols;
-            else
+            if (symbols.Length != _NUM_SYMBOLS)
+            {
                 Init();
+                return;
+            }
+
+            Symbols = new STATE_SYMBOL[_NUM_SYMBOLS];
+
+            for (int i = 0; i < _NUM_SYMBOLS; i++)
+                Symbols[i] = symbols[i];
         }
 
         #endregion
