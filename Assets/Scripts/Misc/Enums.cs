@@ -5,7 +5,7 @@
     /// </summary>
     public enum STATE_SYMBOL
     {
-        UNSET = -1,
+        UNSET,
         SATISFIED,
         UNSATISFIED
     }
@@ -15,7 +15,7 @@ namespace AStar
 {
     public enum RETURN_CODE
     {
-        DEFAULT = -1,
+        DEFAULT,
         SUCCESS,
         ERROR
     }

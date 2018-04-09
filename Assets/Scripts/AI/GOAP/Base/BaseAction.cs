@@ -7,8 +7,15 @@
         protected STATE_SYMBOL[] _preconditions;
         protected STATE_SYMBOL[] _effects;
 
-        protected int _cost;
         protected uint _timeInMinutes;
+
+        #endregion
+
+        #region Properties
+
+        public string ID { get; private set; }
+
+        public int Cost { get; private set; }
 
         #endregion
 

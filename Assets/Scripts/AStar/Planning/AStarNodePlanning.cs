@@ -9,15 +9,18 @@ namespace AStar
     {
         #region Properties
 
-        public WorldState State { get; private set; }
+        public WorldState Current { get; set; }
+        public WorldState Target { get; set; }
 
         #endregion
 
-        public AStarNodePlanning(WorldState state,
-            float g, float h, AStarNode root = null)
-            : base(g, h)
+        #region Constructors
+
+        public AStarNodePlanning(string id)
         {
-            State = state;
+            ID = id;
         }
+
+        #endregion
     }
 }

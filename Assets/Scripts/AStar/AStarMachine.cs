@@ -12,7 +12,7 @@ namespace AStar
         private readonly object _lock = new object();
 
         private AStarCallback _callback = null;
-        private RETURN_CODE _code = RETURN_CODE.DEFAULT;
+        private AStarResult _result;
 
         private bool _running = false;
         private bool _wasRunning = false;
@@ -40,9 +40,9 @@ namespace AStar
                 if (_Finished)
                 {
                     if (_callback != null)
-                        _callback(_code);
+                        _callback(_result);
 
-                    _code = RETURN_CODE.DEFAULT;
+                    _result = new AStarResult();
                 }
 
                 _wasRunning = _running;
@@ -52,7 +52,7 @@ namespace AStar
         /// <summary>
         /// Queues an execution of A*
         /// </summary>
-        public bool RunAStar(AStarGoal goal, AStarCallback callback)
+        public bool RunAStar(AStarGoal goal, AStarMap map, AStarCallback callback)
         {
             lock (_lock)
             {
@@ -64,10 +64,10 @@ namespace AStar
 
                 try
                 {
-                    if (goal == null)
-                        throw new ArgumentNullException("AStarGoal");
+                    if (goal == null || map == null)
+                        throw new ArgumentNullException("Goal/Map is null!");
 
-                    if (!ThreadPool.QueueUserWorkItem(e => Run(goal)))
+                    if (!ThreadPool.QueueUserWorkItem(e => Run(goal, map)))
                         throw new Exception("Item could not be queued!");
 
                     _callback = callback;
@@ -87,22 +87,22 @@ namespace AStar
         /// <summary>
         /// Runs A* on the ThreadPool
         /// </summary>
-        private void Run(AStarGoal goal)
+        private void Run(AStarGoal goal, AStarMap map)
         {
-            var solver = new AStarSolver(goal);
-            RETURN_CODE code = solver.Solve();
+            var solver = new AStarSolver(goal, map);
+            AStarResult result = solver.Solve();
 
-            Terminate(code);
+            Terminate(result);
         }
 
         /// <summary>
         /// Exit function for Run
         /// </summary>
-        private void Terminate(RETURN_CODE code)
+        private void Terminate(AStarResult result)
         {
             lock (_lock)
             {
-                _code = code;
+                _result = result;
                 _running = false;
             }
         }
@@ -145,21 +145,26 @@ namespace AStar
         private readonly AStarGoal _goal;
         private readonly AStarMap _map;
         private readonly AStarStorage _storage;
+
+        private AStarResult _result;
 #pragma warning restore
 
         #endregion
 
         #region Constructors
 
-        public AStarSolver(AStarGoal goal)
+        public AStarSolver(AStarGoal goal, AStarMap map)
         {
             _goal = goal;
+            _map = map;
+
             _storage = new AStarStorage();
+            _result = new AStarResult();
         }
 
         #endregion
 
-        public RETURN_CODE Solve()
+        public AStarResult Solve()
         {
             // 1. Let P = starting node
             // 2. Assign f, g, h to P
@@ -177,18 +182,31 @@ namespace AStar
 
             try
             {
-                // Test, waits for 2 seconds
-                Thread.Sleep(2000);
+                // 1-3:
+                var p = _map.CreateNewNode(_goal, "root");
+                _storage.AddNodeToOpenList(p);
+
+                // 6:
+                while (!_storage.OpenListEmpty)
+                {
+                    var b = _storage.GetBestNode();
+
+                    if (_goal.IsGoalNode(b))
+                    {
+                        Debug.Log("Goal node reached!\n");
+                        _result.Code = RETURN_CODE.SUCCESS;
+                    }
+                }
             }
             catch (Exception e)
             {
                 Debugger.Log(LOG_TYPE.ERROR,
                     e.ToString());
 
-                return RETURN_CODE.ERROR;
+                _result.Code = RETURN_CODE.ERROR;
             }
 
-            return RETURN_CODE.SUCCESS;
+            return _result;
         }
     }
 }

@@ -16,17 +16,12 @@ namespace AStar
 
         #region Properties
 
-        public string ID { get; private set; }
+        public string ID { get; protected set; }
 
         /// <summary>
         /// The root of this node
         /// </summary>
         public AStarNode Root { get; set; }
-
-        /// <summary>
-        /// Fitness (G + H)
-        /// </summary>
-        public float F { get { return Priority; } }
 
         /// <summary>
         /// Cost from start node
@@ -70,24 +65,11 @@ namespace AStar
 
         #endregion
 
-        #region Constructors
-
-        public AStarNode(float g, float h)
+        /// <summary>
+        /// Call this after updating G or H
+        /// </summary>
+        public void Update(AStarStorage storage)
         {
-            Root = null;
-
-            G = g;
-            H = h;
-            Priority = G + H;
-        }
-
-        #endregion
-
-        public void Update(float g, float h, AStarStorage storage)
-        {
-            G = g;
-            H = h;
-
             storage.UpdateLists(this, G + H);
         }
     }

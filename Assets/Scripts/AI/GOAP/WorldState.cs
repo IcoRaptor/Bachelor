@@ -21,7 +21,7 @@
 
         public WorldState()
         {
-            Symbols = new STATE_SYMBOL[_NUM_SYMBOLS];
+            Init();
         }
 
         public WorldState(STATE_SYMBOL[] symbols)
@@ -29,7 +29,7 @@
             if (symbols.Length == _NUM_SYMBOLS)
                 Symbols = symbols;
             else
-                Symbols = new STATE_SYMBOL[_NUM_SYMBOLS];
+                Init();
         }
 
         #endregion
@@ -79,7 +79,7 @@
             if (aSymbols.Length != bSymbols.Length)
                 return false;
 
-            for (int i = 0; i < aSymbols.Length;)
+            for (int i = 0; i < aSymbols.Length; i++)
                 if (aSymbols[i] != bSymbols[i])
                     return false;
 
@@ -116,6 +116,14 @@
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
+        }
+
+        private void Init()
+        {
+            Symbols = new STATE_SYMBOL[_NUM_SYMBOLS];
+
+            for (var i = 0; i < _NUM_SYMBOLS; i++)
+                Symbols[i] = STATE_SYMBOL.UNSET;
         }
     }
 }
