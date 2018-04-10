@@ -25,7 +25,10 @@
             return node;
         }
 
-        public override AStarNode[] GetNeighbours(string id)
+        /// <summary>
+        /// Creates and returns all neighbours
+        /// </summary>
+        public override AStarNode[] GetNeighbours(AStarNode node)
         {
             return new AStarNode[0];
         }

@@ -19,12 +19,20 @@ namespace AI.GOAP
         private void Start()
         {
             var test = new WorldState();
+            var testGoal = new TestGoal(test, test);
 
             _map = new AStarMapPlanning();
-            _goal = new AStarGoalPlanning(new TestGoal(test, test));
+            _goal = new AStarGoalPlanning(testGoal);
+
+            var aSP = new AStarParams()
+            {
+                Goal = _goal,
+                Map = _map,
+                Callback = OnFinished
+            };
 
             _machine = new AStarMachine();
-            _machine.RunAStar(_goal, _map, OnFinished);
+            _machine.RunAStar(aSP);
         }
 
         private void Update()

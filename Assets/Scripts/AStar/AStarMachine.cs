@@ -1,5 +1,6 @@
 ﻿using Framework.Debugging;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
@@ -10,13 +11,13 @@ namespace AStar
         #region Variables
 
         private readonly object _lock = new object();
+        private bool _running = false;
+        private bool _wasRunning = false;
 
         private AStarCallback _callback = null;
         private AStarResult _result;
 
-        private bool _running = false;
-        private bool _wasRunning = false;
-        private bool _hasRun = false;
+        private Queue<AStarParams> _aStarQueue = new Queue<AStarParams>();
 
         #endregion
 
@@ -24,7 +25,7 @@ namespace AStar
 
         private bool _Finished
         {
-            get { return _hasRun && !_running && (_running != _wasRunning); }
+            get { return !_running && (_wasRunning != _running); }
         }
 
         #endregion
@@ -47,36 +48,35 @@ namespace AStar
 
                 _wasRunning = _running;
             }
+
+            if (_aStarQueue.Count > 0)
+                RunAStar(_aStarQueue.Dequeue());
         }
 
         /// <summary>
         /// Queues an execution of A*
         /// </summary>
-        public bool RunAStar(AStarGoal goal, AStarMap map, AStarCallback callback)
+        public bool RunAStar(AStarParams aSP)
         {
             lock (_lock)
             {
-                if (_hasRun && _running)
+                if (_running)
                 {
-                    PrintError(callback);
-                    return false;
+                    _aStarQueue.Enqueue(aSP);
+                    return true;
                 }
 
                 try
                 {
-                    if (goal == null || map == null)
-                        throw new ArgumentNullException("Goal/Map");
-
-                    if (!ThreadPool.QueueUserWorkItem(e => Run(goal, map)))
+                    if (!ThreadPool.QueueUserWorkItem(e => Run(aSP)))
                         throw new Exception("Item could not be queued!");
 
-                    _callback = callback;
-                    _hasRun = true;
+                    _callback = aSP.Callback;
                     _running = true;
                 }
                 catch (Exception e)
                 {
-                    PrintError(callback, e);
+                    PrintError(aSP.Callback, e);
                     return false;
                 }
 
@@ -87,10 +87,10 @@ namespace AStar
         /// <summary>
         /// Runs A* on the ThreadPool
         /// </summary>
-        private void Run(AStarGoal goal, AStarMap map)
+        private void Run(AStarParams aSP)
         {
-            var solver = new AStarSolver(goal, map);
-            AStarResult result = solver.Solve();
+            var solver = new AStarSolver(aSP);
+            var result = solver.Solve();
 
             Terminate(result);
         }
@@ -123,7 +123,7 @@ namespace AStar
                 ((MonoBehaviour)callback.Target).transform.parent.name;
 
             string ex = e == null ?
-                "Item could not be queued!\n" :
+                "Item could not be queued!" :
                 e.Message;
 
             if (callbackNull)
@@ -131,90 +131,9 @@ namespace AStar
             else
             {
                 Debugger.LogFormat(LOG_TYPE.WARNING,
-                    "{0}Callback: {1}, GO: {2}",
+                    "{0}\nCallback: {1}, GO: {2}",
                     ex, cb, go);
             }
-        }
-    }
-
-    internal class AStarSolver
-    {
-        #region Variables
-
-        private readonly AStarGoal _goal;
-        private readonly AStarMap _map;
-        private readonly AStarStorage _storage;
-
-        private AStarResult _result;
-
-        #endregion
-
-        #region Constructors
-
-        public AStarSolver(AStarGoal goal, AStarMap map)
-        {
-            _goal = goal;
-            _map = map;
-
-            _storage = new AStarStorage();
-            _result = new AStarResult();
-        }
-
-        #endregion
-
-        public AStarResult Solve()
-        {
-            // 1. Let P = starting node
-            // 2. Assign f, g, h to P
-            // 3. Add P to open list
-            // 4. Let B = node from open list with lowest f value
-            //      a. If B is goal then quit
-            //      b. If open list is empty quit
-            // 5. Let C = a valid node connected to B
-            //      a. Assign f, g, h to C
-            //      b. Check wheter C is on a list
-            //          i. If so, check if new path is better
-            //          ii. Else add C to open list
-            //      c. Repeat 5 for all valid children of B
-            // 6. Repeat from step 4
-
-            try
-            {
-                var p = _map.CreateNewNode(_goal, "root");
-                _storage.AddNodeToOpenList(p);
-
-                while (!_storage.OpenListEmpty)
-                {
-                    var b = _storage.GetBestNode();
-
-                    if (_goal.IsGoalNode(b))
-                    {
-                        _result.Code = RETURN_CODE.SUCCESS;
-                        break;
-                    }
-
-                    var neighbours = _map.GetNeighbours(b.ID);
-
-                    foreach (var c in neighbours)
-                    {
-                        if (!c.OnOpenList && !c.OnClosedList)
-                            _storage.AddNodeToOpenList(c);
-                    }
-
-                    _storage.AddNodeToClosedList(b);
-                }
-
-                Thread.Sleep(1000);
-            }
-            catch (Exception e)
-            {
-                Debugger.Log(LOG_TYPE.ERROR,
-                    e.ToString());
-
-                _result.Code = RETURN_CODE.ERROR;
-            }
-
-            return _result;
         }
     }
 }

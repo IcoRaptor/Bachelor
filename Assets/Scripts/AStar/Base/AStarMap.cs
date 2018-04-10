@@ -7,6 +7,6 @@
     {
         public abstract AStarNode CreateNewNode(AStarGoal goal, string id);
 
-        public abstract AStarNode[] GetNeighbours(string id);
+        public abstract AStarNode[] GetNeighbours(AStarNode node);
     }
 }
