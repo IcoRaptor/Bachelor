@@ -19,10 +19,10 @@ namespace AStar
 
         #region Constructors
 
-        public AStarSolver(AStarParams aSP)
+        public AStarSolver(AStarParams param)
         {
-            _goal = aSP.Goal;
-            _map = aSP.Map;
+            _goal = param.Goal;
+            _map = param.Map;
 
             _storage = new AStarStorage();
             _result = new AStarResult()

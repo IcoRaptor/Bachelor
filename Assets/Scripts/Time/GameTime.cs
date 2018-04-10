@@ -19,7 +19,7 @@
         Days = 1 + timeUnitLarge / 24;
 
         TimeString = string.Format(
-            "Day {0} - {1:00}h {2:00}",
+            "Day {0} - {1:00} : {2:00}",
             Days, Hours, Minutes);
     }
 }

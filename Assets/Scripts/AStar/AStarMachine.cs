@@ -56,40 +56,38 @@ namespace AStar
         /// <summary>
         /// Queues an execution of A*
         /// </summary>
-        public bool RunAStar(AStarParams aSP)
+        public void RunAStar(AStarParams param)
         {
             lock (_lock)
             {
                 if (_running)
                 {
-                    _aStarQueue.Enqueue(aSP);
-                    return true;
+                    _aStarQueue.Enqueue(param);
+                    return;
                 }
 
                 try
                 {
-                    if (!ThreadPool.QueueUserWorkItem(e => Run(aSP)))
+                    if (!ThreadPool.QueueUserWorkItem(e => Run(param)))
                         throw new Exception("Item could not be queued!");
 
-                    _callback = aSP.Callback;
+                    _callback = param.Callback;
                     _running = true;
                 }
                 catch (Exception e)
                 {
-                    PrintError(aSP.Callback, e);
-                    return false;
+                    PrintError(param.Callback, e);
+                    _aStarQueue.Enqueue(param);
                 }
-
-                return true;
             }
         }
 
         /// <summary>
         /// Runs A* on the ThreadPool
         /// </summary>
-        private void Run(AStarParams aSP)
+        private void Run(AStarParams param)
         {
-            var solver = new AStarSolver(aSP);
+            var solver = new AStarSolver(param);
             var result = solver.Solve();
 
             Terminate(result);
@@ -110,7 +108,7 @@ namespace AStar
         /// <summary>
         /// Prints an error message
         /// </summary>
-        private void PrintError(AStarCallback callback, Exception e = null)
+        private void PrintError(AStarCallback callback, Exception e)
         {
             bool callbackNull = callback == null;
 
@@ -122,17 +120,13 @@ namespace AStar
                 string.Empty :
                 ((MonoBehaviour)callback.Target).transform.parent.name;
 
-            string ex = e == null ?
-                "Item could not be queued!" :
-                e.Message;
-
             if (callbackNull)
-                Debugger.Log(LOG_TYPE.WARNING, ex + cb);
+                Debugger.Log(LOG_TYPE.WARNING, e.Message + "\n" + cb);
             else
             {
                 Debugger.LogFormat(LOG_TYPE.WARNING,
                     "{0}\nCallback: {1}, GO: {2}",
-                    ex, cb, go);
+                    e.Message, cb, go);
             }
         }
     }

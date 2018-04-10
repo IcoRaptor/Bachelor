@@ -4,6 +4,7 @@
     {
         #region Variables
 
+        protected int _relevance;
         protected bool _satisfied;
         protected Plan _plan;
 
