@@ -17,6 +17,6 @@ namespace AStar
     {
         DEFAULT,
         SUCCESS,
-        ERROR
+        ERROR,
     }
 }

@@ -1,11 +1,10 @@
 ﻿using Framework.Debugging;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace AStar
 {
-    internal class AStarSolver
+    internal class AStarSolver : IDisposable
     {
         #region Variables
 
@@ -13,7 +12,13 @@ namespace AStar
         private readonly AStarMap _map;
         private readonly AStarStorage _storage;
 
-        private AStarResult _result;
+        private volatile bool _running;
+
+        #endregion
+
+        #region Properties
+
+        public AStarResult Result { get; private set; }
 
         #endregion
 
@@ -25,16 +30,14 @@ namespace AStar
             _map = param.Map;
 
             _storage = new AStarStorage();
-            _result = new AStarResult()
-            {
-                Code = RETURN_CODE.DEFAULT,
-                Nodes = new LinkedList<AStarNode>()
-            };
+            Result = new AStarResult();
+
+            _running = true;
         }
 
         #endregion
 
-        public AStarResult Solve()
+        public void Solve()
         {
             // 1. Let P = starting node
             // 2. Assign f, g, h to P
@@ -63,12 +66,12 @@ namespace AStar
                     var b = _storage.GetBestNode();
 
                     // Add to plan
-                    _result.Nodes.AddLast(b);
+                    Result.Nodes.AddLast(b);
 
                     // Stop if this is the goal node
                     if (_goal.IsGoalNode(b))
                     {
-                        _result.Code = RETURN_CODE.SUCCESS;
+                        Result.Code = RETURN_CODE.SUCCESS;
                         break;
                     }
 
@@ -95,10 +98,18 @@ namespace AStar
                 Debugger.Log(LOG_TYPE.ERROR,
                     e.ToString());
 
-                _result.Code = RETURN_CODE.ERROR;
+                Result.Code = RETURN_CODE.ERROR;
             }
+        }
 
-            return _result;
+        public void Dispose()
+        {
+            _running = false;
+        }
+
+        public bool IsFinished()
+        {
+            return _running == false;
         }
     }
 }

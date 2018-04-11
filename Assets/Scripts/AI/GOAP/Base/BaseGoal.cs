@@ -1,4 +1,6 @@
-﻿namespace AI.GOAP
+﻿using AStar;
+
+namespace AI.GOAP
 {
     public abstract class BaseGoal
     {
@@ -17,16 +19,28 @@
 
         #endregion
 
+        public virtual void BuildPlan()
+        {
+            var param = new AStarParams()
+            {
+                Goal = new AStarGoalPlanning(this),
+                Map = new AStarMapPlanning(),
+                Callback = OnFinished
+            };
+
+            AStarMachine.Instance.RunAStar(param);
+        }
+
+        public virtual bool Validate()
+        {
+            if (_plan == null)
+                return true;
+
+            return _plan.Validate();
+        }
+
         public abstract void UpdateRelevance();
 
-        public abstract void BuildPlan();
-
-        /// <summary>
-        /// Returns the difference between the target and current WS
-        /// </summary>
-        public int GetDifference()
-        {
-            return Target.GetSymbolDifference(Current);
-        }
+        protected abstract void OnFinished(AStarResult result);
     }
 }
