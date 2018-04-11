@@ -6,8 +6,6 @@ namespace AI.GOAP
     {
         #region Variables
 
-        protected int _relevance;
-        protected bool _satisfied;
         protected Plan _plan;
 
         #endregion
@@ -16,6 +14,10 @@ namespace AI.GOAP
 
         public WorldState Target { get; protected set; }
         public WorldState Current { get; protected set; }
+
+        public string ID { get; set; }
+        public int Relevance { get; protected set; }
+        public bool Satisfied { get; protected set; }
 
         #endregion
 

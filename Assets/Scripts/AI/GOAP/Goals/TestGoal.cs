@@ -21,7 +21,7 @@ namespace AI.GOAP
         public override void UpdateRelevance()
         {
             Debug.Log("Updating relevance to 1...\n");
-            _relevance = 1;
+            Relevance = 1;
         }
 
         protected override void OnFinished(AStarResult result)

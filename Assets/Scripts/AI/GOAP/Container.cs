@@ -12,6 +12,8 @@ namespace AI.GOAP
 
         private static Dictionary<string, BaseAction> _actionCache =
             new Dictionary<string, BaseAction>();
+        private static Dictionary<string, BaseGoal> _goalCache =
+            new Dictionary<string, BaseGoal>();
 
         #endregion
 
@@ -42,6 +44,43 @@ namespace AI.GOAP
                         "GetAction: ID '{0}' is doesn't exist!\n",
                         id);
                 }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns the number of cached actions
+        /// </summary>
+        public static int ActionCount()
+        {
+            return _actionCache.Count;
+        }
+
+        /// <summary>
+        /// Adds a goal to the goal cache
+        /// </summary>
+        public static void AddGoal(BaseGoal goal)
+        {
+            if (!_goalCache.ContainsKey(goal.ID))
+                _goalCache.Add(goal.ID, goal);
+        }
+
+        /// <summary>
+        /// Returns the goal with the given ID.
+        ///  May return null
+        /// </summary>
+        public static BaseGoal GetGoal(string id)
+        {
+            try
+            {
+                return _goalCache[id];
+            }
+            catch
+            {
+                Debugger.LogFormat(LOG_TYPE.WARNING,
+                       "GetGoal: ID '{0}' is doesn't exist!\n",
+                       id);
 
                 return null;
             }

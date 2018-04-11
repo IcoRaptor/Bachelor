@@ -1,4 +1,5 @@
-﻿using Priority_Queue;
+﻿using AI.GOAP;
+using Priority_Queue;
 using System.Collections.Generic;
 
 namespace AStar
@@ -9,8 +10,6 @@ namespace AStar
     public class AStarStorage
     {
         #region Variables
-
-        private const int _MAX_SIZE = 20;
 
         private FastPriorityQueue<AStarNode> _openList;
         private LinkedList<AStarNode> _closedList;
@@ -30,7 +29,9 @@ namespace AStar
 
         public AStarStorage()
         {
-            _openList = new FastPriorityQueue<AStarNode>(_MAX_SIZE);
+            int max = Container.ActionCount() + 10;
+
+            _openList = new FastPriorityQueue<AStarNode>(max);
             _closedList = new LinkedList<AStarNode>();
         }
 
