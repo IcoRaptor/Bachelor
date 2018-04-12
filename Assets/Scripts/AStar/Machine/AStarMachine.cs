@@ -11,12 +11,16 @@ namespace AStar
     {
         #region Variables
 
+        private const float _UPDATES_PER_SECOND = 5f;
+
         private readonly object _lock = new object();
 
         private List<AStarSolver> _solvers = new List<AStarSolver>();
         private Stack<AStarSolver> _solversToRemove = new Stack<AStarSolver>();
         private Dictionary<AStarSolver, AStarCallback> _callbacks =
             new Dictionary<AStarSolver, AStarCallback>();
+
+        private float _delta;
 
         #endregion
 
@@ -31,6 +35,11 @@ namespace AStar
 
         private void Update()
         {
+            _delta += Time.unscaledDeltaTime * _UPDATES_PER_SECOND;
+
+            if (_delta < 1.0f)
+                return;
+
             lock (_lock)
             {
                 while (_solversToRemove.Count > 0)
@@ -49,38 +58,40 @@ namespace AStar
                     }
                 }
             }
+
+            _delta = 0;
         }
 
         /// <summary>
         /// Queues an execution of A*
         /// </summary>
-        public void RunAStar(AStarParams param)
+        public void RunAStar(AStarParams asp)
         {
             try
             {
-                if (param == null)
+                if (asp == null)
                     throw new ArgumentNullException("param");
 
-                if (!ThreadPool.QueueUserWorkItem(e => Run(param)))
+                if (!ThreadPool.QueueUserWorkItem(e => Run(asp)))
                     throw new Exception("Item could not be queued!");
             }
             catch (Exception e)
             {
-                PrintError(param.Callback, e);
+                PrintError(asp.Callback, e);
             }
         }
 
         /// <summary>
         /// Runs A* on the ThreadPool
         /// </summary>
-        private void Run(AStarParams param)
+        private void Run(AStarParams asp)
         {
-            using (var solver = new AStarSolver(param))
+            using (var solver = new AStarSolver(asp))
             {
                 lock (_lock)
                 {
                     _solvers.Add(solver);
-                    _callbacks.Add(solver, param.Callback);
+                    _callbacks.Add(solver, asp.Callback);
                 }
 
                 solver.Solve();

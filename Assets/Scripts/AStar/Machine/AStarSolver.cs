@@ -24,10 +24,10 @@ namespace AStar
 
         #region Constructors
 
-        public AStarSolver(AStarParams param)
+        public AStarSolver(AStarParams asp)
         {
-            _goal = param.Goal;
-            _map = param.Map;
+            _goal = asp.Goal;
+            _map = asp.Map;
 
             _storage = new AStarStorage();
             Result = new AStarResult();
@@ -91,6 +91,7 @@ namespace AStar
                     _storage.AddNodeToClosedList(b);
                 }
 
+                // Test
                 Thread.Sleep(1000);
             }
             catch (Exception e)

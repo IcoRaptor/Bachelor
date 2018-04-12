@@ -8,12 +8,11 @@ public static class Global { }
 /// </summary>
 public enum GAME_STATE
 {
-    DEFAULT = -1,
+    DEFAULT,
     SHUTDOWN,
     FADING,
     MAIN_SCENE,
     TOWN_1,
-    TOWN_2,
 }
 
 /// <summary>

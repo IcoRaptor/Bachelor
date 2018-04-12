@@ -16,7 +16,8 @@ public class GameStart : MonoBehaviour
 #else
         yield return new WaitForSecondsRealtime(1.5f);
 #endif
-        GOAPXmlReader.ReadFile(null);
+        GOAPXmlReader.ReadFile(new XmlFileInfo("GoalSet"));
+
         GameManager.Instance.SetGameState(GAME_STATE.MAIN_SCENE);
     }
 }

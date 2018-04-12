@@ -2,7 +2,8 @@
 {
     #region Variables
 
-    private const string _RELATIVE_BASE = @"Scripts/AI/GOAP/XML/Files";
+    private const string _XML = @".xml";
+    private const string _RELATIVE_BASE = @"Scripts/AI/GOAP/XML/Resources/";
 
     #endregion
 
@@ -18,7 +19,11 @@
 
     public XmlFileInfo(string fileName)
     {
-        FileName = fileName;
+        string end = fileName.EndsWith(_XML) ?
+            string.Empty :
+            _XML;
+
+        FileName = fileName + end;
         RelativePath = _RELATIVE_BASE + FileName;
     }
 

@@ -78,8 +78,6 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
 
             case GAME_STATE.TOWN_1:
 
-            case GAME_STATE.TOWN_2:
-
             default:
                 Debugger.LogFormat(LOG_TYPE.WARNING,
                     "GameState: {0} not implemented!\n",

@@ -11,10 +11,14 @@ namespace AI.GOAP
     /// </summary>
     public static class GOAPXmlReader
     {
+        /// <summary>
+        /// Reads the specified XML file and adds the content to the Container
+        /// </summary>
         public static bool ReadFile(XmlFileInfo info)
         {
             if (info == null)
                 return false;
+
 #if UNITY_EDITOR
             return ReadWithDocument(info);
 #else
