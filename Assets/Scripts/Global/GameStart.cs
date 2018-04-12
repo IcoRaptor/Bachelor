@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using AI.GOAP;
+using System.Collections;
 using UnityEngine;
 
 public class GameStart : MonoBehaviour
@@ -15,6 +16,7 @@ public class GameStart : MonoBehaviour
 #else
         yield return new WaitForSecondsRealtime(1.5f);
 #endif
+        GOAPXmlReader.ReadFile(null);
         GameManager.Instance.SetGameState(GAME_STATE.MAIN_SCENE);
     }
 }
