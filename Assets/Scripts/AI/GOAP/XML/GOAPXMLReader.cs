@@ -12,21 +12,34 @@ namespace AI.GOAP
     public static class GOAPXmlReader
     {
         /// <summary>
-        /// Reads the specified XML file and adds the content to the Container
+        /// Reads all XML files
         /// </summary>
-        public static bool ReadFile(XmlFileInfo info)
+        public static bool ReadAll()
+        {
+            var goalSet = new XmlFileInfo(Strings.GOAL_SET);
+
+            if (!ReadFile(goalSet, XML_TYPE.GOAL_SET))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Reads the specified XML file
+        /// </summary>
+        public static bool ReadFile(XmlFileInfo info, XML_TYPE type)
         {
             if (info == null)
                 return false;
 
 #if UNITY_EDITOR
-            return ReadWithDocument(info);
+            return ReadEditor(info, type);
 #else
-            return ReadWithReader(info);
+            return ReadRelease(info, type);
 #endif
         }
 
-        private static bool ReadWithDocument(XmlFileInfo info)
+        private static bool ReadEditor(XmlFileInfo info, XML_TYPE type)
         {
             var doc = new XmlDocument();
 
@@ -47,44 +60,75 @@ namespace AI.GOAP
                 return false;
             }
 
-            /*
-            var nodes = doc.SelectNodes("//x/path");
-
-            foreach (XmlNode node in nodes)
-            {
-                var name = node.SelectSingleNode("name");
-            }
-            */
-
-            return true;
+            return ReadDocument(doc, type);
         }
 
-        private static bool ReadWithReader(XmlFileInfo info)
+        private static bool ReadRelease(XmlFileInfo info, XML_TYPE type)
         {
             var file = Resources.Load(info.FileName) as TextAsset;
 
             if (file == null)
-                return false;
+            {
+                Debugger.LogFormat(LOG_TYPE.ERROR,
+                    "File '{0}' couldn't be loaded!\n",
+                    info.FileName);
 
-            using (var stream = new MemoryStream(file.bytes, false))
-                return ReadStream(stream);
+                return false;
+            }
+
+            var doc = new XmlDocument();
+
+            try
+            {
+                using (var stream = new MemoryStream(file.bytes, false))
+                    doc.Load(stream);
+            }
+            catch (Exception e)
+            {
+                Debugger.LogFormat(LOG_TYPE.ERROR,
+                    "{0}\n({1})",
+                    e.Message, e.TargetSite);
+
+                return false;
+            }
+
+            return ReadDocument(doc, type);
         }
 
-        private static bool ReadStream(MemoryStream stream)
+        private static bool ReadDocument(XmlDocument doc, XML_TYPE type)
         {
-            using (var reader = XmlReader.Create(stream))
+            switch (type)
             {
-                while (reader.Read())
-                {
-                    if (!reader.IsStartElement())
-                        continue;
+                case XML_TYPE.AGENT:
+                    return ReadAgent(doc);
 
-                    switch (reader.Name)
-                    {
-                        default:
-                            break;
-                    }
-                }
+                case XML_TYPE.ACTION_SET:
+                    return ReadActionSet(doc);
+
+                case XML_TYPE.GOAL_SET:
+                    return ReadGoalSet(doc);
+
+                default:
+                    return false;
+            }
+        }
+
+        private static bool ReadAgent(XmlDocument doc)
+        {
+            return true;
+        }
+
+        private static bool ReadActionSet(XmlDocument doc)
+        {
+            return true;
+        }
+
+        private static bool ReadGoalSet(XmlDocument doc)
+        {
+            var nodes = doc.SelectNodes("//GoalSet/goal");
+
+            foreach (XmlNode node in nodes)
+            {
             }
 
             return true;

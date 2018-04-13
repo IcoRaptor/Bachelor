@@ -59,9 +59,7 @@ public class FollowCamera : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 dist = _rb.position - (Vector2)_pos;
-
-        // Move the camera and avoid the mini shake
+        var dist = _rb.position - (Vector2)_pos;
 
         if (dist.sqrMagnitude > 0.00005f)
             _rb.MovePosition(_pos);

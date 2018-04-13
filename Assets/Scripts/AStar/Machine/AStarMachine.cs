@@ -11,7 +11,7 @@ namespace AStar
     {
         #region Variables
 
-        private const float _UPDATES_PER_SECOND = 5f;
+        private const int _UPDATES_PER_SECOND = 5;
 
         private readonly object _lock = new object();
 

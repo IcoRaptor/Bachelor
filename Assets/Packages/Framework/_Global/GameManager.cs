@@ -1,4 +1,5 @@
-﻿using Framework;
+﻿using AI.GOAP;
+using Framework;
 using Framework.Debugging;
 using Framework.Messaging;
 using UnityEngine.SceneManagement;
@@ -71,6 +72,7 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
 
             case GAME_STATE.MAIN_SCENE:
                 WakeUpSystems();
+                GOAPXmlReader.ReadAll();
                 SceneManager.LoadScene(1);
                 break;
 

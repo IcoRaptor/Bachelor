@@ -1,16 +1,15 @@
 ﻿public class XmlFileInfo
 {
-    #region Variables
-
-    private const string _XML = @".xml";
-    private const string _RELATIVE_BASE = @"Scripts/AI/GOAP/XML/Resources/";
-
-    #endregion
-
     #region Properties
 
+    /// <summary>
+    /// Name of the file
+    /// </summary>
     public string FileName { get; private set; }
 
+    /// <summary>
+    /// Path to the file relative to the Assets folder
+    /// </summary>
     public string RelativePath { get; private set; }
 
     #endregion
@@ -19,12 +18,17 @@
 
     public XmlFileInfo(string fileName)
     {
-        string end = fileName.EndsWith(_XML) ?
-            string.Empty :
-            _XML;
+        bool ending = fileName.Contains(".");
 
-        FileName = fileName + end;
-        RelativePath = _RELATIVE_BASE + FileName;
+        if (ending)
+            fileName = fileName.Split('.')[0];
+
+#if UNITY_EDITOR
+        FileName = fileName + Strings.XML;
+        RelativePath = Strings.RELATIVE_BASE + FileName;
+#else
+        FileName = fileName;
+#endif
     }
 
     #endregion

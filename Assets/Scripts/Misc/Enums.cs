@@ -9,6 +9,13 @@
         SATISFIED,
         UNSATISFIED
     }
+
+    public enum XML_TYPE
+    {
+        AGENT,
+        GOAL_SET,
+        ACTION_SET
+    }
 }
 
 namespace AStar

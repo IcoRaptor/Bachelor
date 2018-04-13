@@ -1,9 +1,4 @@
 ﻿/// <summary>
-/// Global access
-/// </summary>
-public static class Global { }
-
-/// <summary>
 /// The state the game is in
 /// </summary>
 public enum GAME_STATE

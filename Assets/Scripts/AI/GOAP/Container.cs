@@ -38,7 +38,7 @@ namespace AI.GOAP
             }
             catch
             {
-                if (string.CompareOrdinal(id, "root") != 0)
+                if (string.CompareOrdinal(id, Strings.ROOT_NODE) != 0)
                 {
                     Debugger.LogFormat(LOG_TYPE.WARNING,
                         "GetAction: ID '{0}' is doesn't exist!\n",

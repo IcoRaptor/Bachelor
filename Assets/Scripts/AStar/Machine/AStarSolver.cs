@@ -56,7 +56,7 @@ namespace AStar
             try
             {
                 // Create start node and add it to the open list
-                var p = _map.CreateNewNode(_goal, "root");
+                var p = _map.CreateNewNode(_goal, Strings.ROOT_NODE);
                 _storage.AddNodeToOpenList(p);
 
                 // Iterate the open list

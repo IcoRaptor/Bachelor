@@ -14,8 +14,6 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     private Stack<TimerInstance> _timersToRemove = new Stack<TimerInstance>();
 
     private float _delta;
-    private uint _timeUnit;
-    private uint _timeUnitLarge;
 
     #endregion
 
@@ -32,30 +30,24 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 
     private void Awake()
     {
-        _timeUnit = 60 * 12 - 1; // Start at 12:00
-
-        GTime = new GameTime();
-        GTime.Update(_timeUnit, _timeUnitLarge);
+        GTime = GameTime.InitialTime;
     }
 
     private void Update()
     {
-        if (!(GameManager.Instance.GameState >= GAME_STATE.MAIN_SCENE))
+        if (GameManager.Instance.GameState < GAME_STATE.MAIN_SCENE)
             return;
 
         _delta += Time.unscaledDeltaTime * _scale;
 
-        if (_delta >= 1f)
-        {
-            _delta = 0f;
+        if (_delta < 1f)
+            return;
 
-            _timeUnit++;
-            _timeUnitLarge = _timeUnit / 60;
+        _delta = 0f;
 
-            GTime.Update(_timeUnit, _timeUnitLarge);
-            UpdateTimers();
-            UpdateUI();
-        }
+        GTime.Update();
+        UpdateTimers();
+        UpdateUI();
     }
 
     /// <summary>
