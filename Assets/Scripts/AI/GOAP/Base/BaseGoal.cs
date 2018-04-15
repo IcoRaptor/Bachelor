@@ -41,7 +41,7 @@ namespace AI.GOAP
             return _plan.Validate();
         }
 
-        public abstract void UpdateRelevance();
+        public abstract void UpdateRelevance(WorldState current);
 
         protected abstract void OnFinished(AStarResult result);
     }

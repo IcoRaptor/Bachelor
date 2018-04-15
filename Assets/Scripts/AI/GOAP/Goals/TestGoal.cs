@@ -8,19 +8,17 @@ namespace AI.GOAP
         public TestGoal()
         {
             Target = new WorldState();
-            Current = new WorldState();
         }
 
         public override void BuildPlan()
         {
             Debug.Log("TestGoal: Building plan...\n");
-
             base.BuildPlan();
         }
 
-        public override void UpdateRelevance()
+        public override void UpdateRelevance(WorldState current)
         {
-            Debug.Log("Updating relevance to 1...\n");
+            Current = current.Copy();
             Relevance = 1;
         }
 

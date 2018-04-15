@@ -13,7 +13,7 @@ public class GameStart : MonoBehaviour
 #if UNITY_EDITOR
         yield return null;
 #else
-        yield return new WaitForSecondsRealtime(1.0f);
+        yield return new WaitForSecondsRealtime(1.5f);
 #endif
         GameManager.Instance.SetGameState(GAME_STATE.MAIN_SCENE);
     }

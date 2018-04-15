@@ -45,7 +45,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 
         _delta = 0f;
 
-        GTime.Update();
+        GTime.Tick();
         UpdateTimers();
         UpdateUI();
     }

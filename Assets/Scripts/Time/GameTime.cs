@@ -35,46 +35,37 @@
 
     #endregion
 
-    public void Update()
+    public void Tick()
     {
         // Update minutes
 
-        if (Minutes + 1 != 60)
-        {
-            Minutes++;
-            TimeString = GenerateTimeString(
-                Days,
-                Hours,
-                Minutes);
+        Minutes = Minutes + 1 == 60 ?
+            0 :
+            Minutes + 1;
 
+        if (Minutes != 0)
+        {
+            TimeString = GenerateTimeString(Days, Hours, Minutes);
             return;
         }
-
-        Minutes = 0;
 
         // Update hours
 
-        if (Hours + 1 != 24)
-        {
-            Hours++;
-            TimeString = GenerateTimeString(
-                Days,
-                Hours,
-                Minutes);
+        Hours = Hours + 1 == 24 ?
+            0 :
+            Hours + 1;
 
+        if (Hours != 0)
+        {
+            TimeString = GenerateTimeString(Days, Hours, Minutes);
             return;
         }
-
-        Hours = 0;
 
         // Update days
 
         Days++;
 
-        TimeString = GenerateTimeString(
-            Days,
-            Hours,
-            Minutes);
+        TimeString = GenerateTimeString(Days, Hours, Minutes);
     }
 
     private static string GenerateTimeString(uint days, uint hours, uint minutes)

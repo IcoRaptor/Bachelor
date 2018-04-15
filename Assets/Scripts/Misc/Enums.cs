@@ -1,8 +1,5 @@
 ﻿namespace AI.GOAP
 {
-    /// <summary>
-    /// Represents a world state symbol
-    /// </summary>
     public enum STATE_SYMBOL
     {
         UNSET,
@@ -25,5 +22,6 @@ namespace AStar
         DEFAULT,
         SUCCESS,
         ERROR,
+        NO_PATH_FOUND
     }
 }

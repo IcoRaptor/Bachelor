@@ -14,6 +14,7 @@
         private void Start()
         {
             _goal = new TestGoal();
+            _goal.UpdateRelevance(new WorldState());
             _goal.BuildPlan();
         }
     }

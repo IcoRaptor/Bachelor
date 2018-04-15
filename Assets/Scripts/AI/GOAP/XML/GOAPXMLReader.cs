@@ -70,7 +70,7 @@ namespace AI.GOAP
             if (file == null)
             {
                 Debugger.LogFormat(LOG_TYPE.ERROR,
-                    "File '{0}' couldn't be loaded!\n",
+                    "File '{0}' not found!\n",
                     info.FileName);
 
                 return false;
@@ -125,10 +125,11 @@ namespace AI.GOAP
 
         private static bool ReadGoalSet(XmlDocument doc)
         {
-            var nodes = doc.SelectNodes("//GoalSet/goal");
+            var nodes = doc.SelectNodes(Strings.XPATH_GOAL);
 
             foreach (XmlNode node in nodes)
             {
+                Debug.Log(node.Attributes[Strings.ATTR_ID].Value + "\n");
             }
 
             return true;
