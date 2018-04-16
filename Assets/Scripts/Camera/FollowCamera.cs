@@ -7,7 +7,7 @@ public class FollowCamera : MonoBehaviour
 
     [Header("Scale")]
     [SerializeField]
-    [Range(0.5f, 2f)]
+    [Range(1f, 5f)]
     private float _scale = 0;
 
     [Header("Follow")]
@@ -29,7 +29,7 @@ public class FollowCamera : MonoBehaviour
 
     private float _ScaledSize
     {
-        get { return Screen.height / 100f / _scale; }
+        get { return Screen.height / 25f / _scale; }
     }
 
     #endregion

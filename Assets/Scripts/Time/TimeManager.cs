@@ -43,11 +43,12 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         if (_delta < 1f)
             return;
 
-        _delta = 0f;
-
         GTime.Tick();
+
         UpdateTimers();
         UpdateUI();
+
+        _delta = 0f;
     }
 
     /// <summary>
@@ -61,7 +62,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     /// <summary>
     /// Adds a timer. The timer will be added before the next tick
     /// </summary>
-    public void RegisterTimer(TimerInstance timer)
+    internal void RegisterTimer(TimerInstance timer)
     {
         if (!_timers.Contains(timer))
             _timersToAdd.Push(timer);
@@ -70,7 +71,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     /// <summary>
     /// Removes a timer. The timer will be removed before the next tick
     /// </summary>
-    public void UnregisterTimer(TimerInstance timer)
+    internal void UnregisterTimer(TimerInstance timer)
     {
         if (_timers.Contains(timer))
             _timersToRemove.Push(timer);
@@ -92,7 +93,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     }
 
     /// <summary>
-    /// Sends a message to the UI if the time changed
+    /// Sends a message to the UI displaying the time
     /// </summary>
     private void UpdateUI()
     {

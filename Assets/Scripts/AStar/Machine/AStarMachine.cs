@@ -11,7 +11,7 @@ namespace AStar
     {
         #region Variables
 
-        private const int _UPDATES_PER_SECOND = 5;
+        private const float _UPDATES_PER_SECOND = 5f;
 
         private readonly object _lock = new object();
 
@@ -42,24 +42,33 @@ namespace AStar
 
             lock (_lock)
             {
-                while (_solversToRemove.Count > 0)
-                {
-                    var s = _solversToRemove.Pop();
-                    _callbacks.Remove(s);
-                    _solvers.Remove(s);
-                }
-
-                foreach (var s in _solvers)
-                {
-                    if (s.IsFinished())
-                    {
-                        _callbacks[s](s.Result);
-                        _solversToRemove.Push(s);
-                    }
-                }
+                RemoveSolvers();
+                UpdateSolvers();
             }
 
             _delta = 0;
+        }
+
+        private void RemoveSolvers()
+        {
+            while (_solversToRemove.Count > 0)
+            {
+                var s = _solversToRemove.Pop();
+                _callbacks.Remove(s);
+                _solvers.Remove(s);
+            }
+        }
+
+        private void UpdateSolvers()
+        {
+            foreach (var s in _solvers)
+            {
+                if (!s.IsFinished())
+                    continue;
+
+                _callbacks[s](s.Result);
+                _solversToRemove.Push(s);
+            }
         }
 
         /// <summary>
@@ -70,10 +79,10 @@ namespace AStar
             try
             {
                 if (asp == null)
-                    throw new ArgumentNullException("param");
+                    throw new ArgumentNullException("params");
 
                 if (!ThreadPool.QueueUserWorkItem(e => Run(asp)))
-                    throw new Exception("Item could not be queued!");
+                    throw new Exception("Item couldn't be queued!");
             }
             catch (Exception e)
             {
@@ -81,9 +90,6 @@ namespace AStar
             }
         }
 
-        /// <summary>
-        /// Runs A* on the ThreadPool
-        /// </summary>
         private void Run(AStarParams asp)
         {
             using (var solver = new AStarSolver(asp))
@@ -98,9 +104,6 @@ namespace AStar
             }
         }
 
-        /// <summary>
-        /// Prints an error message
-        /// </summary>
         private void PrintError(AStarCallback callback, Exception e)
         {
             bool callbackNull = callback == null;

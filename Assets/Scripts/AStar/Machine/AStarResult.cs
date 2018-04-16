@@ -13,7 +13,6 @@ namespace AStar
         public AStarResult()
         {
             Code = RETURN_CODE.DEFAULT;
-            Nodes = new LinkedList<AStarNode>();
         }
     }
 }

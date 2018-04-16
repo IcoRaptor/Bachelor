@@ -13,7 +13,11 @@
 
         private void Start()
         {
-            _goal = new TestGoal();
+            _goal = new TestGoal()
+            {
+                Module = this
+            };
+
             _goal.UpdateRelevance(new WorldState());
             _goal.BuildPlan();
         }

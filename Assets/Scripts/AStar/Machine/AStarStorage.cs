@@ -7,7 +7,7 @@ namespace AStar
     /// <summary>
     /// Holds the open and closed lists
     /// </summary>
-    public class AStarStorage
+    public class AStarStorage : IAStarStorage
     {
         #region Variables
 
@@ -59,7 +59,6 @@ namespace AStar
             if (node.OnClosedList || !node.OnOpenList)
                 return false;
 
-            _openList.Remove(node);
             _closedList.AddLast(node);
             node.OnClosedList = true;
 
@@ -78,12 +77,26 @@ namespace AStar
         }
 
         /// <summary>
-        /// Updates the open and closed lists
+        /// Updates the open list
         /// </summary>
-        public void UpdateLists(AStarNode node, float f)
+        public void UpdateOpenList(AStarNode node, float f)
         {
             if (node.OnOpenList)
                 _openList.UpdatePriority(node, f);
+        }
+
+        /// <summary>
+        /// Returns all nodes which are part of the solution
+        /// </summary>
+        public LinkedList<AStarNode> GetFinalPath()
+        {
+            var list = new LinkedList<AStarNode>();
+
+            foreach (var node in _closedList)
+                if (node.PartOfSolution)
+                    list.AddLast(node);
+
+            return list;
         }
     }
 }

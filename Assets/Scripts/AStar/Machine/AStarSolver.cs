@@ -10,7 +10,7 @@ namespace AStar
 
         private readonly AStarGoal _goal;
         private readonly AStarMap _map;
-        private readonly AStarStorage _storage;
+        private readonly IAStarStorage _storage;
 
         private volatile bool _running;
 
@@ -29,7 +29,8 @@ namespace AStar
             _goal = asp.Goal;
             _map = asp.Map;
 
-            _storage = new AStarStorage();
+            _storage = asp.Storage ?? new AStarStorage();
+
             Result = new AStarResult();
 
             _running = true;
@@ -39,60 +40,13 @@ namespace AStar
 
         public void Solve()
         {
-            // 1. Let P = starting node
-            // 2. Assign f, g, h to P
-            // 3. Add P to open list
-            // 4. Let B = node from open list with lowest f value
-            //      a. If B is goal then quit
-            //      b. If open list is empty quit
-            // 5. Let C = a valid node connected to B
-            //      a. Assign f, g, h to C
-            //      b. Check wheter C is on a list
-            //          i. If so, check if new path is better
-            //          ii. Else add C to open list
-            //      c. Repeat 5 for all valid children of B
-            // 6. Repeat from step 4
+            // Test
+            Thread.Sleep(2000);
 
             try
             {
-                // Create start node and add it to the open list
-                var p = _map.CreateNewNode(_goal, Strings.ROOT_NODE);
-                _storage.AddNodeToOpenList(p);
-
-                // Iterate the open list
-                while (!_storage.OpenListEmpty)
-                {
-                    // Get the node with lowest f value from open list
-                    var b = _storage.GetBestNode();
-
-                    // Add to plan
-                    Result.Nodes.AddLast(b);
-
-                    // Stop if this is the goal node
-                    if (_goal.IsGoalNode(b))
-                    {
-                        Result.Code = RETURN_CODE.SUCCESS;
-                        break;
-                    }
-
-                    // Get all neighbours connected to the node
-                    var neighbours = _map.GetNeighbours(b);
-
-                    // Iterate neighbours
-                    foreach (var c in neighbours)
-                    {
-                        // Add to open list if necessary
-                        if (!c.OnOpenList && !c.OnClosedList)
-                            _storage.AddNodeToOpenList(c);
-
-                        // Find the one with the lowest f value and add to plan
-                    }
-
-                    _storage.AddNodeToClosedList(b);
-                }
-
-                // Test
-                Thread.Sleep(1000);
+                CreateStartNode();
+                ProcessOpenList();
             }
             catch (Exception e)
             {
@@ -101,6 +55,74 @@ namespace AStar
 
                 Result.Code = RETURN_CODE.ERROR;
             }
+        }
+
+        private void CreateStartNode()
+        {
+            var root = _map.CreateNewNode(_goal, Strings.ROOT_NODE);
+            _storage.AddNodeToOpenList(root);
+        }
+
+        private void ProcessOpenList()
+        {
+            while (!_storage.OpenListEmpty)
+            {
+                // Get the node with lowest f value from open list
+                var b = _storage.GetBestNode();
+
+                // Stop if this is the goal node
+                if (_goal.IsGoalNode(b))
+                {
+                    HandleGoalNode(b);
+                    break;
+                }
+
+                ProcessNeighbours(b);
+
+                // Add b to the closed list
+                _storage.AddNodeToClosedList(b);
+            }
+
+            if (Result.Code == RETURN_CODE.DEFAULT)
+                Result.Code = RETURN_CODE.NO_PATH_FOUND;
+        }
+
+        private void HandleGoalNode(AStarNode node)
+        {
+            Result.Code = RETURN_CODE.SUCCESS;
+
+            node.ProcessFinalPath();
+
+            // TODO: Fill result nodes
+            Result.Nodes = _storage.GetFinalPath();
+        }
+
+        private void ProcessNeighbours(AStarNode node)
+        {
+            // Get all neighbours connected to the node
+            var neighbours = _map.GetNeighbours(node);
+
+            foreach (var n in neighbours)
+            {
+                // Add to open list if necessary
+                if (!n.OnOpenList && !n.OnClosedList)
+                {
+                    // Fill in g and h
+
+                    _storage.AddNodeToOpenList(n);
+                    continue;
+                }
+
+                // Do stuff with costs and backpropagation
+            }
+        }
+
+        private void InitialNodeSetup(AStarNode node)
+        {
+        }
+
+        private void VisitedNodeSetup(AStarNode node)
+        {
         }
 
         public void Dispose()

@@ -8,6 +8,8 @@
         public AStarMap Map { get; set; }
         public AStarCallback Callback { get; set; }
 
+        public IAStarStorage Storage { get; set; }
+
         #endregion
     }
 }

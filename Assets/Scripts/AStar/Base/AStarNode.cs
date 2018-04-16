@@ -63,14 +63,32 @@ namespace AStar
             }
         }
 
+        /// <summary>
+        /// Is this node part of the solution
+        /// </summary>
+        public bool PartOfSolution { get; private set; }
+
         #endregion
+
+        /// <summary>
+        /// Processes the solution path backwards
+        /// </summary>
+        public void ProcessFinalPath()
+        {
+            PartOfSolution = true;
+
+            if (Root == null)
+                return;
+
+            Root.ProcessFinalPath();
+        }
 
         /// <summary>
         /// Call this after updating G or H
         /// </summary>
         public void Update(AStarStorage storage)
         {
-            storage.UpdateLists(this, G + H);
+            storage.UpdateOpenList(this, G + H);
         }
     }
 }

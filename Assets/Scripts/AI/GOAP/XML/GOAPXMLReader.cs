@@ -43,12 +43,12 @@ namespace AI.GOAP
         {
             var doc = new XmlDocument();
 
-            try
-            {
-                string path = Path.Combine(
+            string path = Path.Combine(
                     Application.dataPath,
                     info.RelativePath);
 
+            try
+            {
                 doc.Load(path);
             }
             catch (Exception e)
@@ -107,10 +107,9 @@ namespace AI.GOAP
 
                 case XML_TYPE.GOAL_SET:
                     return ReadGoalSet(doc);
-
-                default:
-                    return false;
             }
+
+            return false;
         }
 
         private static bool ReadAgent(XmlDocument doc)

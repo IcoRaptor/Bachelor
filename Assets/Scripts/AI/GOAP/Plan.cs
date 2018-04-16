@@ -1,5 +1,6 @@
 ﻿using AStar;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace AI.GOAP
 {
@@ -10,7 +11,8 @@ namespace AI.GOAP
     {
         #region Variables
 
-        private LinkedList<BaseAction> _plan;
+        private LinkedList<BaseAction> _plan =
+            new LinkedList<BaseAction>();
 
         #endregion
 
@@ -24,15 +26,12 @@ namespace AI.GOAP
 
         public Plan(AStarResult result)
         {
-            _plan = new LinkedList<BaseAction>();
-
-            foreach (var n in result.Nodes)
+            foreach (var node in result.Nodes)
             {
-                BaseAction action = Container.GetAction(n.ID);
+                if (node.Root == null)
+                    break;
 
-                if (action == null)
-                    continue;
-
+                BaseAction action = Container.GetAction(node.ID);
                 _plan.AddFirst(action);
             }
         }
@@ -41,6 +40,8 @@ namespace AI.GOAP
 
         public void Execute()
         {
+            Debug.Log("Executing plan...\n");
+
             if (_plan.Count == 0)
                 return;
 

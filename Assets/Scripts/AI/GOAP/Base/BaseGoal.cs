@@ -15,6 +15,8 @@ namespace AI.GOAP
         public WorldState Target { get; protected set; }
         public WorldState Current { get; protected set; }
 
+        public GOAPModule Module { get; set; }
+
         public string ID { get; set; }
         public int Relevance { get; protected set; }
         public bool Satisfied { get; protected set; }
@@ -36,7 +38,7 @@ namespace AI.GOAP
         public virtual bool Validate()
         {
             if (_plan == null)
-                return true;
+                return false;
 
             return _plan.Validate();
         }
