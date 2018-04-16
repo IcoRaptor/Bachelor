@@ -9,7 +9,7 @@ namespace AI.GOAP
     /// <summary>
     /// Reads the actions and goals from XML
     /// </summary>
-    public static class GOAPXmlReader
+    public static class GOAPReader
     {
         /// <summary>
         /// Reads all XML files
@@ -43,12 +43,12 @@ namespace AI.GOAP
         {
             var doc = new XmlDocument();
 
-            string path = Path.Combine(
+            try
+            {
+                string path = Path.Combine(
                     Application.dataPath,
                     info.RelativePath);
 
-            try
-            {
                 doc.Load(path);
             }
             catch (Exception e)

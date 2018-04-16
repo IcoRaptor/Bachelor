@@ -78,15 +78,20 @@ namespace AStar
         {
             try
             {
-                if (asp == null)
-                    throw new ArgumentNullException("params");
+                bool aspNull = asp == null ||
+                    asp.Callback == null ||
+                    asp.Goal == null ||
+                    asp.Map == null;
+
+                if (aspNull)
+                    throw new ArgumentNullException("AStarParams");
 
                 if (!ThreadPool.QueueUserWorkItem(e => Run(asp)))
                     throw new Exception("Item couldn't be queued!");
             }
             catch (Exception e)
             {
-                PrintError(asp.Callback, e);
+                PrintError(asp, e);
             }
         }
 
@@ -104,26 +109,27 @@ namespace AStar
             }
         }
 
-        private void PrintError(AStarCallback callback, Exception e)
+        private void PrintError(AStarParams asp, Exception e)
         {
-            bool callbackNull = callback == null;
+            bool callbackNull = asp == null || asp.Callback == null;
 
             string cb = callbackNull ?
                 "No callback defined" :
-                callback.Method.Name;
+                asp.Callback.Method.Name;
 
             string go = callbackNull ?
                 string.Empty :
-                ((MonoBehaviour)callback.Target).transform.parent.name;
+                ((MonoBehaviour)asp.Callback.Target).transform.parent.name;
 
             if (callbackNull)
-                Debugger.Log(LOG_TYPE.WARNING, e.Message + "\n" + cb);
-            else
             {
-                Debugger.LogFormat(LOG_TYPE.WARNING,
-                    "{0}\nCallback: {1}, GO: {2}",
-                    e.Message, cb, go);
+                Debugger.Log(LOG_TYPE.WARNING, e.Message + "\n" + cb);
+                return;
             }
+
+            Debugger.LogFormat(LOG_TYPE.WARNING,
+                "{0}\nCallback: {1}, GO: {2}",
+                e.Message, cb, go);
         }
 
         private void OnDestroy()

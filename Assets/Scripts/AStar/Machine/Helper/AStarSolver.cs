@@ -26,10 +26,10 @@ namespace AStar
 
         public AStarSolver(AStarParams asp)
         {
+            _storage = asp.Storage ?? new AStarStorage();
+
             _goal = asp.Goal;
             _map = asp.Map;
-
-            _storage = asp.Storage ?? new AStarStorage();
 
             Result = new AStarResult();
 
@@ -67,20 +67,20 @@ namespace AStar
         {
             while (!_storage.OpenListEmpty)
             {
-                // Get the node with lowest f value from open list
-                var b = _storage.GetBestNode();
+                // Get node with lowest f value from open list
+                var node = _storage.GetBestNode();
 
                 // Stop if this is the goal node
-                if (_goal.IsGoalNode(b))
+                if (_goal.IsGoalNode(node))
                 {
-                    HandleGoalNode(b);
+                    HandleGoalNode(node);
                     break;
                 }
 
-                ProcessNeighbours(b);
+                ProcessNeighbours(node);
 
-                // Add b to the closed list
-                _storage.AddNodeToClosedList(b);
+                // Add node to closed list
+                _storage.AddNodeToClosedList(node);
             }
 
             if (Result.Code == RETURN_CODE.DEFAULT)

@@ -72,7 +72,7 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
 
             case GAME_STATE.MAIN_SCENE:
                 WakeUpSystems();
-                GOAPXmlReader.ReadAll();
+                GOAPReader.ReadAll();
                 SceneManager.LoadScene(1);
                 break;
 
