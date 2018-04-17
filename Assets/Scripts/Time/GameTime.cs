@@ -13,7 +13,7 @@
             {
                 Days = 1,
                 Hours = 12,
-                Minutes = 0
+                Minutes = 0,
             };
 
             time.TimeString = GenerateTimeString(
@@ -31,7 +31,7 @@
 
     public uint Days { get; set; }
 
-    public string TimeString { get; private set; }
+    public string TimeString { get; set; }
 
     #endregion
 

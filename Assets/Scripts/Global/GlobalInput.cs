@@ -29,13 +29,13 @@ public class GlobalInput : MonoBehaviour
     {
         Debug.LogFormat(
                "Timer started... Execution in 10 minutes!\n{0}",
-               TimeManager.Instance.GTime.TimeString);
+               TimeManager.Instance.GetTimeStamp().TimeString);
 
         Timer.StartNew(0, 10, () =>
         {
             Debug.LogFormat(
                 "Timer finished.\n{0}",
-                TimeManager.Instance.GTime.TimeString);
+                TimeManager.Instance.GetTimeStamp().TimeString);
         });
     }
 

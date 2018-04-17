@@ -4,6 +4,10 @@ using System.Threading;
 
 namespace AStar
 {
+    /// <summary>
+    /// Helper class that solves the A* problem.
+    ///  Implements IDisposable
+    /// </summary>
     internal class AStarSolver : IDisposable
     {
         #region Variables
@@ -40,6 +44,9 @@ namespace AStar
 
         #endregion
 
+        /// <summary>
+        /// Executes the A* algorithm
+        /// </summary>
         public void Solve()
         {
             // Test
@@ -47,7 +54,11 @@ namespace AStar
 
             try
             {
-                CreateStartNode();
+                // Create root node
+                var root = _map.CreateNewNode(_goal, Strings.ROOT_NODE);
+                _storage.AddNodeToOpenList(root);
+
+                // Process the open list
                 ProcessOpenList();
             }
             catch (Exception e)
@@ -57,12 +68,6 @@ namespace AStar
 
                 Result.Code = RETURN_CODE.ERROR;
             }
-        }
-
-        private void CreateStartNode()
-        {
-            var root = _map.CreateNewNode(_goal, Strings.ROOT_NODE);
-            _storage.AddNodeToOpenList(root);
         }
 
         private void ProcessOpenList()
@@ -97,11 +102,10 @@ namespace AStar
 
         private void HandleGoalNode(AStarNode node)
         {
-            Result.Code = RETURN_CODE.SUCCESS;
-
             _storage.AddNodeToClosedList(node);
             node.ProcessFinalPath();
 
+            Result.Code = RETURN_CODE.SUCCESS;
             Result.Nodes = _storage.GetFinalPath();
         }
 
@@ -112,24 +116,30 @@ namespace AStar
 
             foreach (var n in neighbours)
             {
-                // Add to open list if necessary
-                if (!n.OnOpenList && !n.OnClosedList)
+                // Do nothing if node is on closed list
+                if (n.OnClosedList)
+                    continue;
+
+                // Evaluate initial node
+                if (!n.OnOpenList)
                 {
-                    InitialNodeSetup(n);
-                    _storage.AddNodeToOpenList(n);
+                    HandleInitialNode(node, n);
                     continue;
                 }
 
-                // Do stuff with costs and backpropagation
+                // Evaluate visited node
+                HandleVisitedNode(node, n);
             }
         }
 
-        private void InitialNodeSetup(AStarNode node)
+        private void HandleInitialNode(AStarNode root, AStarNode current)
         {
             // Fill in g and h
+
+            _storage.AddNodeToOpenList(current);
         }
 
-        private void VisitedNodeSetup(AStarNode node)
+        private void HandleVisitedNode(AStarNode root, AStarNode current)
         {
             // Evaluate g and h
         }
@@ -139,12 +149,18 @@ namespace AStar
             _running = false;
         }
 
+        /// <summary>
+        /// Interrupts the execution
+        /// </summary>
         public void Interrupt()
         {
             _interrupt = true;
         }
 
-        public bool IsFinished()
+        /// <summary>
+        /// Is the execution complete
+        /// </summary>
+        public bool Finished()
         {
             return _running == false;
         }

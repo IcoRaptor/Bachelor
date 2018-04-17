@@ -13,6 +13,8 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     private Stack<TimerInstance> _timersToAdd = new Stack<TimerInstance>();
     private Stack<TimerInstance> _timersToRemove = new Stack<TimerInstance>();
 
+    private GameTime _gameTime;
+
     private float _delta;
 
     #endregion
@@ -24,13 +26,11 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         get { return (TimeManager)_Instance; }
     }
 
-    public GameTime GTime { get; private set; }
-
     #endregion
 
     private void Awake()
     {
-        GTime = GameTime.InitialTime;
+        _gameTime = GameTime.InitialTime;
     }
 
     private void Update()
@@ -43,7 +43,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         if (_delta < 1f)
             return;
 
-        GTime.Tick();
+        _gameTime.Tick();
 
         UpdateTimers();
         UpdateUI();
@@ -57,6 +57,22 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     public void AdjustTimeScale(float val)
     {
         _scale = Mathf.Clamp(_scale + val, 1f, 30f);
+    }
+
+    /// <summary>
+    /// Returns the current in-game time
+    /// </summary>
+    public GameTime GetTimeStamp()
+    {
+        var gt = new GameTime()
+        {
+            Days = _gameTime.Days,
+            Hours = _gameTime.Hours,
+            Minutes = _gameTime.Minutes,
+            TimeString = _gameTime.TimeString
+        };
+
+        return gt;
     }
 
     /// <summary>
@@ -97,7 +113,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     /// </summary>
     private void UpdateUI()
     {
-        string time = GTime.TimeString;
+        string time = _gameTime.TimeString;
         MessagingSystem.Instance.QueueMessage(new TimeTextMessage(time));
     }
 }

@@ -17,8 +17,12 @@ namespace AI.GOAP
         public static bool ReadAll()
         {
             var goalSet = new XmlFileInfo(Strings.GOAL_SET);
+            var actionSet = new XmlFileInfo(Strings.ACTION_SET);
 
             if (!ReadFile(goalSet, XML_TYPE.GOAL_SET))
+                return false;
+
+            if (!ReadFile(actionSet, XML_TYPE.ACTION_SET))
                 return false;
 
             return true;
@@ -69,7 +73,7 @@ namespace AI.GOAP
 
             if (file == null)
             {
-                Debugger.LogFormat(LOG_TYPE.ERROR,
+                Debug.LogFormat(
                     "File '{0}' not found!\n",
                     info.FileName);
 
@@ -85,7 +89,7 @@ namespace AI.GOAP
             }
             catch (Exception e)
             {
-                Debugger.LogFormat(LOG_TYPE.ERROR,
+                Debug.LogFormat(
                     "{0}\n({1})",
                     e.Message, e.TargetSite);
 

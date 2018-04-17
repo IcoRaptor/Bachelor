@@ -23,3 +23,5 @@ sysinfo.txt
 *.ide
 
 \.vs/Bachelor/v15/Server/sqlite3/
+
+*.db

@@ -11,7 +11,9 @@ namespace AStar
     {
         #region Variables
 
-        private const float _UPDATES_PER_SECOND = 5f;
+        [SerializeField]
+        [Range(1, 10)]
+        private int _updatePerSecond = 5;
 
         private readonly object _lock = new object();
 
@@ -33,9 +35,33 @@ namespace AStar
 
         #endregion
 
+        /// <summary>
+        /// Queues an execution of A*
+        /// </summary>
+        public void RunAStar(AStarParams asp)
+        {
+            try
+            {
+                bool aspNull = asp == null ||
+                    asp.Callback == null ||
+                    asp.Goal == null ||
+                    asp.Map == null;
+
+                if (aspNull)
+                    throw new ArgumentNullException("AStarParams");
+
+                if (!ThreadPool.QueueUserWorkItem(e => Run(asp)))
+                    throw new Exception("Item couldn't be queued!");
+            }
+            catch (Exception e)
+            {
+                PrintError(asp, e);
+            }
+        }
+
         private void Update()
         {
-            _delta += Time.unscaledDeltaTime * _UPDATES_PER_SECOND;
+            _delta += Time.unscaledDeltaTime * _updatePerSecond;
 
             if (_delta < 1.0f)
                 return;
@@ -63,35 +89,11 @@ namespace AStar
         {
             foreach (var s in _solvers)
             {
-                if (!s.IsFinished())
+                if (!s.Finished())
                     continue;
 
                 _callbacks[s](s.Result);
                 _solversToRemove.Push(s);
-            }
-        }
-
-        /// <summary>
-        /// Queues an execution of A*
-        /// </summary>
-        public void RunAStar(AStarParams asp)
-        {
-            try
-            {
-                bool aspNull = asp == null ||
-                    asp.Callback == null ||
-                    asp.Goal == null ||
-                    asp.Map == null;
-
-                if (aspNull)
-                    throw new ArgumentNullException("AStarParams");
-
-                if (!ThreadPool.QueueUserWorkItem(e => Run(asp)))
-                    throw new Exception("Item couldn't be queued!");
-            }
-            catch (Exception e)
-            {
-                PrintError(asp, e);
             }
         }
 

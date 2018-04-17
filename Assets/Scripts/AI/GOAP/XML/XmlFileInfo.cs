@@ -18,10 +18,7 @@
 
     public XmlFileInfo(string fileName)
     {
-        bool ending = fileName.Contains(".");
-
-        if (ending)
-            fileName = fileName.Split('.')[0];
+        fileName = fileName.Split('.')[0];
 
 #if UNITY_EDITOR
         FileName = fileName + Strings.XML;
