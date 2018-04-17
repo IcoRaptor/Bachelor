@@ -12,6 +12,7 @@ namespace AStar
         private readonly AStarMap _map;
         private readonly IAStarStorage _storage;
 
+        private volatile bool _interrupt;
         private volatile bool _running;
 
         #endregion
@@ -33,6 +34,7 @@ namespace AStar
 
             Result = new AStarResult();
 
+            _interrupt = false;
             _running = true;
         }
 
@@ -67,6 +69,12 @@ namespace AStar
         {
             while (!_storage.OpenListEmpty)
             {
+                if (_interrupt)
+                {
+                    Result.Code = RETURN_CODE.INTERRUPT;
+                    break;
+                }
+
                 // Get node with lowest f value from open list
                 var node = _storage.GetBestNode();
 
@@ -91,9 +99,9 @@ namespace AStar
         {
             Result.Code = RETURN_CODE.SUCCESS;
 
+            _storage.AddNodeToClosedList(node);
             node.ProcessFinalPath();
 
-            // TODO: Fill result nodes
             Result.Nodes = _storage.GetFinalPath();
         }
 
@@ -107,8 +115,7 @@ namespace AStar
                 // Add to open list if necessary
                 if (!n.OnOpenList && !n.OnClosedList)
                 {
-                    // Fill in g and h
-
+                    InitialNodeSetup(n);
                     _storage.AddNodeToOpenList(n);
                     continue;
                 }
@@ -119,15 +126,22 @@ namespace AStar
 
         private void InitialNodeSetup(AStarNode node)
         {
+            // Fill in g and h
         }
 
         private void VisitedNodeSetup(AStarNode node)
         {
+            // Evaluate g and h
         }
 
         public void Dispose()
         {
             _running = false;
+        }
+
+        public void Interrupt()
+        {
+            _interrupt = true;
         }
 
         public bool IsFinished()
