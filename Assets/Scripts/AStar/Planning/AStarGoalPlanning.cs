@@ -31,9 +31,8 @@ namespace AStar
         public override void CalculateValues(AStarNode node, out float g, out float h)
         {
             var action = Container.GetAction(node.ID);
-            bool root = action == null;
 
-            g = root ? 0 : action.Cost;
+            g = action == null ? 0 : action.Cost;
             h = _target.GetSymbolDifference(_current);
         }
 

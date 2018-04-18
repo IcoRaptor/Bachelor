@@ -24,6 +24,11 @@ namespace AStar
         public AStarNode Root { get; set; }
 
         /// <summary>
+        /// Cost of this node
+        /// </summary>
+        public float Cost { get; set; }
+
+        /// <summary>
         /// Cost from start node
         /// </summary>
         public float G { get; set; }
@@ -64,29 +69,16 @@ namespace AStar
         }
 
         /// <summary>
-        /// Is this node part of the solution
+        /// Is this node the target
         /// </summary>
-        public bool PartOfSolution { get; private set; }
+        public bool SolutionNode { get; set; }
 
         #endregion
 
         /// <summary>
-        /// Processes the solution path backwards
-        /// </summary>
-        public void ProcessFinalPath()
-        {
-            PartOfSolution = true;
-
-            if (Root == null)
-                return;
-
-            Root.ProcessFinalPath();
-        }
-
-        /// <summary>
         /// Call this after updating G or H
         /// </summary>
-        public void Update(AStarStorage storage)
+        public void Update(IAStarStorage storage)
         {
             storage.UpdateOpenList(this, G + H);
         }

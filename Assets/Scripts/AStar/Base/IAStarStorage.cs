@@ -2,6 +2,9 @@
 
 namespace AStar
 {
+    /// <summary>
+    /// Interface for A* storages
+    /// </summary>
     public interface IAStarStorage
     {
         #region Properties

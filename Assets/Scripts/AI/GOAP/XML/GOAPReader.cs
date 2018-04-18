@@ -72,13 +72,7 @@ namespace AI.GOAP
             var file = Resources.Load(info.FileName) as TextAsset;
 
             if (file == null)
-            {
-                Debug.LogFormat(
-                    "File '{0}' not found!\n",
-                    info.FileName);
-
                 return false;
-            }
 
             var doc = new XmlDocument();
 
@@ -87,12 +81,8 @@ namespace AI.GOAP
                 using (var stream = new MemoryStream(file.bytes, false))
                     doc.Load(stream);
             }
-            catch (Exception e)
+            catch
             {
-                Debug.LogFormat(
-                    "{0}\n({1})",
-                    e.Message, e.TargetSite);
-
                 return false;
             }
 

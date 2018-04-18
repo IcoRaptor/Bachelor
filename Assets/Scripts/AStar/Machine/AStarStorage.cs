@@ -20,7 +20,7 @@ namespace AStar
 
         public bool OpenListEmpty
         {
-            get { return _openList.Count == 0; }
+            get { return _openList.Count <= 0; }
         }
 
         #endregion
@@ -56,7 +56,7 @@ namespace AStar
         /// </summary>
         public bool AddNodeToClosedList(AStarNode node)
         {
-            if (node.OnClosedList || !node.OnOpenList)
+            if (node.OnClosedList)
                 return false;
 
             _closedList.AddLast(node);
@@ -70,10 +70,12 @@ namespace AStar
         /// </summary>
         public AStarNode GetBestNode()
         {
-            if (!OpenListEmpty)
-                return _openList.Dequeue();
+            AStarNode node = null;
 
-            return null;
+            if (!OpenListEmpty)
+                node = _openList.Dequeue();
+
+            return node;
         }
 
         /// <summary>
@@ -93,8 +95,20 @@ namespace AStar
             var list = new LinkedList<AStarNode>();
 
             foreach (var node in _closedList)
-                if (node.PartOfSolution)
-                    list.AddLast(node);
+            {
+                if (!node.SolutionNode)
+                    continue;
+
+                list.AddFirst(node);
+
+                var root = node.Root;
+
+                while (root != null)
+                {
+                    list.AddFirst(root);
+                    root = root.Root;
+                }
+            }
 
             return list;
         }

@@ -1,6 +1,5 @@
 ﻿using Framework.Debugging;
 using System;
-using System.Threading;
 
 namespace AStar
 {
@@ -32,7 +31,6 @@ namespace AStar
         public AStarSolver(AStarParams asp)
         {
             _storage = asp.Storage ?? new AStarStorage();
-
             _goal = asp.Goal;
             _map = asp.Map;
 
@@ -49,17 +47,18 @@ namespace AStar
         /// </summary>
         public void Solve()
         {
-            // Test
-            Thread.Sleep(2000);
-
             try
             {
                 // Create root node
-                var root = _map.CreateNewNode(_goal, Strings.ROOT_NODE);
+                var root = _map.CreateNode(null, Strings.ROOT_NODE);
                 _storage.AddNodeToOpenList(root);
 
                 // Process the open list
                 ProcessOpenList();
+
+                // Was a path found?
+                if (Result.Code == RETURN_CODE.DEFAULT)
+                    Result.Code = RETURN_CODE.NO_PATH_FOUND;
             }
             catch (Exception e)
             {
@@ -74,6 +73,7 @@ namespace AStar
         {
             while (!_storage.OpenListEmpty)
             {
+                // Check for interrupts
                 if (_interrupt)
                 {
                     Result.Code = RETURN_CODE.INTERRUPT;
@@ -90,20 +90,18 @@ namespace AStar
                     break;
                 }
 
+                // Go through all neighbours
                 ProcessNeighbours(node);
 
                 // Add node to closed list
                 _storage.AddNodeToClosedList(node);
             }
-
-            if (Result.Code == RETURN_CODE.DEFAULT)
-                Result.Code = RETURN_CODE.NO_PATH_FOUND;
         }
 
         private void HandleGoalNode(AStarNode node)
         {
             _storage.AddNodeToClosedList(node);
-            node.ProcessFinalPath();
+            node.SolutionNode = true;
 
             Result.Code = RETURN_CODE.SUCCESS;
             Result.Nodes = _storage.GetFinalPath();
@@ -134,14 +132,17 @@ namespace AStar
 
         private void HandleInitialNode(AStarNode root, AStarNode current)
         {
-            // Fill in g and h
+            // TODO
 
+            current.Root = root;
             _storage.AddNodeToOpenList(current);
         }
 
         private void HandleVisitedNode(AStarNode root, AStarNode current)
         {
-            // Evaluate g and h
+            // TODO
+
+            current.Update(_storage);
         }
 
         public void Dispose()

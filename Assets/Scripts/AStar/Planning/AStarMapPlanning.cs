@@ -1,26 +1,60 @@
-﻿namespace AStar
+﻿using AI.GOAP;
+using System.Collections.Generic;
+
+namespace AStar
 {
     public class AStarMapPlanning : AStarMap
     {
-        /// <summary>
-        /// Creates a new node.
-        /// </summary>
-        public override AStarNode CreateNewNode(AStarGoal goal, string actionID)
+        #region Variables
+
+        private static readonly object _lock = new object();
+
+        private static Dictionary<string, AStarNodePlanning> _nodeCache =
+           new Dictionary<string, AStarNodePlanning>();
+
+        #endregion
+
+        #region Constructors
+
+        public AStarMapPlanning(AStarGoalPlanning goal) : base(goal)
         {
-            var goalPlanning = (AStarGoalPlanning)goal;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Creates a new node
+        ///  (Doesn't set root)
+        /// </summary>
+        public override AStarNode CreateNode(AStarNode root, string actionID)
+        {
+            var goalPlanning = (AStarGoalPlanning)_goal;
+            var rootPlanning = (AStarNodePlanning)root;
+
+            var current = root == null ?
+                goalPlanning.Goal.Current.Copy() :
+                rootPlanning.Current;
+
+            var target = root == null ?
+                goalPlanning.Goal.Target.Copy() :
+                rootPlanning.Target;
 
             var node = new AStarNodePlanning(actionID)
             {
-                Current = goalPlanning.Goal.Current.Copy(),
-                Target = goalPlanning.Goal.Target.Copy()
+                Current = current,
+                Target = target,
+                Cost = Container.GetAction(actionID).Cost
             };
 
             float g, h;
-            goal.CalculateValues(node, out g, out h);
+            _goal.CalculateValues(node, out g, out h);
 
             node.G = g;
             node.H = h;
             node.Priority = g + h;
+
+            lock (_lock)
+                _nodeCache[node.ID] = node;
 
             return node;
         }
@@ -30,6 +64,7 @@
         /// </summary>
         public override AStarNode[] GetNeighbours(AStarNode node)
         {
+            // Test
             return new AStarNode[0];
         }
     }

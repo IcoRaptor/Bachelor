@@ -25,10 +25,13 @@ namespace AI.GOAP
 
         public virtual void BuildPlan()
         {
+            var goal = new AStarGoalPlanning(this);
+            var map = new AStarMapPlanning(goal);
+
             var param = new AStarParams()
             {
-                Goal = new AStarGoalPlanning(this),
-                Map = new AStarMapPlanning(),
+                Goal = goal,
+                Map = map,
                 Callback = OnFinished
             };
 
