@@ -8,6 +8,9 @@ namespace AI.GOAP
         public TestGoal()
         {
             Target = new WorldState();
+
+            for (int i = 0; i < Target.Symbols.Length; i++)
+                Target.Symbols[i] = STATE_SYMBOL.SATISFIED;
         }
 
         public override void BuildPlan()
@@ -18,7 +21,11 @@ namespace AI.GOAP
 
         public override void UpdateRelevance(WorldState current)
         {
-            Current = current.Copy();
+            Current = new WorldState();
+
+            for (int i = 0; i < Current.Symbols.Length; i++)
+                Current.Symbols[i] = STATE_SYMBOL.SATISFIED;
+
             Relevance = 1;
         }
 

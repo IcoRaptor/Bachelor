@@ -39,11 +39,15 @@ namespace AStar
                 goalPlanning.Goal.Target.Copy() :
                 rootPlanning.Target;
 
+            float cost = root == null ?
+                0 :
+                Container.GetAction(actionID).Cost;
+
             var node = new AStarNodePlanning(actionID)
             {
                 Current = current,
                 Target = target,
-                Cost = Container.GetAction(actionID).Cost
+                Cost = cost
             };
 
             float g, h;
