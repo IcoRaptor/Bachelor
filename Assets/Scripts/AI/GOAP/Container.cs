@@ -15,6 +15,8 @@ namespace AI.GOAP
         private static Dictionary<string, BaseGoal> _goalCache =
             new Dictionary<string, BaseGoal>();
 
+        // TODO Neighbours
+
         #endregion
 
         /// <summary>

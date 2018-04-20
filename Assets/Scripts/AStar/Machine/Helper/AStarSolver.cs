@@ -15,8 +15,9 @@ namespace AStar
         private readonly AStarMap _map;
         private readonly IAStarStorage _storage;
 
-        private volatile bool _interrupt;
         private volatile bool _running;
+
+        private System.Diagnostics.Stopwatch _stopwatch;
 
         #endregion
 
@@ -36,8 +37,8 @@ namespace AStar
 
             Result = new AStarResult();
 
-            _interrupt = false;
             _running = true;
+            _stopwatch = System.Diagnostics.Stopwatch.StartNew();
         }
 
         #endregion
@@ -50,7 +51,7 @@ namespace AStar
             try
             {
                 // Create root node
-                var root = _map.CreateNode(null, Strings.ROOT_NODE);
+                var root = _map.CreateRootNode();
                 _storage.AddNodeToOpenList(root);
 
                 // Process the open list
@@ -73,13 +74,6 @@ namespace AStar
         {
             while (!_storage.OpenListEmpty)
             {
-                // Check for interrupts
-                if (_interrupt)
-                {
-                    Result.Code = RETURN_CODE.INTERRUPT;
-                    break;
-                }
-
                 // Get node with lowest f value from open list
                 var node = _storage.GetBestNode();
 
@@ -121,26 +115,31 @@ namespace AStar
                 // Evaluate initial node
                 if (!n.OnOpenList)
                 {
-                    HandleInitialNode(node, n);
+                    HandleInitialNode(n, node);
                     continue;
                 }
 
                 // Evaluate visited node
-                HandleVisitedNode(node, n);
+                HandleVisitedNode(n, node);
             }
         }
 
-        private void HandleInitialNode(AStarNode root, AStarNode current)
+        private void HandleInitialNode(AStarNode current, AStarNode root)
         {
-            // TODO
-
             current.Root = root;
+            current.G = root.G + current.Cost;
+            current.Priority = current.G + current.H;
+
             _storage.AddNodeToOpenList(current);
         }
 
-        private void HandleVisitedNode(AStarNode root, AStarNode current)
+        private void HandleVisitedNode(AStarNode current, AStarNode root)
         {
-            // TODO
+            if (current.G <= root.G + current.Cost)
+                return;
+
+            current.G = root.G + current.Cost;
+            current.Root = root;
 
             current.Update(_storage);
         }
@@ -148,14 +147,11 @@ namespace AStar
         public void Dispose()
         {
             _running = false;
-        }
 
-        /// <summary>
-        /// Interrupts the execution
-        /// </summary>
-        public void Interrupt()
-        {
-            _interrupt = true;
+            _stopwatch.Stop();
+            Debugger.LogFormat(LOG_TYPE.LOG,
+                "Elapsed milliseconds: {0}\nTicks: {1}",
+                _stopwatch.ElapsedMilliseconds, _stopwatch.ElapsedTicks);
         }
 
         /// <summary>

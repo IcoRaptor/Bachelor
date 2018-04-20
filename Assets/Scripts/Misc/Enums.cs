@@ -22,7 +22,6 @@ namespace AStar
         DEFAULT,
         SUCCESS,
         ERROR,
-        NO_PATH_FOUND,
-        INTERRUPT
+        NO_PATH_FOUND
     }
 }

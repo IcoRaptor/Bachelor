@@ -15,14 +15,14 @@ namespace AStar
         [Range(1, 10)]
         private int _updatePerSecond = 5;
 
+        private float _delta = 0f;
+
         private readonly object _lock = new object();
 
         private List<AStarSolver> _solvers = new List<AStarSolver>();
         private Stack<AStarSolver> _solversToRemove = new Stack<AStarSolver>();
-        private Dictionary<AStarSolver, AStarCallback> _callbacks =
+        private Dictionary<AStarSolver, AStarCallback> _solverToCallback =
             new Dictionary<AStarSolver, AStarCallback>();
-
-        private float _delta;
 
         #endregion
 
@@ -42,10 +42,8 @@ namespace AStar
         {
             try
             {
-                bool aspNull = asp == null ||
-                    asp.Callback == null ||
-                    asp.Goal == null ||
-                    asp.Map == null;
+                bool aspNull = asp == null || asp.Callback == null ||
+                    asp.Goal == null || asp.Map == null;
 
                 if (aspNull)
                     throw new ArgumentNullException("AStarParams");
@@ -80,7 +78,7 @@ namespace AStar
             while (_solversToRemove.Count > 0)
             {
                 var s = _solversToRemove.Pop();
-                _callbacks.Remove(s);
+                _solverToCallback.Remove(s);
                 _solvers.Remove(s);
             }
         }
@@ -92,7 +90,7 @@ namespace AStar
                 if (!s.Finished())
                     continue;
 
-                _callbacks[s](s.Result);
+                _solverToCallback[s](s.Result);
                 _solversToRemove.Push(s);
             }
         }
@@ -104,7 +102,7 @@ namespace AStar
                 lock (_lock)
                 {
                     _solvers.Add(solver);
-                    _callbacks.Add(solver, asp.Callback);
+                    _solverToCallback.Add(solver, asp.Callback);
                 }
 
                 solver.Solve();
@@ -138,7 +136,7 @@ namespace AStar
         {
             _solvers.Clear();
             _solversToRemove.Clear();
-            _callbacks.Clear();
+            _solverToCallback.Clear();
         }
     }
 }

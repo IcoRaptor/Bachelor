@@ -21,7 +21,7 @@ namespace AI.GOAP
 
         public override void UpdateRelevance(WorldState current)
         {
-            Current = new WorldState();
+            Current = current;
 
             for (int i = 0; i < Current.Symbols.Length; i++)
                 Current.Symbols[i] = STATE_SYMBOL.SATISFIED;
@@ -32,10 +32,7 @@ namespace AI.GOAP
         protected override void OnFinished(AStarResult result)
         {
             if (!Module)
-            {
-                Debug.Log("No module found!\n");
                 return;
-            }
 
             Debug.LogFormat("OnFinished\n{0}", result.Code);
 

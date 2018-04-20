@@ -7,9 +7,7 @@ namespace AStar
     {
         #region Variables
 
-        private static readonly object _lock = new object();
-
-        private static Dictionary<string, AStarNodePlanning> _nodeCache =
+        private Dictionary<string, AStarNodePlanning> _nodeCache =
            new Dictionary<string, AStarNodePlanning>();
 
         #endregion
@@ -23,42 +21,47 @@ namespace AStar
         #endregion
 
         /// <summary>
+        /// Creates the root node for an A* search
+        /// </summary>
+        public override AStarNode CreateRootNode()
+        {
+            var goalPlanning = (AStarGoalPlanning)_goal;
+
+            var root = new AStarNodePlanning(Strings.ROOT_NODE)
+            {
+                G = 0,
+                H = 0,
+                Priority = 0,
+                Cost = 0,
+                Current = goalPlanning.Goal.Target.Copy()   // Search backwards
+            };
+
+            _nodeCache[root.ID] = root;
+
+            return root;
+        }
+
+        /// <summary>
         /// Creates a new node
-        ///  (Doesn't set root)
+        ///  (Doesn't set G and F)
         /// </summary>
         public override AStarNode CreateNode(AStarNode root, string actionID)
         {
-            var goalPlanning = (AStarGoalPlanning)_goal;
+            if (_nodeCache.ContainsKey(actionID))
+                return _nodeCache[actionID];
+
             var rootPlanning = (AStarNodePlanning)root;
-
-            var current = root == null ?
-                goalPlanning.Goal.Current.Copy() :
-                rootPlanning.Current;
-
-            var target = root == null ?
-                goalPlanning.Goal.Target.Copy() :
-                rootPlanning.Target;
-
-            float cost = root == null ?
-                0 :
-                Container.GetAction(actionID).Cost;
 
             var node = new AStarNodePlanning(actionID)
             {
-                Current = current,
-                Target = target,
-                Cost = cost
+                Root = rootPlanning,
+                Current = rootPlanning.Current,
+                Cost = Container.GetAction(actionID).Cost
             };
 
-            float g, h;
-            _goal.CalculateValues(node, out g, out h);
+            node.H = _goal.CalcDistanceToTarget(node);
 
-            node.G = g;
-            node.H = h;
-            node.Priority = g + h;
-
-            lock (_lock)
-                _nodeCache[node.ID] = node;
+            _nodeCache[node.ID] = node;
 
             return node;
         }

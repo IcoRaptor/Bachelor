@@ -10,7 +10,6 @@ namespace AStar
         #region Properties
 
         public WorldState Current { get; set; }
-        public WorldState Target { get; set; }
 
         #endregion
 

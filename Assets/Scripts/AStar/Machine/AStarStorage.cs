@@ -110,6 +110,9 @@ namespace AStar
                 }
             }
 
+            _closedList.Clear();
+            _openList.Clear();
+
             return list;
         }
     }

@@ -7,7 +7,6 @@ namespace AStar
         #region Variables
 
         private WorldState _target;
-        private WorldState _current;
 
         #endregion
 
@@ -22,18 +21,17 @@ namespace AStar
         public AStarGoalPlanning(BaseGoal goal)
         {
             Goal = goal;
-            _target = goal.Target.Copy();
-            _current = goal.Current.Copy();
+            _target = goal.Current; // Search backwards
         }
 
         #endregion
 
-        public override void CalculateValues(AStarNode node, out float g, out float h)
+        public override float CalcDistanceToTarget(AStarNode node)
         {
-            var action = Container.GetAction(node.ID);
+            var nodePlanning = (AStarNodePlanning)node;
+            float distance = nodePlanning.Current.GetSymbolDifference(_target);
 
-            g = action == null ? 0 : action.Cost;
-            h = _target.GetSymbolDifference(_current);
+            return distance;
         }
 
         public override bool IsGoalNode(AStarNode node)

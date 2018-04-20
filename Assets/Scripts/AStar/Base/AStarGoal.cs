@@ -4,6 +4,6 @@
     {
         public abstract bool IsGoalNode(AStarNode node);
 
-        public abstract void CalculateValues(AStarNode node, out float g, out float h);
+        public abstract float CalcDistanceToTarget(AStarNode node);
     }
 }
