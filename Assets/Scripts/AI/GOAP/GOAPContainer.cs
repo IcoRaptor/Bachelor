@@ -6,7 +6,7 @@ namespace AI.GOAP
     /// <summary>
     /// Contains the goals and actions
     /// </summary>
-    public static class Container
+    public static class GOAPContainer
     {
         #region Variables
 

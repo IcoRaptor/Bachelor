@@ -56,7 +56,7 @@ namespace AStar
             {
                 Root = rootPlanning,
                 Current = rootPlanning.Current,
-                Cost = Container.GetAction(actionID).Cost
+                Cost = GOAPContainer.GetAction(actionID).Cost
             };
 
             node.H = _goal.CalcDistanceToTarget(node);

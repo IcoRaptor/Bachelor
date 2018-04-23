@@ -116,14 +116,16 @@ namespace AI.GOAP
             string id = string.Empty;
 
             foreach (XmlNode node in nodes)
+            {
                 id = node.Attributes[Strings.ATTR_ID].Value;
+            }
 
             // Test
             var testGoal = new TestGoal()
             {
                 ID = id
             };
-            Container.AddGoal(testGoal);
+            GOAPContainer.AddGoal(testGoal);
 
             return true;
         }
@@ -141,7 +143,7 @@ namespace AI.GOAP
             {
                 ID = id
             };
-            Container.AddAction(testAction);
+            GOAPContainer.AddAction(testAction);
 
             return true;
         }
@@ -161,7 +163,7 @@ namespace AI.GOAP
                 Actions = new BaseAction[0],
                 Goals = new BaseGoal[0]
             };
-            Container.AddAgent(agent);
+            GOAPContainer.AddAgent(agent);
 
             return true;
         }

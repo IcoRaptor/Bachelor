@@ -25,7 +25,7 @@ namespace AI.GOAP
 
         private void Start()
         {
-            Container.GetAgent(
+            GOAPContainer.GetAgent(
                 _agentID,
                 out _goals,
                 out _actions);
@@ -36,8 +36,11 @@ namespace AI.GOAP
                 goal.AgentID = _agentID;
             }
 
+            foreach (var action in _actions)
+                action.Deactivate();
+
             // Test
-            ActiveGoal = Container.GetGoal("TestGoal");
+            ActiveGoal = GOAPContainer.GetGoal("TestGoal");
             ActiveGoal.Module = this;
             ActiveGoal.AgentID = _agentID;
 

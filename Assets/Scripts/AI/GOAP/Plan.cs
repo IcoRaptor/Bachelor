@@ -31,12 +31,12 @@ namespace AI.GOAP
                 if (node.Root == null)
                     continue;
 
-                BaseAction action = Container.GetAction(node.ID);
+                BaseAction action = GOAPContainer.GetAction(node.ID);
                 _plan.AddLast(action);
             }
 
             // Test
-            _plan.AddFirst(Container.GetAction("TestAction"));
+            _plan.AddFirst(GOAPContainer.GetAction("TestAction"));
         }
 
         #endregion
