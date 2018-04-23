@@ -1,4 +1,6 @@
-﻿public class XmlFileInfo
+﻿using System.IO;
+
+public class XmlFileInfo
 {
     #region Properties
 
@@ -22,7 +24,7 @@
 
 #if UNITY_EDITOR
         FileName = fileName + Strings.XML;
-        RelativePath = Strings.RELATIVE_BASE + FileName;
+        RelativePath = Path.Combine(Strings.RELATIVE_BASE, FileName);
 #else
         FileName = fileName;
 #endif

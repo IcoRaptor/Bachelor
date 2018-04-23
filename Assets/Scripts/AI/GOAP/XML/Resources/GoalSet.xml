@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <GoalSet>
-    <goal id="TestGoal"></goal>
+    <goal id="TestGoal">
+        <target>
+        </target>
+    </goal>
 </GoalSet>

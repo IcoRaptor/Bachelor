@@ -150,7 +150,7 @@ namespace AStar
 
             _stopwatch.Stop();
             Debugger.LogFormat(LOG_TYPE.LOG,
-                "Elapsed milliseconds: {0}\nTicks: {1}",
+                "Milliseconds: {0}\nTicks: {1}",
                 _stopwatch.ElapsedMilliseconds, _stopwatch.ElapsedTicks);
         }
 

@@ -5,7 +5,8 @@ public enum GAME_STATE
 {
     DEFAULT,
     SHUTDOWN,
-    FADING,
+    FADING_IN,
+    FADING_OUT,
     MAIN_SCENE,
     TOWN_1,
 }

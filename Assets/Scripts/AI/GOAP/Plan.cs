@@ -29,14 +29,23 @@ namespace AI.GOAP
             foreach (var node in result.Nodes)
             {
                 if (node.Root == null)
-                    break;
+                    continue;
 
                 BaseAction action = Container.GetAction(node.ID);
-                _plan.AddFirst(action);
+                _plan.AddLast(action);
             }
+
+            // Test
+            _plan.AddFirst(Container.GetAction("TestAction"));
         }
 
         #endregion
+
+        public void Update(AIModule module)
+        {
+            if (CurrentAction != null)
+                CurrentAction.Update(module);
+        }
 
         public void Execute()
         {
@@ -61,6 +70,9 @@ namespace AI.GOAP
 
         private void SetupAction()
         {
+            if (_plan.Count == 0)
+                return;
+
             CurrentAction = _plan.First.Value;
             _plan.RemoveFirst();
 

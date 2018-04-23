@@ -1,48 +1,47 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace Pathfinding
 {
     using Pathfinding.Util;
 
     /** Linearly interpolating movement script.
-	 * This movement script will follow the path exactly, it uses linear interpolation to move between the waypoints in the path.
-	 * This is desirable for some types of games.
-	 * It also works in 2D.
-	 *
-	 * \see You can see an example of this script in action in the example scene called \a Example15_2D.
-	 *
-	 * \section rec Configuration
-	 * \subsection rec-snapped Recommended setup for movement along connections
-	 *
-	 * This depends on what type of movement you are aiming for.
-	 * If you are aiming for movement where the unit follows the path exactly and move only along the graph connections on a grid/point graph.
-	 * I recommend that you adjust the StartEndModifier on the Seeker component: set the 'Start Point Snapping' field to 'NodeConnection' and the 'End Point Snapping' field to 'SnapToNode'.
-	 * \shadowimage{ailerp_recommended_snapped.png}
-	 * \shadowimage{ailerp_snapped_movement.png}
-	 *
-	 * \subsection rec-smooth Recommended setup for smooth movement
-	 * If you on the other hand want smoother movement I recommend setting 'Start Point Snapping' and 'End Point Snapping' to 'ClosestOnNode' and to add the Simple Smooth Modifier to the GameObject as well.
-	 * Alternatively you can use the \link Pathfinding.FunnelModifier Funnel Modifier\endlink which works better on navmesh/recast graphs or the \link Pathfinding.RaycastModifier RaycastModifier\endlink.
-	 *
-	 * You should not combine the Simple Smooth Modifier or the Funnel Modifier with the NodeConnection snapping mode. This may lead to very odd behavior.
-	 *
-	 * \shadowimage{ailerp_recommended_smooth.png}
-	 * \shadowimage{ailerp_smooth_movement.png}
-	 * You may also want to tweak the #rotationSpeed.
-	 *
-	 * \ingroup movementscripts
-	 */
+     * This movement script will follow the path exactly, it uses linear interpolation to move between the waypoints in the path.
+     * This is desirable for some types of games.
+     * It also works in 2D.
+     *
+     * \see You can see an example of this script in action in the example scene called \a Example15_2D.
+     *
+     * \section rec Configuration
+     * \subsection rec-snapped Recommended setup for movement along connections
+     *
+     * This depends on what type of movement you are aiming for.
+     * If you are aiming for movement where the unit follows the path exactly and move only along the graph connections on a grid/point graph.
+     * I recommend that you adjust the StartEndModifier on the Seeker component: set the 'Start Point Snapping' field to 'NodeConnection' and the 'End Point Snapping' field to 'SnapToNode'.
+     * \shadowimage{ailerp_recommended_snapped.png}
+     * \shadowimage{ailerp_snapped_movement.png}
+     *
+     * \subsection rec-smooth Recommended setup for smooth movement
+     * If you on the other hand want smoother movement I recommend setting 'Start Point Snapping' and 'End Point Snapping' to 'ClosestOnNode' and to add the Simple Smooth Modifier to the GameObject as well.
+     * Alternatively you can use the \link Pathfinding.FunnelModifier Funnel Modifier\endlink which works better on navmesh/recast graphs or the \link Pathfinding.RaycastModifier RaycastModifier\endlink.
+     *
+     * You should not combine the Simple Smooth Modifier or the Funnel Modifier with the NodeConnection snapping mode. This may lead to very odd behavior.
+     *
+     * \shadowimage{ailerp_recommended_smooth.png}
+     * \shadowimage{ailerp_smooth_movement.png}
+     * You may also want to tweak the #rotationSpeed.
+     *
+     * \ingroup movementscripts
+     */
+
     [RequireComponent(typeof(Seeker))]
     [AddComponentMenu("Pathfinding/AI/AILerp (2D,3D)")]
     [HelpURL("http://arongranberg.com/astar/docs/class_pathfinding_1_1_a_i_lerp.php")]
     public class AILerp : VersionedMonoBehaviour, IAstarAI
     {
         /** Determines how often it will search for new paths.
-		 * If you have fast moving targets or AIs, you might want to set it to a lower value.
-		 * The value is in seconds between path requests.
-		 */
+         * If you have fast moving targets or AIs, you might want to set it to a lower value.
+         * The value is in seconds between path requests.
+         */
         public float repathRate = 0.5F;
 
         /** \copydoc Pathfinding::IAstarAI::canSearch */
@@ -58,17 +57,17 @@ namespace Pathfinding
         public bool enableRotation = true;
 
         /** If true, rotation will only be done along the Z axis so that the Y axis is the forward direction of the character.
-		 * This is useful for 2D games in which one often want to have the Y axis as the forward direction to get sprites and 2D colliders to work properly.
-		 * \shadowimage{aibase_forward_axis.png}
-		 */
+         * This is useful for 2D games in which one often want to have the Y axis as the forward direction to get sprites and 2D colliders to work properly.
+         * \shadowimage{aibase_forward_axis.png}
+         */
         public bool rotationIn2D = false;
 
         /** How quickly to rotate */
         public float rotationSpeed = 10;
 
         /** If true, some interpolation will be done when a new path has been calculated.
-		 * This is used to avoid short distance teleportation.
-		 */
+         * This is used to avoid short distance teleportation.
+         */
         public bool interpolatePathSwitches = true;
 
         /** How quickly to interpolate to the new path */
@@ -80,32 +79,32 @@ namespace Pathfinding
         public Vector3 destination { get; set; }
 
         /** Determines if the character's position should be coupled to the Transform's position.
-		 * If false then all movement calculations will happen as usual, but the object that this component is attached to will not move
-		 * instead only the #position property will change.
-		 *
-		 * \see #canMove which in contrast to this field will disable all movement calculations.
-		 * \see #updateRotation
-		 */
+         * If false then all movement calculations will happen as usual, but the object that this component is attached to will not move
+         * instead only the #position property will change.
+         *
+         * \see #canMove which in contrast to this field will disable all movement calculations.
+         * \see #updateRotation
+         */
         [System.NonSerialized]
         public bool updatePosition = true;
 
         /** Determines if the character's rotation should be coupled to the Transform's rotation.
-		 * If false then all movement calculations will happen as usual, but the object that this component is attached to will not rotate
-		 * instead only the #rotation property will change.
-		 *
-		 * \see #updatePosition
-		 */
+         * If false then all movement calculations will happen as usual, but the object that this component is attached to will not rotate
+         * instead only the #rotation property will change.
+         *
+         * \see #updatePosition
+         */
         [System.NonSerialized]
         public bool updateRotation = true;
 
         /** Target to move towards.
-		 * The AI will try to follow/move towards this target.
-		 * It can be a point on the ground where the player has clicked in an RTS for example, or it can be the player object in a zombie game.
-		 *
-		 * \deprecated In 4.0 this will automatically add a \link Pathfinding.AIDestinationSetter AIDestinationSetter\endlink component and set the target on that component.
-		 * Try instead to use the #destination property which does not require a transform to be created as the target or use
-		 * the AIDestinationSetter component directly.
-		 */
+         * The AI will try to follow/move towards this target.
+         * It can be a point on the ground where the player has clicked in an RTS for example, or it can be the player object in a zombie game.
+         *
+         * \deprecated In 4.0 this will automatically add a \link Pathfinding.AIDestinationSetter AIDestinationSetter\endlink component and set the target on that component.
+         * Try instead to use the #destination property which does not require a transform to be created as the target or use
+         * the AIDestinationSetter component directly.
+         */
         [System.Obsolete("Use the destination property or the AIDestinationSetter component instead")]
         public Transform target
         {
@@ -134,6 +133,7 @@ namespace Pathfinding
         #region IAstarAI implementation
 
         /** \copydoc Pathfinding::IAstarAI::Move */
+
         void IAstarAI.Move(Vector3 deltaPosition)
         {
             // This script does not know the concept of being away from the path that it is following
@@ -176,6 +176,7 @@ namespace Pathfinding
                 return interpolator.valid ? interpolator.position + interpolator.tangent : simulatedPosition;
             }
         }
+
         #endregion
 
         public float remainingDistance
@@ -228,43 +229,47 @@ namespace Pathfinding
         protected bool canSearchAgain = true;
 
         /** When a new path was returned, the AI was moving along this ray.
-		 * Used to smoothly interpolate between the previous movement and the movement along the new path.
-		 * The speed is equal to movement direction.
-		 */
+         * Used to smoothly interpolate between the previous movement and the movement along the new path.
+         * The speed is equal to movement direction.
+         */
         protected Vector3 previousMovementOrigin;
         protected Vector3 previousMovementDirection;
 
         /** Time since the path was replaced by a new path.
-		 * \see #interpolatePathSwitches
-		 */
+         * \see #interpolatePathSwitches
+         */
         protected float pathSwitchInterpolationTime = 0;
 
         protected PathInterpolator interpolator = new PathInterpolator();
 
-
         /** Holds if the Start function has been run.
-		 * Used to test if coroutines should be started in OnEnable to prevent calculating paths
-		 * in the awake stage (or rather before start on frame 0).
-		 */
-        bool startHasRun = false;
+         * Used to test if coroutines should be started in OnEnable to prevent calculating paths
+         * in the awake stage (or rather before start on frame 0).
+         */
+        private bool startHasRun = false;
 
-        Vector3 previousPosition1, previousPosition2, simulatedPosition;
-        Quaternion simulatedRotation;
+        private Vector3 previousPosition1, previousPosition2, simulatedPosition;
+        private Quaternion simulatedRotation;
 
         /** Required for serialization backward compatibility */
         [UnityEngine.Serialization.FormerlySerializedAs("target")]
         [SerializeField]
         [HideInInspector]
-        Transform targetCompatibility;
+        private Transform targetCompatibility;
 
         /** Initializes reference variables.
-		 * If you override this function you should in most cases call base.Awake () at the start of it.
-		 * */
+         * If you override this function you should in most cases call base.Awake () at the start of it.
+         * */
+
         protected override void Awake()
         {
             base.Awake();
             //This is a simple optimization, cache the transform component lookup
-            tr = transform.parent.transform;
+
+            tr = transform;
+
+            while (tr.parent != null)
+                tr = tr.parent;
 
             seeker = GetComponent<Seeker>();
 
@@ -277,10 +282,11 @@ namespace Pathfinding
         }
 
         /** Starts searching for paths.
-		 * If you override this function you should in most cases call base.Start () at the start of it.
-		 * \see #Init
-		 * \see #RepeatTrySearchPath
-		 */
+         * If you override this function you should in most cases call base.Start () at the start of it.
+         * \see #Init
+         * \see #RepeatTrySearchPath
+         */
+
         protected virtual void Start()
         {
             startHasRun = true;
@@ -288,6 +294,7 @@ namespace Pathfinding
         }
 
         /** Called when the component is enabled */
+
         protected virtual void OnEnable()
         {
             // Make sure we receive callbacks when paths complete
@@ -295,7 +302,7 @@ namespace Pathfinding
             Init();
         }
 
-        void Init()
+        private void Init()
         {
             if (startHasRun)
             {
@@ -346,8 +353,9 @@ namespace Pathfinding
         }
 
         /** Requests a path to the target.
-		 * \deprecated Use #SearchPath instead.
-		 */
+         * \deprecated Use #SearchPath instead.
+         */
+
         [System.Obsolete("Use SearchPath instead")]
         public virtual void ForceSearchPath()
         {
@@ -355,7 +363,8 @@ namespace Pathfinding
         }
 
         /** Requests a path to the target.
-		 */
+         */
+
         public virtual void SearchPath()
         {
             if (float.IsPositiveInfinity(destination.x))
@@ -371,13 +380,13 @@ namespace Pathfinding
             // If we are following a path, start searching from the node we will
             // reach next this can prevent odd turns right at the start of the path
             /*if (interpolator.valid) {
-			    var prevDist = interpolator.distance;
-			    // Move to the end of the current segment
-			    interpolator.MoveToSegment(interpolator.segmentIndex, 1);
-			    currentPosition = interpolator.position;
-			    // Move back to the original position
-			    interpolator.distance = prevDist;
-			}*/
+                var prevDist = interpolator.distance;
+                // Move to the end of the current segment
+                interpolator.MoveToSegment(interpolator.segmentIndex, 1);
+                currentPosition = interpolator.position;
+                // Move back to the original position
+                interpolator.distance = prevDist;
+            }*/
 
             canSearchAgain = false;
 
@@ -391,19 +400,21 @@ namespace Pathfinding
         }
 
         /** The end of the path has been reached.
-		 * If you want custom logic for when the AI has reached it's destination
-		 * add it here.
-		 * You can also create a new script which inherits from this one
-		 * and override the function in that script.
-		 */
+         * If you want custom logic for when the AI has reached it's destination
+         * add it here.
+         * You can also create a new script which inherits from this one
+         * and override the function in that script.
+         */
+
         public virtual void OnTargetReached()
         {
         }
 
         /** Called when a requested path has finished calculation.
-		 * A path is first requested by #SearchPath, it is then calculated, probably in the same or the next frame.
-		 * Finally it is returned to the seeker which forwards it to this function.
-		 */
+         * A path is first requested by #SearchPath, it is then calculated, probably in the same or the next frame.
+         * Finally it is returned to the seeker which forwards it to this function.
+         */
+
         protected virtual void OnPathComplete(Path _p)
         {
             ABPath p = _p as ABPath;
@@ -429,7 +440,6 @@ namespace Pathfinding
             {
                 ConfigurePathSwitchInterpolation();
             }
-
 
             // Replace the old path
             var oldPath = path;
@@ -462,6 +472,7 @@ namespace Pathfinding
         }
 
         /** \copydoc Pathfinding::IAstarAI::SetPath */
+
         public void SetPath(Path path)
         {
             if (path.PipelineState == PathState.Created)
@@ -515,6 +526,7 @@ namespace Pathfinding
         }
 
         /** Finds the closest point on the current path and configures the #interpolator */
+
         protected virtual void ConfigureNewPath()
         {
             var hadValidPath = interpolator.valid;
@@ -544,6 +556,7 @@ namespace Pathfinding
         }
 
         /** \copydoc Pathfinding::IAstarAI::MovementUpdate */
+
         public void MovementUpdate(float deltaTime, out Vector3 nextPosition, out Quaternion nextRotation)
         {
             if (updatePosition)
@@ -562,6 +575,7 @@ namespace Pathfinding
         }
 
         /** \copydoc Pathfinding::IAstarAI::FinalizeMovement */
+
         public void FinalizeMovement(Vector3 nextPosition, Quaternion nextRotation)
         {
             previousPosition2 = previousPosition1;
@@ -573,7 +587,7 @@ namespace Pathfinding
                 tr.rotation = nextRotation;
         }
 
-        Quaternion SimulateRotationTowards(Vector3 direction, float deltaTime)
+        private Quaternion SimulateRotationTowards(Vector3 direction, float deltaTime)
         {
             // Rotate unless we are really close to the target
             if (direction != Vector3.zero)
@@ -588,8 +602,9 @@ namespace Pathfinding
         }
 
         /** Calculate the AI's next position (one frame in the future).
-		 * \param direction The tangent of the segment the AI is currently traversing. Not normalized.
-		 */
+         * \param direction The tangent of the segment the AI is currently traversing. Not normalized.
+         */
+
         protected virtual Vector3 CalculateNextPosition(out Vector3 direction, float deltaTime)
         {
             if (!interpolator.valid)

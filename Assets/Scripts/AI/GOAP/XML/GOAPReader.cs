@@ -18,11 +18,15 @@ namespace AI.GOAP
         {
             var goalSet = new XmlFileInfo(Strings.GOAL_SET);
             var actionSet = new XmlFileInfo(Strings.ACTION_SET);
+            var agentSet = new XmlFileInfo(Strings.AGENT_SET);
 
             if (!ReadFile(goalSet, XML_TYPE.GOAL_SET))
                 return false;
 
             if (!ReadFile(actionSet, XML_TYPE.ACTION_SET))
+                return false;
+
+            if (!ReadFile(agentSet, XML_TYPE.AGENT_SET))
                 return false;
 
             return true;
@@ -93,37 +97,71 @@ namespace AI.GOAP
         {
             switch (type)
             {
-                case XML_TYPE.AGENT:
-                    return ReadAgent(doc);
+                case XML_TYPE.GOAL_SET:
+                    return ReadGoalSet(doc);
 
                 case XML_TYPE.ACTION_SET:
                     return ReadActionSet(doc);
 
-                case XML_TYPE.GOAL_SET:
-                    return ReadGoalSet(doc);
+                case XML_TYPE.AGENT_SET:
+                    return ReadAgentSet(doc);
             }
 
             return false;
         }
 
-        private static bool ReadAgent(XmlDocument doc)
+        private static bool ReadGoalSet(XmlDocument doc)
         {
+            var nodes = doc.SelectNodes(Strings.XPATH_GOAL);
+            string id = string.Empty;
+
+            foreach (XmlNode node in nodes)
+                id = node.Attributes[Strings.ATTR_ID].Value;
+
+            // Test
+            var testGoal = new TestGoal()
+            {
+                ID = id
+            };
+            Container.AddGoal(testGoal);
+
             return true;
         }
 
         private static bool ReadActionSet(XmlDocument doc)
         {
+            var nodes = doc.SelectNodes(Strings.XPATH_ACTION);
+            string id = string.Empty;
+
+            foreach (XmlNode node in nodes)
+                id = node.Attributes[Strings.ATTR_ID].Value;
+
+            // Test
+            var testAction = new TestAction()
+            {
+                ID = id
+            };
+            Container.AddAction(testAction);
+
             return true;
         }
 
-        private static bool ReadGoalSet(XmlDocument doc)
+        private static bool ReadAgentSet(XmlDocument doc)
         {
-            var nodes = doc.SelectNodes(Strings.XPATH_GOAL);
+            var nodes = doc.SelectNodes(Strings.XPATH_AGENT);
+            string id = string.Empty;
 
             foreach (XmlNode node in nodes)
+                id = node.Attributes[Strings.ATTR_ID].Value;
+
+            // Test
+            var agent = new Agent()
             {
-                Debug.Log(node.Attributes[Strings.ATTR_ID].Value + "\n");
-            }
+                ID = id,
+                Actions = new BaseAction[0],
+                Goals = new BaseGoal[0]
+            };
+            Container.AddAgent(agent);
 
             return true;
         }

@@ -1,4 +1,6 @@
-﻿namespace AI.GOAP
+﻿using UnityEngine;
+
+namespace AI.GOAP
 {
     /// <summary>
     /// Provides GOAP functionality for the agent
@@ -7,19 +9,45 @@
     {
         #region Variables
 
-        private TestGoal _goal;
+        [SerializeField]
+        private string _agentID;
+
+        private BaseGoal[] _goals;
+        private BaseAction[] _actions;
+
+        #endregion
+
+        #region Properties
+
+        public BaseGoal ActiveGoal { get; private set; }
 
         #endregion
 
         private void Start()
         {
-            _goal = new TestGoal()
-            {
-                Module = this
-            };
+            Container.GetAgent(
+                _agentID,
+                out _goals,
+                out _actions);
 
-            _goal.UpdateRelevance(new WorldState());
-            _goal.BuildPlan();
+            foreach (var goal in _goals)
+            {
+                goal.Module = this;
+                goal.AgentID = _agentID;
+            }
+
+            // Test
+            ActiveGoal = Container.GetGoal("TestGoal");
+            ActiveGoal.Module = this;
+            ActiveGoal.AgentID = _agentID;
+
+            ActiveGoal.UpdateRelevance(new WorldState());
+            ActiveGoal.BuildPlan();
+        }
+
+        private void Update()
+        {
+            ActiveGoal.Update();
         }
     }
 }

@@ -7,7 +7,7 @@
     {
         #region Variables
 
-        private const int _NUM_SYMBOLS = 5;
+        public const int NUM_SYMBOLS = 5;
 
         #endregion
 
@@ -26,15 +26,15 @@
 
         public WorldState(STATE_SYMBOL[] symbols)
         {
-            if (symbols.Length != _NUM_SYMBOLS)
+            if (symbols.Length != NUM_SYMBOLS)
             {
                 Init();
                 return;
             }
 
-            Symbols = new STATE_SYMBOL[_NUM_SYMBOLS];
+            Symbols = new STATE_SYMBOL[NUM_SYMBOLS];
 
-            for (int i = 0; i < _NUM_SYMBOLS; i++)
+            for (int i = 0; i < NUM_SYMBOLS; i++)
                 Symbols[i] = symbols[i];
         }
 
@@ -126,9 +126,9 @@
 
         private void Init()
         {
-            Symbols = new STATE_SYMBOL[_NUM_SYMBOLS];
+            Symbols = new STATE_SYMBOL[NUM_SYMBOLS];
 
-            for (var i = 0; i < _NUM_SYMBOLS; i++)
+            for (var i = 0; i < NUM_SYMBOLS; i++)
                 Symbols[i] = STATE_SYMBOL.UNSET;
         }
     }

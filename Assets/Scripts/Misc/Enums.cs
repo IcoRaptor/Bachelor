@@ -9,7 +9,7 @@
 
     public enum XML_TYPE
     {
-        AGENT,
+        AGENT_SET,
         GOAL_SET,
         ACTION_SET
     }

@@ -23,7 +23,7 @@ namespace AI
             {
                 Debugger.LogFormat(LOG_TYPE.ERROR,
                    "{0}: {1} missing!\n",
-                    gameObject.name, _blackboard.GetType().Name);
+                    gameObject.name, typeof(Blackboard).Name);
             }
         }
     }

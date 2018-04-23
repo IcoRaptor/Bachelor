@@ -49,7 +49,8 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
         }
         else
         {
-            Debugger.LogFormat(LOG_TYPE.LOG, "GameState is already \"{0}\"!\n",
+            Debugger.LogFormat(LOG_TYPE.LOG,
+                "GameState is already \"{0}\"!\n",
                 newState);
         }
     }
@@ -73,10 +74,15 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
             case GAME_STATE.MAIN_SCENE:
                 WakeUpSystems();
                 GOAPReader.ReadAll();
-                SceneManager.LoadScene(1);
+
+                if (SceneManager.GetActiveScene().buildIndex != 1)
+                    SceneManager.LoadScene(1);
+
                 break;
 
-            case GAME_STATE.FADING:
+            case GAME_STATE.FADING_IN:
+
+            case GAME_STATE.FADING_OUT:
 
             case GAME_STATE.TOWN_1:
 

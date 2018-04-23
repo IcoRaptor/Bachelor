@@ -3,26 +3,17 @@ using UnityEngine;
 
 namespace AI
 {
-    public abstract class AIModule : MonoBehaviour
+    public class SensorySystem : MonoBehaviour
     {
         #region Variables
 
-        protected Blackboard _blackboard;
-        protected WorkingMemory _memory;
+        private WorkingMemory _memory;
 
         #endregion
 
         private void Awake()
         {
-            _blackboard = GetComponentInParent<Blackboard>();
             _memory = GetComponentInParent<WorkingMemory>();
-
-            if (!_blackboard)
-            {
-                Debugger.LogFormat(LOG_TYPE.ERROR,
-                   "{0}: {1} missing!\n",
-                    gameObject.name, typeof(Blackboard).Name);
-            }
 
             if (!_memory)
             {
@@ -30,6 +21,16 @@ namespace AI
                    "{0}: {1} missing!\n",
                     gameObject.name, typeof(WorkingMemory).Name);
             }
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            var memoryFact = other.GetComponent<IMemoryFact>();
+
+            if (memoryFact == null)
+                return;
+
+            memoryFact.WriteToMemory(_memory);
         }
     }
 }

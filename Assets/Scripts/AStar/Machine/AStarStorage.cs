@@ -94,26 +94,44 @@ namespace AStar
         {
             var list = new LinkedList<AStarNode>();
 
+            // Check last entry first
+            var last = _closedList.Last.Value;
+
+            if (last.SolutionNode)
+            {
+                HandleSolutionNode(last, list);
+
+                _closedList.Clear();
+                _openList.Clear();
+
+                return list;
+            }
+
             foreach (var node in _closedList)
             {
                 if (!node.SolutionNode)
                     continue;
 
-                list.AddFirst(node);
-
-                var root = node.Root;
-
-                while (root != null)
-                {
-                    list.AddFirst(root);
-                    root = root.Root;
-                }
+                HandleSolutionNode(node, list);
             }
 
             _closedList.Clear();
             _openList.Clear();
 
             return list;
+        }
+
+        private void HandleSolutionNode(AStarNode node, LinkedList<AStarNode> list)
+        {
+            list.AddFirst(node);
+
+            var root = node.Root;
+
+            while (root != null)
+            {
+                list.AddFirst(root);
+                root = root.Root;
+            }
         }
     }
 }
