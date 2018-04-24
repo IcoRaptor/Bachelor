@@ -10,10 +10,10 @@ namespace AI.GOAP
         #region Variables
 
         [SerializeField]
-        private string _agentID;
+        private string _agentID = string.Empty;
 
-        private BaseGoal[] _goals;
-        private BaseAction[] _actions;
+        private Agent _agent;
+        private Discontentment _disc;
 
         #endregion
 
@@ -21,36 +21,55 @@ namespace AI.GOAP
 
         public BaseGoal ActiveGoal { get; private set; }
 
+        public WorldState Current { get; set; }
+
         #endregion
 
         private void Start()
         {
-            GOAPContainer.GetAgent(
-                _agentID,
-                out _goals,
-                out _actions);
+            _agent = GOAPContainer.GetAgent(_agentID);
 
-            foreach (var goal in _goals)
+            Current = new WorldState();
+            _disc = new Discontentment();
+
+            foreach (var goal in _agent.Goals)
             {
                 goal.Module = this;
                 goal.AgentID = _agentID;
             }
 
-            foreach (var action in _actions)
-                action.Deactivate();
-
-            // Test
-            ActiveGoal = GOAPContainer.GetGoal("TestGoal");
-            ActiveGoal.Module = this;
-            ActiveGoal.AgentID = _agentID;
-
-            ActiveGoal.UpdateRelevance(new WorldState());
+            UpdateGoals();
             ActiveGoal.BuildPlan();
         }
 
         private void Update()
         {
             ActiveGoal.Update();
+        }
+
+        private void UpdateGoals()
+        {
+            foreach (var goal in _agent.Goals)
+            {
+                goal.Current = Current;
+                goal.UpdateRelevance(_disc);
+            }
+
+            int highest = int.MinValue;
+            int index = 0;
+
+            for (int i = 0; i < _agent.Goals.Length; i++)
+            {
+                int relevance = _agent.Goals[i].Relevance;
+
+                if (highest < relevance)
+                {
+                    highest = relevance;
+                    index = i;
+                }
+            }
+
+            ActiveGoal = _agent.Goals[index];
         }
     }
 }

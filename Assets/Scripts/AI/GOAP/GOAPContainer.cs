@@ -14,11 +14,8 @@ namespace AI.GOAP
             new Dictionary<string, BaseAction>();
         private static Dictionary<string, BaseGoal> _goalCache =
             new Dictionary<string, BaseGoal>();
-
-        private static Dictionary<string, BaseAction[]> _agentActions =
-            new Dictionary<string, BaseAction[]>();
-        private static Dictionary<string, BaseGoal[]> _agentGoals =
-            new Dictionary<string, BaseGoal[]>();
+        private static Dictionary<string, Agent> _agentCache =
+            new Dictionary<string, Agent>();
 
         // TODO Neighbours
 
@@ -37,8 +34,7 @@ namespace AI.GOAP
         /// </summary>
         public static void AddAction(BaseAction action)
         {
-            if (!_actionCache.ContainsKey(action.ID))
-                _actionCache.Add(action.ID, action);
+            _actionCache.Add(action.ID, action);
         }
 
         /// <summary>
@@ -49,7 +45,7 @@ namespace AI.GOAP
         {
             try
             {
-                return _actionCache[id];
+                return _actionCache[id].Copy();
             }
             catch
             {
@@ -69,8 +65,7 @@ namespace AI.GOAP
         /// </summary>
         public static void AddGoal(BaseGoal goal)
         {
-            if (!_goalCache.ContainsKey(goal.ID))
-                _goalCache.Add(goal.ID, goal);
+            _goalCache.Add(goal.ID, goal);
         }
 
         /// <summary>
@@ -81,7 +76,7 @@ namespace AI.GOAP
         {
             try
             {
-                return _goalCache[id];
+                return _goalCache[id].Copy();
             }
             catch
             {
@@ -98,21 +93,18 @@ namespace AI.GOAP
         /// </summary>
         public static void AddAgent(Agent agent)
         {
-            _agentGoals[agent.ID] = agent.Goals;
-            _agentActions[agent.ID] = agent.Actions;
+            _agentCache[agent.ID] = agent;
         }
 
         /// <summary>
-        /// Fills in the goals and actions of the agent with the given ID
+        /// Returns the agent with the given ID.
+        ///  May return null
         /// </summary>
-        public static void GetAgent(string id,
-            out BaseGoal[] goals,
-            out BaseAction[] actions)
+        public static Agent GetAgent(string id)
         {
             try
             {
-                goals = _agentGoals[id];
-                actions = _agentActions[id];
+                return _agentCache[id].Copy();
             }
             catch
             {
@@ -120,8 +112,7 @@ namespace AI.GOAP
                     "GetAgent: ID '{0}' doesn't exist!\n",
                     id);
 
-                goals = new BaseGoal[0];
-                actions = new BaseAction[0];
+                return null;
             }
         }
     }

@@ -8,6 +8,7 @@ namespace AI.GOAP
         public TestGoal()
         {
             Target = new WorldState();
+            Current = new WorldState();
 
             for (int i = 0; i < Target.Symbols.Length; i++)
                 Target.Symbols[i] = STATE_SYMBOL.SATISFIED;
@@ -19,10 +20,8 @@ namespace AI.GOAP
             base.BuildPlan();
         }
 
-        public override void UpdateRelevance(WorldState current)
+        public override void UpdateRelevance(Discontentment disc)
         {
-            Current = current;
-
             for (int i = 0; i < Current.Symbols.Length; i++)
                 Current.Symbols[i] = STATE_SYMBOL.SATISFIED;
 
@@ -41,6 +40,18 @@ namespace AI.GOAP
 
             _plan = new Plan(result);
             _plan.Execute();
+        }
+
+        public override BaseGoal Copy()
+        {
+            var goal = new TestGoal()
+            {
+                ID = ID,
+                Current = Current.Copy(),
+                Target = Target.Copy(),
+            };
+
+            return goal;
         }
     }
 }

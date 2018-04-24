@@ -12,8 +12,8 @@ namespace AI.GOAP
 
         #region Properties
 
-        public WorldState Target { get; protected set; }
-        public WorldState Current { get; protected set; }
+        public WorldState Target { get; set; }
+        public WorldState Current { get; set; }
 
         public AIModule Module { get; set; }
         public string AgentID { get; set; }
@@ -24,7 +24,9 @@ namespace AI.GOAP
 
         #endregion
 
-        public abstract void UpdateRelevance(WorldState current);
+        public abstract BaseGoal Copy();
+
+        public abstract void UpdateRelevance(Discontentment disc);
 
         protected abstract void OnFinished(AStarResult result);
 

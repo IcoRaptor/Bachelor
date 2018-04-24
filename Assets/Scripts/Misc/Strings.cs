@@ -4,6 +4,14 @@
 
     public const string ROOT_NODE = @"r";
 
+    // GOAP
+
+    public const string GOAL_TEST = "TestGoal";
+
+    public const string ACTION_TEST = "TestAction";
+
+    public const string AGENT_TEST = "TestAgent";
+
     // XmlFileInfo
 
     public const string XML = @".xml";

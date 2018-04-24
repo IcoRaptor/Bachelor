@@ -35,4 +35,10 @@ public class TestAction : BaseAction
     {
         return true;
     }
+
+    public override BaseAction Copy()
+    {
+        var action = new TestAction();
+        return action;
+    }
 }

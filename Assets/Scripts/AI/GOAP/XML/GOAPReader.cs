@@ -87,8 +87,11 @@ namespace AI.GOAP
             }
             catch
             {
+                DestroyFile(file);
                 return false;
             }
+
+            DestroyFile(file);
 
             return ReadDocument(doc, type);
         }
@@ -115,17 +118,21 @@ namespace AI.GOAP
             var nodes = doc.SelectNodes(Strings.XPATH_GOAL);
             string id = string.Empty;
 
-            foreach (XmlNode node in nodes)
+            foreach (XmlNode goalNode in nodes)
             {
-                id = node.Attributes[Strings.ATTR_ID].Value;
-            }
+                id = goalNode.Attributes[Strings.ATTR_ID].Value;
 
-            // Test
-            var testGoal = new TestGoal()
-            {
-                ID = id
-            };
-            GOAPContainer.AddGoal(testGoal);
+                switch (id)
+                {
+                    case Strings.GOAL_TEST:
+                        var testGoal = new TestGoal()
+                        {
+                            ID = id
+                        };
+                        GOAPContainer.AddGoal(testGoal);
+                        break;
+                }
+            }
 
             return true;
         }
@@ -135,15 +142,21 @@ namespace AI.GOAP
             var nodes = doc.SelectNodes(Strings.XPATH_ACTION);
             string id = string.Empty;
 
-            foreach (XmlNode node in nodes)
-                id = node.Attributes[Strings.ATTR_ID].Value;
-
-            // Test
-            var testAction = new TestAction()
+            foreach (XmlNode actionNode in nodes)
             {
-                ID = id
-            };
-            GOAPContainer.AddAction(testAction);
+                id = actionNode.Attributes[Strings.ATTR_ID].Value;
+
+                switch (id)
+                {
+                    case Strings.ACTION_TEST:
+                        var testAction = new TestAction()
+                        {
+                            ID = id
+                        };
+                        GOAPContainer.AddAction(testAction);
+                        break;
+                }
+            }
 
             return true;
         }
@@ -153,19 +166,37 @@ namespace AI.GOAP
             var nodes = doc.SelectNodes(Strings.XPATH_AGENT);
             string id = string.Empty;
 
-            foreach (XmlNode node in nodes)
-                id = node.Attributes[Strings.ATTR_ID].Value;
-
-            // Test
-            var agent = new Agent()
+            foreach (XmlNode agentNode in nodes)
             {
-                ID = id,
-                Actions = new BaseAction[0],
-                Goals = new BaseGoal[0]
-            };
-            GOAPContainer.AddAgent(agent);
+                id = agentNode.Attributes[Strings.ATTR_ID].Value;
+
+                switch (id)
+                {
+                    case Strings.AGENT_TEST:
+                        var action = GOAPContainer.GetAction(Strings.ACTION_TEST);
+                        var goal = GOAPContainer.GetGoal(Strings.GOAL_TEST);
+
+                        BaseAction[] actions = { action };
+                        BaseGoal[] goals = { goal };
+
+                        var agent = new Agent()
+                        {
+                            ID = id,
+                            Actions = actions,
+                            Goals = goals
+                        };
+                        GOAPContainer.AddAgent(agent);
+                        break;
+                }
+            }
 
             return true;
+        }
+
+        private static void DestroyFile(TextAsset file)
+        {
+            UnityEngine.Object.Destroy(file);
+            Resources.UnloadUnusedAssets();
         }
     }
 }

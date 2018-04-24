@@ -1,6 +1,5 @@
 ﻿using AStar;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace AI.GOAP
 {
@@ -49,8 +48,6 @@ namespace AI.GOAP
 
         public void Execute()
         {
-            Debug.Log("Executing plan...\n");
-
             if (_plan.Count == 0)
                 return;
 

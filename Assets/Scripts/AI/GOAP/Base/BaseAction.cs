@@ -22,6 +22,8 @@
 
         #endregion
 
+        public abstract BaseAction Copy();
+
         public abstract void Update(AIModule module);
 
         public abstract bool CheckContext();
