@@ -43,6 +43,24 @@ namespace AStar
 
         #endregion
 
+        public void Dispose()
+        {
+            _running = false;
+
+            _stopwatch.Stop();
+            Debugger.LogFormat(LOG_TYPE.LOG,
+                "Solver finished\nMilliseconds: {0}",
+                _stopwatch.ElapsedMilliseconds);
+        }
+
+        /// <summary>
+        /// Is the execution complete
+        /// </summary>
+        public bool Finished()
+        {
+            return _running == false;
+        }
+
         /// <summary>
         /// Executes the A* algorithm
         /// </summary>
@@ -142,24 +160,6 @@ namespace AStar
             current.Root = root;
 
             current.Update(_storage);
-        }
-
-        public void Dispose()
-        {
-            _running = false;
-
-            _stopwatch.Stop();
-            Debugger.LogFormat(LOG_TYPE.LOG,
-                "Milliseconds: {0}\nTicks: {1}",
-                _stopwatch.ElapsedMilliseconds, _stopwatch.ElapsedTicks);
-        }
-
-        /// <summary>
-        /// Is the execution complete
-        /// </summary>
-        public bool Finished()
-        {
-            return _running == false;
         }
     }
 }

@@ -98,21 +98,16 @@ namespace AStar
             var last = _closedList.Last.Value;
 
             if (last.SolutionNode)
-            {
                 HandleSolutionNode(last, list);
-
-                _closedList.Clear();
-                _openList.Clear();
-
-                return list;
-            }
-
-            foreach (var node in _closedList)
+            else
             {
-                if (!node.SolutionNode)
-                    continue;
+                foreach (var node in _closedList)
+                {
+                    if (!node.SolutionNode)
+                        continue;
 
-                HandleSolutionNode(node, list);
+                    HandleSolutionNode(node, list);
+                }
             }
 
             _closedList.Clear();

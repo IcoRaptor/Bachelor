@@ -14,8 +14,8 @@ namespace AI.GOAP
             new Dictionary<string, BaseAction>();
         private static Dictionary<string, BaseGoal> _goalCache =
             new Dictionary<string, BaseGoal>();
-        private static Dictionary<string, Agent> _agentCache =
-            new Dictionary<string, Agent>();
+        private static Dictionary<string, GOAPAgent> _agentCache =
+            new Dictionary<string, GOAPAgent>();
 
         // TODO Neighbours
 
@@ -91,7 +91,7 @@ namespace AI.GOAP
         /// <summary>
         /// Adss an agent to the agent cache
         /// </summary>
-        public static void AddAgent(Agent agent)
+        public static void AddAgent(GOAPAgent agent)
         {
             _agentCache[agent.ID] = agent;
         }
@@ -100,7 +100,7 @@ namespace AI.GOAP
         /// Returns the agent with the given ID.
         ///  May return null
         /// </summary>
-        public static Agent GetAgent(string id)
+        public static GOAPAgent GetAgent(string id)
         {
             try
             {

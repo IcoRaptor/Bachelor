@@ -6,13 +6,13 @@ public class TestAction : BaseAction
 {
     public TestAction()
     {
-        _preconditions = new STATE_SYMBOL[WorldState.NUM_SYMBOLS];
-        _effects = new STATE_SYMBOL[WorldState.NUM_SYMBOLS];
+        Preconditions = new WorldState();
+        Effects = new WorldState();
 
-        for (int i = 0; i < _effects.Length; i++)
+        for (int i = 0; i < Effects.Symbols.Length; i++)
         {
-            _preconditions[i] = STATE_SYMBOL.UNSET;
-            _effects[i] = STATE_SYMBOL.UNSET;
+            Preconditions.Symbols[i] = STATE_SYMBOL.UNSET;
+            Effects.Symbols[i] = STATE_SYMBOL.UNSET;
         }
     }
 
@@ -23,7 +23,9 @@ public class TestAction : BaseAction
     public override void Activate()
     {
         base.Activate();
-        Debug.Log("TestAction activated!\n");
+        Debug.LogFormat(
+            "{0}\nCost: {1}, Time: {2}",
+            Dialog, Cost, TimeInMinutes);
     }
 
     public override bool CheckContext()
@@ -38,7 +40,14 @@ public class TestAction : BaseAction
 
     public override BaseAction Copy()
     {
-        var action = new TestAction();
-        return action;
+        return new TestAction()
+        {
+            ID = ID,
+            Cost = Cost,
+            TimeInMinutes = TimeInMinutes,
+            Dialog = Dialog,
+            Effects = Effects.Copy(),
+            Preconditions = Preconditions.Copy()
+        };
     }
 }

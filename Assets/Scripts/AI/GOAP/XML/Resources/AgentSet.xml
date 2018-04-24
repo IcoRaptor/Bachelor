@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <AgentSet>
+
     <agent id="TestAgent">
         <actions>
+            <action>TestAction</action>
         </actions>
         <goals>
+            <goal>TestGoal</goal>
         </goals>
     </agent>
+
 </AgentSet>

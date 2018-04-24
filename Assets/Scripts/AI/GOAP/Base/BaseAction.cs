@@ -4,9 +4,6 @@
     {
         #region Variables
 
-        protected STATE_SYMBOL[] _preconditions;
-        protected STATE_SYMBOL[] _effects;
-
         protected bool _complete;
         protected bool _active;
 
@@ -16,9 +13,15 @@
 
         public string ID { get; set; }
 
-        public string Dialog { get; protected set; }
+        public string Dialog { get; set; }
 
-        public int Cost { get; protected set; }
+        public int Cost { get; set; }
+
+        public int TimeInMinutes { get; set; }
+
+        public WorldState Preconditions { get; set; }
+
+        public WorldState Effects { get; set; }
 
         #endregion
 
@@ -41,7 +44,7 @@
                 if (s == STATE_SYMBOL.UNSET)
                     continue;
 
-                s = _effects[i];
+                s = Effects.Symbols[i];
             }
 
             return oldState;
@@ -53,7 +56,7 @@
 
             for (int i = 0; i < symbols.Length; i++)
             {
-                var s = _preconditions[i];
+                var s = Preconditions.Symbols[i];
 
                 if (s == STATE_SYMBOL.UNSET)
                     continue;

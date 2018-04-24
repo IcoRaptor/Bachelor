@@ -12,7 +12,7 @@ namespace AI.GOAP
         [SerializeField]
         private string _agentID = string.Empty;
 
-        private Agent _agent;
+        private GOAPAgent _agent;
         private Discontentment _disc;
 
         #endregion

@@ -62,9 +62,8 @@ namespace AI.GOAP
             catch (Exception e)
             {
                 Debugger.LogFormat(LOG_TYPE.ERROR,
-                    "{0}\n({1})",
-                    e.Message, e.TargetSite);
-
+                    "Couldn't load the XmlDocument!\n{0}",
+                    e.ToString());
                 return false;
             }
 
@@ -98,16 +97,25 @@ namespace AI.GOAP
 
         private static bool ReadDocument(XmlDocument doc, XML_TYPE type)
         {
-            switch (type)
+            try
             {
-                case XML_TYPE.GOAL_SET:
-                    return ReadGoalSet(doc);
+                switch (type)
+                {
+                    case XML_TYPE.GOAL_SET:
+                        return ReadGoalSet(doc);
 
-                case XML_TYPE.ACTION_SET:
-                    return ReadActionSet(doc);
+                    case XML_TYPE.ACTION_SET:
+                        return ReadActionSet(doc);
 
-                case XML_TYPE.AGENT_SET:
-                    return ReadAgentSet(doc);
+                    case XML_TYPE.AGENT_SET:
+                        return ReadAgentSet(doc);
+                }
+            }
+            catch (Exception e)
+            {
+                Debugger.LogFormat(LOG_TYPE.ERROR,
+                    "ReadDocument failed!\n{0}",
+                    e.ToString());
             }
 
             return false;
@@ -116,22 +124,33 @@ namespace AI.GOAP
         private static bool ReadGoalSet(XmlDocument doc)
         {
             var nodes = doc.SelectNodes(Strings.XPATH_GOAL);
-            string id = string.Empty;
 
             foreach (XmlNode goalNode in nodes)
             {
-                id = goalNode.Attributes[Strings.ATTR_ID].Value;
+                string id = goalNode.Attributes[Strings.ATTR_ID].Value;
+
+                // TODO: target WorldState
+
+                BaseGoal goal = null;
 
                 switch (id)
                 {
                     case Strings.GOAL_TEST:
-                        var testGoal = new TestGoal()
+                        goal = new TestGoal()
                         {
                             ID = id
                         };
-                        GOAPContainer.AddGoal(testGoal);
+                        break;
+
+                    default:
+                        Debugger.LogFormat(LOG_TYPE.WARNING,
+                            "GoalID '{0}' is not defined.\n",
+                            id);
                         break;
                 }
+
+                if (goal != null)
+                    GOAPContainer.AddGoal(goal);
             }
 
             return true;
@@ -140,22 +159,40 @@ namespace AI.GOAP
         private static bool ReadActionSet(XmlDocument doc)
         {
             var nodes = doc.SelectNodes(Strings.XPATH_ACTION);
-            string id = string.Empty;
 
             foreach (XmlNode actionNode in nodes)
             {
-                id = actionNode.Attributes[Strings.ATTR_ID].Value;
+                string id = actionNode.Attributes[Strings.ATTR_ID].Value;
+
+                string dialog = actionNode.ChildNodes.Item(0).InnerText;
+                int cost = int.Parse(actionNode.ChildNodes.Item(1).InnerText);
+                int time = int.Parse(actionNode.ChildNodes.Item(2).InnerText);
+
+                // TODO: conditions and effects
+
+                BaseAction action = null;
 
                 switch (id)
                 {
                     case Strings.ACTION_TEST:
-                        var testAction = new TestAction()
+                        action = new TestAction()
                         {
-                            ID = id
+                            ID = id,
+                            Dialog = dialog,
+                            Cost = cost,
+                            TimeInMinutes = time
                         };
-                        GOAPContainer.AddAction(testAction);
+                        break;
+
+                    default:
+                        Debugger.LogFormat(LOG_TYPE.WARNING,
+                            "ActionID '{0}' is not defined.\n",
+                            id);
                         break;
                 }
+
+                if (action != null)
+                    GOAPContainer.AddAction(action);
             }
 
             return true;
@@ -163,31 +200,37 @@ namespace AI.GOAP
 
         private static bool ReadAgentSet(XmlDocument doc)
         {
-            var nodes = doc.SelectNodes(Strings.XPATH_AGENT);
-            string id = string.Empty;
+            var agents = doc.SelectNodes(Strings.XPATH_AGENT);
 
-            foreach (XmlNode agentNode in nodes)
+            foreach (XmlNode agentNode in agents)
             {
-                id = agentNode.Attributes[Strings.ATTR_ID].Value;
+                string id = agentNode.Attributes[Strings.ATTR_ID].Value;
 
-                switch (id)
+                var actionList = agentNode.ChildNodes.Item(0).ChildNodes;
+                var goalList = agentNode.ChildNodes.Item(1).ChildNodes;
+
+                var actions = new BaseAction[actionList.Count];
+                var goals = new BaseGoal[goalList.Count];
+
+                for (int i = 0; i < actionList.Count; i++)
                 {
-                    case Strings.AGENT_TEST:
-                        var action = GOAPContainer.GetAction(Strings.ACTION_TEST);
-                        var goal = GOAPContainer.GetGoal(Strings.GOAL_TEST);
-
-                        BaseAction[] actions = { action };
-                        BaseGoal[] goals = { goal };
-
-                        var agent = new Agent()
-                        {
-                            ID = id,
-                            Actions = actions,
-                            Goals = goals
-                        };
-                        GOAPContainer.AddAgent(agent);
-                        break;
+                    string aID = actionList.Item(i).InnerText;
+                    actions[i] = GOAPContainer.GetAction(aID);
                 }
+
+                for (int i = 0; i < goalList.Count; i++)
+                {
+                    string gID = goalList.Item(i).InnerText;
+                    goals[i] = GOAPContainer.GetGoal(gID);
+                }
+
+                var agent = new GOAPAgent()
+                {
+                    ID = id,
+                    Actions = actions,
+                    Goals = goals
+                };
+                GOAPContainer.AddAgent(agent);
             }
 
             return true;

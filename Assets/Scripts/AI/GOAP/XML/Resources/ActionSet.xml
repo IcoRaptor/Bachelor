@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <ActionSet>
+
     <action id="TestAction">
         <dialog>I'm currently testing this action.</dialog>
+        <cost>10</cost>
+        <time>60</time>
         <conditions>
         </conditions>
         <effects>
         </effects>
     </action>
+    
 </ActionSet>

@@ -16,7 +16,7 @@ namespace AI.GOAP
 
         public override void BuildPlan()
         {
-            Debug.Log("TestGoal: Building plan...\n");
+            Debug.Log("TestGoal\nBuilding plan...\n");
             base.BuildPlan();
         }
 
@@ -44,14 +44,12 @@ namespace AI.GOAP
 
         public override BaseGoal Copy()
         {
-            var goal = new TestGoal()
+            return new TestGoal()
             {
                 ID = ID,
                 Current = Current.Copy(),
                 Target = Target.Copy(),
             };
-
-            return goal;
         }
     }
 }

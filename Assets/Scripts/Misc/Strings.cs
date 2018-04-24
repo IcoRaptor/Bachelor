@@ -10,8 +10,6 @@
 
     public const string ACTION_TEST = "TestAction";
 
-    public const string AGENT_TEST = "TestAgent";
-
     // XmlFileInfo
 
     public const string XML = @".xml";
