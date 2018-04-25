@@ -1,17 +1,9 @@
 ﻿using AI.GOAP;
-using System.Collections.Generic;
 
 namespace AStar
 {
     public class AStarMapPlanning : AStarMap
     {
-        #region Variables
-
-        private Dictionary<string, AStarNodePlanning> _nodeCache =
-           new Dictionary<string, AStarNodePlanning>();
-
-        #endregion
-
         #region Constructors
 
         public AStarMapPlanning(AStarGoalPlanning goal) : base(goal)
@@ -36,8 +28,6 @@ namespace AStar
                 Current = goalPlanning.Goal.Target.Copy()   // Search backwards
             };
 
-            _nodeCache[root.ID] = root;
-
             return root;
         }
 
@@ -47,9 +37,6 @@ namespace AStar
         /// </summary>
         public override AStarNode CreateNode(AStarNode root, string actionID)
         {
-            if (_nodeCache.ContainsKey(actionID))
-                return _nodeCache[actionID];
-
             var rootPlanning = (AStarNodePlanning)root;
 
             var node = new AStarNodePlanning(actionID)
@@ -61,18 +48,27 @@ namespace AStar
 
             node.H = _goal.CalcDistanceToTarget(node);
 
-            _nodeCache[node.ID] = node;
-
             return node;
         }
 
         /// <summary>
-        /// Creates and returns all neighbours
+        /// Creates and returns the neighbouring nodes
         /// </summary>
         public override AStarNode[] GetNeighbours(AStarNode node)
         {
-            // Test
-            return new AStarNode[0];
+            var goalPlanning = (AStarGoalPlanning)_goal;
+            var nodePlanning = (AStarNodePlanning)node;
+
+            var actions = GOAPContainer.ChooseActions(
+                nodePlanning.Current,
+                goalPlanning.Goal.Actions);
+
+            var nodes = new AStarNode[actions.Length];
+
+            for (int i = 0; i < nodes.Length; i++)
+                nodes[i] = CreateNode(nodePlanning, actions[i].ID);
+
+            return nodes;
         }
     }
 }

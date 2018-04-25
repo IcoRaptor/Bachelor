@@ -35,7 +35,7 @@ namespace AI.GOAP
             foreach (var goal in _agent.Goals)
             {
                 goal.Module = this;
-                goal.AgentID = _agentID;
+                goal.Actions = _agent.Actions;
             }
 
             UpdateGoals();

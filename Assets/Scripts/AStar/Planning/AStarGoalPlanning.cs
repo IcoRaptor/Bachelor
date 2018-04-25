@@ -37,7 +37,6 @@ namespace AStar
         public override bool IsGoalNode(AStarNode node)
         {
             var nodePlanning = (AStarNodePlanning)node;
-
             return nodePlanning.Current == _target;
         }
     }

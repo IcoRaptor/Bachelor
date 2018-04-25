@@ -15,12 +15,12 @@ namespace AI.GOAP
         public WorldState Target { get; set; }
         public WorldState Current { get; set; }
 
-        public AIModule Module { get; set; }
-        public string AgentID { get; set; }
-
         public string ID { get; set; }
         public int Relevance { get; protected set; }
         public bool Satisfied { get; protected set; }
+
+        public AIModule Module { get; set; }
+        public BaseAction[] Actions { get; set; }
 
         #endregion
 

@@ -1,6 +1,8 @@
-﻿namespace AI.GOAP
+﻿using System.Collections.Generic;
+
+namespace AI.GOAP
 {
-    public abstract class BaseAction
+    public abstract class BaseAction : IEqualityComparer<BaseAction>
     {
         #region Variables
 
@@ -31,7 +33,7 @@
 
         public abstract bool CheckContext();
 
-        public abstract bool IsValid();
+        public abstract bool Validate();
 
         public virtual WorldState ApplyEffects(WorldState oldState)
         {
@@ -78,9 +80,23 @@
             _active = false;
         }
 
-        public virtual bool IsActionComplete()
+        public virtual bool IsComplete()
         {
             return _complete;
+        }
+
+        public bool Equals(BaseAction x, BaseAction y)
+        {
+            if (ReferenceEquals(x, y))
+                return true;
+
+            return x != null && y != null &&
+                string.CompareOrdinal(x.ID, y.ID) == 0;
+        }
+
+        public int GetHashCode(BaseAction obj)
+        {
+            return obj.ID.GetHashCode();
         }
     }
 }

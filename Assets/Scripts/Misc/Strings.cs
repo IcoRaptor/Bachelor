@@ -26,6 +26,7 @@
     public const string AGENT = @"agent";
 
     public const string ATTR_ID = @"id";
+    public const string ATTR_SYMBOL = @"symbol";
 
     // XPath
 

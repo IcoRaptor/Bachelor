@@ -10,8 +10,7 @@ namespace AI.GOAP
     {
         #region Variables
 
-        private LinkedList<BaseAction> _plan =
-            new LinkedList<BaseAction>();
+        private LinkedList<BaseAction> _plan;
 
         #endregion
 
@@ -25,6 +24,8 @@ namespace AI.GOAP
 
         public Plan(AStarResult result)
         {
+            _plan = new LinkedList<BaseAction>();
+
             foreach (var node in result.Nodes)
             {
                 if (node.Root == null)
@@ -33,9 +34,6 @@ namespace AI.GOAP
                 BaseAction action = GOAPContainer.GetAction(node.ID);
                 _plan.AddLast(action);
             }
-
-            // Test
-            _plan.AddFirst(GOAPContainer.GetAction("TestAction"));
         }
 
         #endregion
@@ -59,10 +57,10 @@ namespace AI.GOAP
             if (_plan.Count == 0)
                 return false;
 
-            if (CurrentAction.IsActionComplete())
+            if (CurrentAction.IsComplete())
                 SetupAction();
 
-            return CurrentAction.IsValid();
+            return CurrentAction.Validate();
         }
 
         private void SetupAction()

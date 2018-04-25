@@ -23,7 +23,7 @@ namespace AI.GOAP
         public override void UpdateRelevance(Discontentment disc)
         {
             for (int i = 0; i < Current.Symbols.Length; i++)
-                Current.Symbols[i] = STATE_SYMBOL.SATISFIED;
+                Current.Symbols[i] = STATE_SYMBOL.UNSATISFIED;
 
             Relevance = 1;
         }
@@ -47,6 +47,7 @@ namespace AI.GOAP
             return new TestGoal()
             {
                 ID = ID,
+                Actions = Actions,
                 Current = Current.Copy(),
                 Target = Target.Copy(),
             };

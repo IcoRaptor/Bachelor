@@ -29,7 +29,7 @@ namespace AStar
 
         public AStarStorage()
         {
-            int max = GOAPContainer.ActionCount() + 10;
+            int max = GOAPContainer.ActionCount + 10;
 
             _openList = new FastPriorityQueue<AStarNode>(max);
             _closedList = new LinkedList<AStarNode>();
@@ -96,6 +96,7 @@ namespace AStar
 
             // Check last entry first
             var last = _closedList.Last.Value;
+            _closedList.RemoveLast();
 
             if (last.SolutionNode)
                 HandleSolutionNode(last, list);

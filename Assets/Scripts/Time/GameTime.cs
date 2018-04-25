@@ -12,7 +12,7 @@
             var time = new GameTime()
             {
                 Days = 1,
-                Hours = 12,
+                Hours = 6,
                 Minutes = 0,
             };
 

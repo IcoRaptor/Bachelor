@@ -112,6 +112,7 @@ namespace AStar
 
         private void HandleGoalNode(AStarNode node)
         {
+            // Set solution
             _storage.AddNodeToClosedList(node);
             node.SolutionNode = true;
 
@@ -119,31 +120,32 @@ namespace AStar
             Result.Nodes = _storage.GetFinalPath();
         }
 
-        private void ProcessNeighbours(AStarNode node)
+        private void ProcessNeighbours(AStarNode root)
         {
             // Get all neighbours connected to the node
-            var neighbours = _map.GetNeighbours(node);
+            var neighbours = _map.GetNeighbours(root);
 
-            foreach (var n in neighbours)
+            foreach (var current in neighbours)
             {
                 // Do nothing if node is on closed list
-                if (n.OnClosedList)
+                if (current.OnClosedList)
                     continue;
 
                 // Evaluate initial node
-                if (!n.OnOpenList)
+                if (!current.OnOpenList)
                 {
-                    HandleInitialNode(n, node);
+                    HandleInitialNode(current, root);
                     continue;
                 }
 
                 // Evaluate visited node
-                HandleVisitedNode(n, node);
+                HandleVisitedNode(current, root);
             }
         }
 
         private void HandleInitialNode(AStarNode current, AStarNode root)
         {
+            // Setup node
             current.Root = root;
             current.G = root.G + current.Cost;
             current.Priority = current.G + current.H;
@@ -153,9 +155,11 @@ namespace AStar
 
         private void HandleVisitedNode(AStarNode current, AStarNode root)
         {
+            // Do nothing if the old path is better
             if (current.G <= root.G + current.Cost)
                 return;
 
+            // Update path
             current.G = root.G + current.Cost;
             current.Root = root;
 

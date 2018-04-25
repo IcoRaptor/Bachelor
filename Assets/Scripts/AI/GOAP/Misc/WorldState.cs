@@ -7,7 +7,7 @@
     {
         #region Variables
 
-        public const int NUM_SYMBOLS = 5;
+        public const int NUM_SYMBOLS = 3;
 
         #endregion
 
@@ -49,7 +49,7 @@
 
             foreach (var symbol in Symbols)
                 if (symbol == STATE_SYMBOL.UNSATISFIED)
-                    ++num;
+                    num++;
 
             return num;
         }
@@ -114,22 +114,32 @@
             return new WorldState(Symbols);
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
         private void Init()
         {
             Symbols = new STATE_SYMBOL[NUM_SYMBOLS];
 
             for (var i = 0; i < NUM_SYMBOLS; i++)
                 Symbols[i] = STATE_SYMBOL.UNSET;
+        }
+
+        public override string ToString()
+        {
+            string s = string.Empty;
+
+            foreach (var symbol in Symbols)
+                s += symbol.ToString() + " ";
+
+            return s;
+        }
+
+        public override int GetHashCode()
+        {
+            return Symbols.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
         }
     }
 }

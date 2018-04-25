@@ -1,5 +1,6 @@
 ﻿using Framework.Debugging;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AI.GOAP
 {
@@ -10,31 +11,67 @@ namespace AI.GOAP
     {
         #region Variables
 
-        private static Dictionary<string, BaseAction> _actionCache =
-            new Dictionary<string, BaseAction>();
-        private static Dictionary<string, BaseGoal> _goalCache =
-            new Dictionary<string, BaseGoal>();
-        private static Dictionary<string, GOAPAgent> _agentCache =
-            new Dictionary<string, GOAPAgent>();
+        private static Dictionary<string, BaseAction> _actionCache;
+        private static Dictionary<string, BaseGoal> _goalCache;
+        private static Dictionary<string, GOAPAgent> _agentCache;
 
-        // TODO Neighbours
+        private static List<BaseAction>[] _effectsTable;
+
+        #endregion
+
+        #region Properties
+
+        public static bool Initialized { get; private set; }
+
+        public static int ActionCount { get { return _actionCache.Count; } }
 
         #endregion
 
         /// <summary>
-        /// Returns the number of cached actions
+        /// Initializes the GOAPContainer
         /// </summary>
-        public static int ActionCount()
+        public static void Init()
         {
-            return _actionCache.Count;
+            _actionCache = new Dictionary<string, BaseAction>();
+            _goalCache = new Dictionary<string, BaseGoal>();
+            _agentCache = new Dictionary<string, GOAPAgent>();
+
+            _effectsTable = new List<BaseAction>[WorldState.NUM_SYMBOLS];
+
+            for (int i = 0; i < _effectsTable.Length; i++)
+                _effectsTable[i] = new List<BaseAction>();
+
+            Initialized = true;
         }
 
         /// <summary>
-        /// Adds an action to the action cache
+        /// Adds an action to the action cache and the effects table
         /// </summary>
         public static void AddAction(BaseAction action)
         {
             _actionCache.Add(action.ID, action);
+
+            var symbols = action.Effects.Symbols;
+
+            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+                if (symbols[i] == STATE_SYMBOL.SATISFIED)
+                    _effectsTable[i].Add(action);
+        }
+
+        /// <summary>
+        /// Adds a goal to the goal cache
+        /// </summary>
+        public static void AddGoal(BaseGoal goal)
+        {
+            _goalCache.Add(goal.ID, goal);
+        }
+
+        /// <summary>
+        /// Adss an agent to the agent cache
+        /// </summary>
+        public static void AddAgent(GOAPAgent agent)
+        {
+            _agentCache[agent.ID] = agent;
         }
 
         /// <summary>
@@ -61,14 +98,6 @@ namespace AI.GOAP
         }
 
         /// <summary>
-        /// Adds a goal to the goal cache
-        /// </summary>
-        public static void AddGoal(BaseGoal goal)
-        {
-            _goalCache.Add(goal.ID, goal);
-        }
-
-        /// <summary>
         /// Returns the goal with the given ID.
         ///  May return null
         /// </summary>
@@ -89,14 +118,6 @@ namespace AI.GOAP
         }
 
         /// <summary>
-        /// Adss an agent to the agent cache
-        /// </summary>
-        public static void AddAgent(GOAPAgent agent)
-        {
-            _agentCache[agent.ID] = agent;
-        }
-
-        /// <summary>
         /// Returns the agent with the given ID.
         ///  May return null
         /// </summary>
@@ -114,6 +135,27 @@ namespace AI.GOAP
 
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Chooses valid actions from the action array
+        /// </summary>
+        public static BaseAction[] ChooseActions(WorldState state, BaseAction[] actions)
+        {
+            List<BaseAction> allActions = new List<BaseAction>();
+
+            // Get all fitting actions
+            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+            {
+                if (state.Symbols[i] != STATE_SYMBOL.UNSATISFIED)
+                    continue;
+
+                foreach (var action in _effectsTable[i])
+                    allActions.Add(action.Copy());
+            }
+
+            // Remove unavailable actions and return resulting array
+            return allActions.Intersect(actions).ToArray();
         }
     }
 }

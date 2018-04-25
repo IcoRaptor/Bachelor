@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <GoalSet>
 
+<!--
+    UNSET       0
+    SATISFIED   1
+    UNSATISFIED 2
+-->
+
     <goal id="TestGoal">
-        <target>
-        </target>
+        <state symbol="test1">1</state>
+        <state symbol="test2">1</state>
+        <state symbol="test3">1</state>
     </goal>
-    
+
 </GoalSet>

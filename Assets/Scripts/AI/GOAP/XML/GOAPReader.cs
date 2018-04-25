@@ -16,6 +16,9 @@ namespace AI.GOAP
         /// </summary>
         public static bool ReadAll()
         {
+            if (!GOAPContainer.Initialized)
+                GOAPContainer.Init();
+
             var goalSet = new XmlFileInfo(Strings.GOAL_SET);
             var actionSet = new XmlFileInfo(Strings.ACTION_SET);
             var agentSet = new XmlFileInfo(Strings.AGENT_SET);
@@ -62,7 +65,7 @@ namespace AI.GOAP
             catch (Exception e)
             {
                 Debugger.LogFormat(LOG_TYPE.ERROR,
-                    "Couldn't load the XmlDocument!\n{0}",
+                    "Load document failed!\n{0}",
                     e.ToString());
                 return false;
             }
@@ -114,7 +117,7 @@ namespace AI.GOAP
             catch (Exception e)
             {
                 Debugger.LogFormat(LOG_TYPE.ERROR,
-                    "ReadDocument failed!\n{0}",
+                    "Read document failed!\n{0}",
                     e.ToString());
             }
 
@@ -139,6 +142,7 @@ namespace AI.GOAP
                         goal = new TestGoal()
                         {
                             ID = id
+                            // Target
                         };
                         break;
 
@@ -200,9 +204,9 @@ namespace AI.GOAP
 
         private static bool ReadAgentSet(XmlDocument doc)
         {
-            var agents = doc.SelectNodes(Strings.XPATH_AGENT);
+            var nodes = doc.SelectNodes(Strings.XPATH_AGENT);
 
-            foreach (XmlNode agentNode in agents)
+            foreach (XmlNode agentNode in nodes)
             {
                 string id = agentNode.Attributes[Strings.ATTR_ID].Value;
 

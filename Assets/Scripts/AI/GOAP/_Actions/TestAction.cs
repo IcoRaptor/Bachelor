@@ -12,7 +12,7 @@ public class TestAction : BaseAction
         for (int i = 0; i < Effects.Symbols.Length; i++)
         {
             Preconditions.Symbols[i] = STATE_SYMBOL.UNSET;
-            Effects.Symbols[i] = STATE_SYMBOL.UNSET;
+            Effects.Symbols[i] = STATE_SYMBOL.SATISFIED;
         }
     }
 
@@ -33,7 +33,7 @@ public class TestAction : BaseAction
         return true;
     }
 
-    public override bool IsValid()
+    public override bool Validate()
     {
         return true;
     }

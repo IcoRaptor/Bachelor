@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <ActionSet>
 
+<!--
+    UNSET       0
+    SATISFIED   1
+    UNSATISFIED 2
+-->
+
     <action id="TestAction">
         <dialog>I'm currently testing this action.</dialog>
         <cost>10</cost>
         <time>60</time>
-        <conditions>
-        </conditions>
+        <preconds>
+            <state symbol="test1">2</state>
+            <state symbol="test2">2</state>
+            <state symbol="test3">2</state>
+        </preconds>
         <effects>
+            <state symbol="test1">1</state>
+            <state symbol="test2">1</state>
+            <state symbol="test3">1</state>
         </effects>
     </action>
     
