@@ -4,13 +4,14 @@ using UnityEngine;
 
 namespace AI
 {
-    [RequireComponent(typeof(Seeker))]
+    [RequireComponent(typeof(Seeker), typeof(AIDestinationSetter))]
     public class NavigationManager : MonoBehaviour
     {
         #region Variables
 
 #pragma warning disable 0414
         private Blackboard _blackboard;
+        private AIDestinationSetter _dest;
 #pragma warning restore
 
         #endregion
@@ -18,6 +19,7 @@ namespace AI
         private void Awake()
         {
             _blackboard = GetComponentInParent<Blackboard>();
+            _dest = GetComponent<AIDestinationSetter>();
 
             if (!_blackboard)
             {

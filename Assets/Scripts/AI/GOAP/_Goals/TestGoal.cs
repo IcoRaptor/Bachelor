@@ -10,8 +10,11 @@ namespace AI.GOAP
             Target = new WorldState();
             Current = new WorldState();
 
-            for (int i = 0; i < Target.Symbols.Length; i++)
-                Target.Symbols[i] = STATE_SYMBOL.SATISFIED;
+            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+            {
+                Target.Symbols[i] = STATE_SYMBOL.UNSET;
+                Current.Symbols[i] = STATE_SYMBOL.UNSET;
+            }
         }
 
         public override void BuildPlan()
@@ -22,9 +25,6 @@ namespace AI.GOAP
 
         public override void UpdateRelevance(Discontentment disc)
         {
-            for (int i = 0; i < Current.Symbols.Length; i++)
-                Current.Symbols[i] = STATE_SYMBOL.UNSATISFIED;
-
             Relevance = 1;
         }
 

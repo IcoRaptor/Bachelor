@@ -132,7 +132,7 @@ namespace AI.GOAP
             {
                 string id = goalNode.Attributes[Strings.ATTR_ID].Value;
 
-                // TODO: target WorldState
+                // TODO: discontentment, target
 
                 BaseGoal goal = null;
 
@@ -142,7 +142,6 @@ namespace AI.GOAP
                         goal = new TestGoal()
                         {
                             ID = id
-                            // Target
                         };
                         break;
 
@@ -234,6 +233,7 @@ namespace AI.GOAP
                     Actions = actions,
                     Goals = goals
                 };
+
                 GOAPContainer.AddAgent(agent);
             }
 

@@ -23,7 +23,15 @@ namespace AI.GOAP
 
         public static bool Initialized { get; private set; }
 
-        public static int ActionCount { get { return _actionCache.Count; } }
+        public static int ActionCount
+        {
+            get
+            {
+                return Initialized ?
+                    _actionCache.Count :
+                    0;
+            }
+        }
 
         #endregion
 
@@ -38,7 +46,7 @@ namespace AI.GOAP
 
             _effectsTable = new List<BaseAction>[WorldState.NUM_SYMBOLS];
 
-            for (int i = 0; i < _effectsTable.Length; i++)
+            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
                 _effectsTable[i] = new List<BaseAction>();
 
             Initialized = true;
@@ -51,10 +59,8 @@ namespace AI.GOAP
         {
             _actionCache.Add(action.ID, action);
 
-            var symbols = action.Effects.Symbols;
-
             for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
-                if (symbols[i] == STATE_SYMBOL.SATISFIED)
+                if (action.Effects.Symbols[i] == STATE_SYMBOL.SATISFIED)
                     _effectsTable[i].Add(action);
         }
 
@@ -89,7 +95,7 @@ namespace AI.GOAP
                 if (string.CompareOrdinal(id, Strings.ROOT_NODE) != 0)
                 {
                     Debugger.LogFormat(LOG_TYPE.WARNING,
-                        "GetAction: ID '{0}' doesn't exist!\n",
+                        "ActionID '{0}' doesn't exist!\n",
                         id);
                 }
 
@@ -110,7 +116,7 @@ namespace AI.GOAP
             catch
             {
                 Debugger.LogFormat(LOG_TYPE.WARNING,
-                       "GetGoal: ID '{0}' doesn't exist!\n",
+                       "GoalID '{0}' doesn't exist!\n",
                        id);
 
                 return null;
@@ -130,7 +136,7 @@ namespace AI.GOAP
             catch
             {
                 Debugger.LogFormat(LOG_TYPE.WARNING,
-                    "GetAgent: ID '{0}' doesn't exist!\n",
+                    "AgentID '{0}' doesn't exist!\n",
                     id);
 
                 return null;
@@ -140,22 +146,25 @@ namespace AI.GOAP
         /// <summary>
         /// Chooses valid actions from the action array
         /// </summary>
-        public static BaseAction[] ChooseActions(WorldState state, BaseAction[] actions)
+        public static BaseAction[] ChooseActions(WorldState current, BaseAction[] actions)
         {
             List<BaseAction> allActions = new List<BaseAction>();
 
             // Get all fitting actions
             for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
             {
-                if (state.Symbols[i] != STATE_SYMBOL.UNSATISFIED)
+                if (current.Symbols[i] != STATE_SYMBOL.UNSATISFIED)
                     continue;
 
                 foreach (var action in _effectsTable[i])
                     allActions.Add(action.Copy());
             }
 
-            // Remove unavailable actions and return resulting array
-            return allActions.Intersect(actions).ToArray();
+            // Remove unavailable actions
+            var availableActions = allActions.Intersect(actions).ToList();
+            availableActions.RemoveAll(item => !item.CheckContext());
+
+            return availableActions.ToArray();
         }
     }
 }

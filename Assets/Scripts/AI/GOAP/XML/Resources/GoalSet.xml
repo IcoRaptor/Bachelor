@@ -8,9 +8,13 @@
 -->
 
     <goal id="TestGoal">
-        <state symbol="test1">1</state>
-        <state symbol="test2">1</state>
-        <state symbol="test3">1</state>
+        <relevance>
+        </relevance>
+        <states>
+            <state symbol="test1">1</state>
+            <state symbol="test2">1</state>
+            <state symbol="test3">1</state>
+        </states>
     </goal>
 
 </GoalSet>

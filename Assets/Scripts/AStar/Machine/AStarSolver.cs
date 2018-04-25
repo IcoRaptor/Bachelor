@@ -110,11 +110,11 @@ namespace AStar
             }
         }
 
-        private void HandleGoalNode(AStarNode node)
+        private void HandleGoalNode(AStarNode goalNode)
         {
             // Set solution
-            _storage.AddNodeToClosedList(node);
-            node.SolutionNode = true;
+            _storage.AddNodeToClosedList(goalNode);
+            goalNode.SolutionNode = true;
 
             Result.Code = RETURN_CODE.SUCCESS;
             Result.Nodes = _storage.GetFinalPath();

@@ -85,18 +85,28 @@ namespace AI.GOAP
             return _complete;
         }
 
+        public override bool Equals(object obj)
+        {
+            var action = obj as BaseAction;
+
+            return action != null ?
+                string.CompareOrdinal(ID, action.ID) == 0 :
+                false;
+        }
+
+        public override int GetHashCode()
+        {
+            return ID.GetHashCode();
+        }
+
         public bool Equals(BaseAction x, BaseAction y)
         {
-            if (ReferenceEquals(x, y))
-                return true;
-
-            return x != null && y != null &&
-                string.CompareOrdinal(x.ID, y.ID) == 0;
+            return x.Equals(y);
         }
 
         public int GetHashCode(BaseAction obj)
         {
-            return obj.ID.GetHashCode();
+            return obj.GetHashCode();
         }
     }
 }

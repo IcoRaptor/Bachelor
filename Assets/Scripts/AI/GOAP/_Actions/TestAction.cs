@@ -9,10 +9,10 @@ public class TestAction : BaseAction
         Preconditions = new WorldState();
         Effects = new WorldState();
 
-        for (int i = 0; i < Effects.Symbols.Length; i++)
+        for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
         {
             Preconditions.Symbols[i] = STATE_SYMBOL.UNSET;
-            Effects.Symbols[i] = STATE_SYMBOL.SATISFIED;
+            Effects.Symbols[i] = STATE_SYMBOL.UNSET;
         }
     }
 
@@ -43,9 +43,9 @@ public class TestAction : BaseAction
         return new TestAction()
         {
             ID = ID,
+            Dialog = Dialog,
             Cost = Cost,
             TimeInMinutes = TimeInMinutes,
-            Dialog = Dialog,
             Effects = Effects.Copy(),
             Preconditions = Preconditions.Copy()
         };

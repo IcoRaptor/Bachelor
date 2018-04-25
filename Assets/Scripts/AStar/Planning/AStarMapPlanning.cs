@@ -1,13 +1,21 @@
 ﻿using AI.GOAP;
+using System.Collections.Generic;
 
 namespace AStar
 {
     public class AStarMapPlanning : AStarMap
     {
+        #region Variables
+
+        private Dictionary<string, AStarNodePlanning> _nodeCache;
+
+        #endregion
+
         #region Constructors
 
         public AStarMapPlanning(AStarGoalPlanning goal) : base(goal)
         {
+            _nodeCache = new Dictionary<string, AStarNodePlanning>();
         }
 
         #endregion
@@ -28,6 +36,8 @@ namespace AStar
                 Current = goalPlanning.Goal.Target.Copy()   // Search backwards
             };
 
+            _nodeCache[root.ID] = root;
+
             return root;
         }
 
@@ -35,18 +45,22 @@ namespace AStar
         /// Creates a new node
         ///  (Doesn't set G and F)
         /// </summary>
-        public override AStarNode CreateNode(AStarNode root, string actionID)
+        public override AStarNode CreateNode(AStarNode root, string id)
         {
             var rootPlanning = (AStarNodePlanning)root;
+            AStarNodePlanning node = null;
 
-            var node = new AStarNodePlanning(actionID)
-            {
-                Root = rootPlanning,
-                Current = rootPlanning.Current,
-                Cost = GOAPContainer.GetAction(actionID).Cost
-            };
+            if (_nodeCache.ContainsKey(id))
+                node = _nodeCache[id];
+            else
+                node = new AStarNodePlanning(id);
 
+            node.Root = rootPlanning;
+            node.Current = rootPlanning.Current;
+            node.Cost = GOAPContainer.GetAction(id).Cost;
             node.H = _goal.CalcDistanceToTarget(node);
+
+            _nodeCache[id] = node;
 
             return node;
         }
