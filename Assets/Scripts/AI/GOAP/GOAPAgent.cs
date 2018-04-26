@@ -1,6 +1,6 @@
 ﻿namespace AI.GOAP
 {
-    public class GOAPAgent
+    public class GOAPAgent : IGOAPImmutable<GOAPAgent>
     {
         public string ID { get; set; }
         public BaseGoal[] Goals { get; set; }

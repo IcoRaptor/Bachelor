@@ -12,7 +12,7 @@ public class TestAction : BaseAction
         for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
         {
             Preconditions.Symbols[i] = STATE_SYMBOL.UNSET;
-            Effects.Symbols[i] = STATE_SYMBOL.UNSET;
+            Effects.Symbols[i] = STATE_SYMBOL.SATISFIED;
         }
     }
 

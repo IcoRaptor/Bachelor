@@ -4,15 +4,13 @@ namespace AStar
 {
     public class AStarGoalPlanning : AStarGoal
     {
-        #region Variables
-
-        private WorldState _target;
-
-        #endregion
-
         #region Properties
 
-        public BaseGoal Goal { get; private set; }
+        public WorldState Target { get; private set; }
+        public WorldState Current { get; private set; }
+        public WorldState Temp { get; private set; }
+
+        public BaseAction[] Actions { get; private set; }
 
         #endregion
 
@@ -20,24 +18,56 @@ namespace AStar
 
         public AStarGoalPlanning(BaseGoal goal)
         {
-            Goal = goal;
-            _target = goal.Current; // Search backwards
+            Target = goal.Target.Copy();
+            Current = goal.Current.Copy();
+            Actions = goal.Actions;
+
+            Temp = new WorldState();
+
+            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+            {
+                if (Target.Symbols[i] != STATE_SYMBOL.SATISFIED)
+                    continue;
+
+                Temp.Symbols[i] = Current.Symbols[i];
+            }
         }
 
         #endregion
 
-        public override float CalcDistanceToTarget(AStarNode node)
+        public override float DistanceToTarget(AStarNode node)
         {
-            var nodePlanning = (AStarNodePlanning)node;
-            float distance = nodePlanning.Current.GetSymbolDifference(_target);
+            var pNode = (AStarNodePlanning)node;
+            var action = GOAPContainer.GetAction(pNode.ID);
 
-            return distance;
+            if (action == null)
+                return 0;
+
+            var tempState = action.ApplyEffects(pNode.Current);
+            float distance = tempState.GetSymbolDifference(Target);
+
+            return distance * distance * 10;
         }
 
-        public override bool IsGoalNode(AStarNode node)
+        public override bool CheckNode(AStarNode node)
         {
-            var nodePlanning = (AStarNodePlanning)node;
-            return nodePlanning.Current == _target;
+            var pNode = (AStarNodePlanning)node;
+            ApplyNode(pNode);
+
+            return pNode.Current == Target;
+        }
+
+        private void ApplyNode(AStarNodePlanning node)
+        {
+            var action = GOAPContainer.GetAction(node.ID);
+
+            if (action == null)
+                return;
+
+            Target = action.ApplyPreconditions(Target);
+            Temp = action.ApplyEffects(Temp);
+
+            node.Current = Temp.Copy();
         }
     }
 }

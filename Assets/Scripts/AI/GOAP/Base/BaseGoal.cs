@@ -2,7 +2,7 @@
 
 namespace AI.GOAP
 {
-    public abstract class BaseGoal
+    public abstract class BaseGoal : IGOAPImmutable<BaseGoal>
     {
         #region Variables
 

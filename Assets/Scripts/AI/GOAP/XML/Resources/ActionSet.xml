@@ -4,7 +4,6 @@
 <!--
     UNSET       0
     SATISFIED   1
-    UNSATISFIED 2
 -->
 
     <action id="TestAction">
@@ -12,13 +11,13 @@
         <cost>10</cost>
         <time>60</time>
         <preconds>
-            <state symbol="test1">2</state>
-            <state symbol="test2">2</state>
-            <state symbol="test3">2</state>
+            <state symbol="test1">1</state>
+            <state symbol="test2">0</state>
+            <state symbol="test3">0</state>
         </preconds>
         <effects>
-            <state symbol="test1">1</state>
-            <state symbol="test2">1</state>
+            <state symbol="test1">0</state>
+            <state symbol="test2">0</state>
             <state symbol="test3">1</state>
         </effects>
     </action>

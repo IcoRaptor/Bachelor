@@ -4,12 +4,14 @@ using System;
 namespace AStar
 {
     /// <summary>
-    /// Helper class that solves the A* problem.
-    ///  Implements IDisposable
+    /// Helper class that solves the A* problem
+    ///  (IDisposable)
     /// </summary>
     internal class AStarSolver : IDisposable
     {
         #region Variables
+
+        private const int _MAX_TIME = 2 * 1000; // 2 seconds
 
         private readonly AStarGoal _goal;
         private readonly AStarMap _map;
@@ -92,11 +94,19 @@ namespace AStar
         {
             while (!_storage.OpenListEmpty)
             {
+                // Stop if the search is taking too long
+                if (_stopwatch.ElapsedMilliseconds >= _MAX_TIME)
+                {
+                    Debugger.Log(LOG_TYPE.WARNING,
+                        "Solver: Execution expired...\n");
+                    break;
+                }
+
                 // Get node with lowest f value from open list
                 var node = _storage.GetBestNode();
 
                 // Stop if this is the goal node
-                if (_goal.IsGoalNode(node))
+                if (_goal.CheckNode(node))
                 {
                     HandleGoalNode(node);
                     break;

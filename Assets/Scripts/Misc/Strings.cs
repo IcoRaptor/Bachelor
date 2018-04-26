@@ -2,7 +2,7 @@
 {
     // A*
 
-    public const string ROOT_NODE = @"r";
+    public const string ROOT_NODE = @"_R";
 
     // GOAP
 

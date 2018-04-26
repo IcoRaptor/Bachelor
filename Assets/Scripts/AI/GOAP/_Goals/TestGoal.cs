@@ -12,8 +12,8 @@ namespace AI.GOAP
 
             for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
             {
-                Target.Symbols[i] = STATE_SYMBOL.UNSET;
-                Current.Symbols[i] = STATE_SYMBOL.UNSET;
+                Current.Symbols[i] = STATE_SYMBOL.UNSATISFIED;
+                Target.Symbols[i] = STATE_SYMBOL.SATISFIED;
             }
         }
 

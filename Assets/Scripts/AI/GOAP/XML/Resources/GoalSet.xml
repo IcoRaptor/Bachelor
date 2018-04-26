@@ -4,7 +4,6 @@
 <!--
     UNSET       0
     SATISFIED   1
-    UNSATISFIED 2
 -->
 
     <goal id="TestGoal">

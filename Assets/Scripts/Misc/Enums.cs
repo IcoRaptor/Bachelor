@@ -2,9 +2,9 @@
 {
     public enum STATE_SYMBOL
     {
+        UNSATISFIED = -1,
         UNSET,
-        SATISFIED,
-        UNSATISFIED
+        SATISFIED
     }
 
     public enum XML_TYPE

@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents an agents world state
     /// </summary>
-    public sealed class WorldState
+    public sealed class WorldState : IGOAPImmutable<WorldState>
     {
         #region Variables
 

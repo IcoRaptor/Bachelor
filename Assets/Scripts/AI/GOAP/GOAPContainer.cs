@@ -86,18 +86,20 @@ namespace AI.GOAP
         /// </summary>
         public static BaseAction GetAction(string id)
         {
+            // Check for Root
+            if (id.Length == Strings.ROOT_NODE.Length)
+                if (string.CompareOrdinal(id, Strings.ROOT_NODE) == 0)
+                    return null;
+
             try
             {
                 return _actionCache[id].Copy();
             }
             catch
             {
-                if (string.CompareOrdinal(id, Strings.ROOT_NODE) != 0)
-                {
-                    Debugger.LogFormat(LOG_TYPE.WARNING,
-                        "ActionID '{0}' doesn't exist!\n",
-                        id);
-                }
+                Debugger.LogFormat(LOG_TYPE.WARNING,
+                    "ActionID '{0}' doesn't exist!\n",
+                    id);
 
                 return null;
             }

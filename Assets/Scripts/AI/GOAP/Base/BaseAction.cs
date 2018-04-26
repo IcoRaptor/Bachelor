@@ -2,7 +2,7 @@
 
 namespace AI.GOAP
 {
-    public abstract class BaseAction : IEqualityComparer<BaseAction>
+    public abstract class BaseAction : IGOAPImmutable<BaseAction>, IEqualityComparer<BaseAction>
     {
         #region Variables
 
@@ -35,35 +35,48 @@ namespace AI.GOAP
 
         public abstract bool Validate();
 
-        public virtual WorldState ApplyEffects(WorldState oldState)
+        public virtual WorldState ApplyEffects(WorldState state)
         {
-            var symbols = oldState.Symbols;
+            var temp = state.Copy();
 
-            for (int i = 0; i < symbols.Length; i++)
+            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
             {
-                var s = oldState.Symbols[i];
-
-                if (s == STATE_SYMBOL.UNSET)
+                if (Effects.Symbols[i] != STATE_SYMBOL.SATISFIED)
                     continue;
 
-                s = Effects.Symbols[i];
+                if (Effects.Symbols[i] != STATE_SYMBOL.UNSET)
+                    temp.Symbols[i] = Effects.Symbols[i];
             }
 
-            return oldState;
+            return temp;
         }
 
-        public virtual bool CheckPreconditions(WorldState current)
+        public virtual WorldState ApplyPreconditions(WorldState state)
         {
-            var symbols = current.Symbols;
+            var temp = state.Copy();
 
-            for (int i = 0; i < symbols.Length; i++)
+            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+            {
+                if (Preconditions.Symbols[i] != STATE_SYMBOL.UNSATISFIED)
+                    continue;
+
+                if (Preconditions.Symbols[i] != STATE_SYMBOL.UNSET)
+                    temp.Symbols[i] = Preconditions.Symbols[i];
+            }
+
+            return temp;
+        }
+
+        public virtual bool CheckPreconditions(WorldState state)
+        {
+            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
             {
                 var s = Preconditions.Symbols[i];
 
                 if (s == STATE_SYMBOL.UNSET)
                     continue;
 
-                if (s != symbols[i])
+                if (s != state.Symbols[i])
                     return false;
             }
 
@@ -87,11 +100,12 @@ namespace AI.GOAP
 
         public override bool Equals(object obj)
         {
-            var action = obj as BaseAction;
+            if (!(obj is BaseAction))
+                return false;
 
-            return action != null ?
-                string.CompareOrdinal(ID, action.ID) == 0 :
-                false;
+            var action = (BaseAction)obj;
+
+            return string.CompareOrdinal(ID, action.ID) == 0;
         }
 
         public override int GetHashCode()

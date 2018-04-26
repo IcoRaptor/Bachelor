@@ -25,7 +25,7 @@ namespace AStar
         /// </summary>
         public override AStarNode CreateRootNode()
         {
-            var goalPlanning = (AStarGoalPlanning)_goal;
+            var pGoal = (AStarGoalPlanning)_goal;
 
             var root = new AStarNodePlanning(Strings.ROOT_NODE)
             {
@@ -33,7 +33,7 @@ namespace AStar
                 H = 0,
                 Priority = 0,
                 Cost = 0,
-                Current = goalPlanning.Goal.Target.Copy()   // Search backwards
+                Current = pGoal.Current
             };
 
             _nodeCache[root.ID] = root;
@@ -47,18 +47,17 @@ namespace AStar
         /// </summary>
         public override AStarNode CreateNode(AStarNode root, string id)
         {
-            var rootPlanning = (AStarNodePlanning)root;
-            AStarNodePlanning node = null;
+            var pRoot = (AStarNodePlanning)root;
 
-            if (_nodeCache.ContainsKey(id))
-                node = _nodeCache[id];
-            else
-                node = new AStarNodePlanning(id);
+            var node = _nodeCache.ContainsKey(id) ?
+                _nodeCache[id] :
+                new AStarNodePlanning(id);
 
-            node.Root = rootPlanning;
-            node.Current = rootPlanning.Current;
+            // Initialize node
+            node.Root = pRoot;
+            node.Current = pRoot.Current;
             node.Cost = GOAPContainer.GetAction(id).Cost;
-            node.H = _goal.CalcDistanceToTarget(node);
+            node.H = _goal.DistanceToTarget(node);
 
             _nodeCache[id] = node;
 
@@ -70,17 +69,17 @@ namespace AStar
         /// </summary>
         public override AStarNode[] GetNeighbours(AStarNode node)
         {
-            var goalPlanning = (AStarGoalPlanning)_goal;
-            var nodePlanning = (AStarNodePlanning)node;
+            var pGoal = (AStarGoalPlanning)_goal;
+            var pNode = (AStarNodePlanning)node;
 
             var actions = GOAPContainer.ChooseActions(
-                nodePlanning.Current,
-                goalPlanning.Goal.Actions);
+                pNode.Current,
+                pGoal.Actions);
 
             var nodes = new AStarNode[actions.Length];
 
             for (int i = 0; i < nodes.Length; i++)
-                nodes[i] = CreateNode(nodePlanning, actions[i].ID);
+                nodes[i] = CreateNode(pNode, actions[i].ID);
 
             return nodes;
         }
