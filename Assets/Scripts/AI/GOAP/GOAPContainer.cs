@@ -146,14 +146,14 @@ namespace AI.GOAP
         /// <summary>
         /// Chooses valid actions from the action array
         /// </summary>
-        public static BaseAction[] ChooseActions(WorldState current, BaseAction[] actions)
+        public static BaseAction[] ChooseActions(WorldState state, BaseAction[] actions)
         {
             List<BaseAction> allActions = new List<BaseAction>();
 
             // Get all fitting actions
             for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
             {
-                if (current.Symbols[i] != STATE_SYMBOL.UNSATISFIED)
+                if (state.Symbols[i] != STATE_SYMBOL.UNSATISFIED)
                     continue;
 
                 foreach (var action in _effectsTable[i])
@@ -162,7 +162,7 @@ namespace AI.GOAP
 
             // Remove unavailable actions
             var availableActions = allActions.Intersect(actions).ToList();
-            availableActions.RemoveAll(item => !item.CheckContext());
+            availableActions.RemoveAll(action => !action.CheckContext());
 
             return availableActions.ToArray();
         }
