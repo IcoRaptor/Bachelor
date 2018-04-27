@@ -48,7 +48,7 @@
             int num = 0;
 
             foreach (var symbol in Symbols)
-                if (symbol == STATE_SYMBOL.UNSATISFIED)
+                if (symbol == STATE_SYMBOL.ERROR)
                     num++;
 
             return num;

@@ -65,7 +65,7 @@ namespace AI.GOAP
             catch (Exception e)
             {
                 Debugger.LogFormat(LOG_TYPE.ERROR,
-                    "Load document failed!\n{0}",
+                    "LoadDocument failed!\n{0}",
                     e.ToString());
                 return false;
             }
@@ -117,7 +117,7 @@ namespace AI.GOAP
             catch (Exception e)
             {
                 Debugger.LogFormat(LOG_TYPE.ERROR,
-                    "Read document failed!\n{0}",
+                    "ReadDocument failed!\n{0}",
                     e.ToString());
             }
 
@@ -134,26 +134,27 @@ namespace AI.GOAP
 
                 // TODO: discontentment, target
 
+                var relevance = goalNode.ChildNodes.Item(0).ChildNodes;
+                var target = goalNode.ChildNodes.Item(1).ChildNodes;
+
                 BaseGoal goal = null;
 
                 switch (id)
                 {
                     case Strings.GOAL_TEST:
-                        goal = new TestGoal()
-                        {
-                            ID = id
-                        };
+                        goal = new TestGoal();
                         break;
 
                     default:
                         Debugger.LogFormat(LOG_TYPE.WARNING,
                             "GoalID '{0}' is not defined.\n",
                             id);
-                        break;
+                        continue;
                 }
 
-                if (goal != null)
-                    GOAPContainer.AddGoal(goal);
+                goal.ID = id;
+
+                GOAPContainer.AddGoal(goal);
             }
 
             return true;
@@ -171,31 +172,43 @@ namespace AI.GOAP
                 int cost = int.Parse(actionNode.ChildNodes.Item(1).InnerText);
                 int time = int.Parse(actionNode.ChildNodes.Item(2).InnerText);
 
-                // TODO: conditions and effects
+                var conditionList = actionNode.ChildNodes.Item(3).ChildNodes;
+                var effectList = actionNode.ChildNodes.Item(4).ChildNodes;
+
+                var conditions = new WorldState();
+                var effects = new WorldState();
+
+                for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+                {
+                    var attribNode = conditionList.Item(i);
+                    var attrib = attribNode.Attributes[Strings.ATTR_SYMBOL].Value;
+                    var symbol = GOAPResolver.GetSymbolFromAttribute(attrib);
+
+                    if (symbol != STATE_SYMBOL.ERROR)
+                        conditions.Symbols[i] = symbol;
+                }
 
                 BaseAction action = null;
 
                 switch (id)
                 {
                     case Strings.ACTION_TEST:
-                        action = new TestAction()
-                        {
-                            ID = id,
-                            Dialog = dialog,
-                            Cost = cost,
-                            TimeInMinutes = time
-                        };
+                        action = new TestAction();
                         break;
 
                     default:
                         Debugger.LogFormat(LOG_TYPE.WARNING,
                             "ActionID '{0}' is not defined.\n",
                             id);
-                        break;
+                        continue;
                 }
 
-                if (action != null)
-                    GOAPContainer.AddAction(action);
+                action.ID = id;
+                action.Dialog = dialog;
+                action.Cost = cost;
+                action.TimeInMinutes = time;
+
+                GOAPContainer.AddAction(action);
             }
 
             return true;

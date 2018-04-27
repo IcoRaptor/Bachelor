@@ -155,7 +155,7 @@ namespace AI.GOAP
             // Get all fitting actions
             for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
             {
-                if (state.Symbols[i] != STATE_SYMBOL.UNSATISFIED)
+                if (state.Symbols[i] != STATE_SYMBOL.ERROR)
                     continue;
 
                 foreach (var action in _effectsTable[i])

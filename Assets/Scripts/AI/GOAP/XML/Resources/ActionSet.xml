@@ -2,8 +2,9 @@
 <ActionSet>
 
 <!--
-    UNSET       0
-    SATISFIED   1
+    Num Symbols     3
+    UNSET           0
+    SATISFIED       1
 -->
 
     <action id="TestAction">

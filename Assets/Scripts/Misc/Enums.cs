@@ -2,7 +2,7 @@
 {
     public enum STATE_SYMBOL
     {
-        UNSATISFIED = -1,
+        ERROR = -1,
         UNSET,
         SATISFIED
     }

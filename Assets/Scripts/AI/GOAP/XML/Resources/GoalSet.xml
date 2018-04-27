@@ -2,8 +2,9 @@
 <GoalSet>
 
 <!--
-    UNSET       0
-    SATISFIED   1
+    Num Symbols     3
+    UNSET           0
+    SATISFIED       1
 -->
 
     <goal id="TestGoal">
