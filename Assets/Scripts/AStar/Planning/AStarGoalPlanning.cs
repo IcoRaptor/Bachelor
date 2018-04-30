@@ -24,8 +24,11 @@ namespace AStar
 
             Temp = new WorldState();
 
-            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+            for (int i = 0; i < WorldState.SymbolCount; i++)
             {
+                if (GOAPResolver.GetMovementActionFromIndex(i))
+                    Current.Symbols[i] = STATE_SYMBOL.UNSATISFIED;
+
                 if (Target.Symbols[i] != STATE_SYMBOL.SATISFIED)
                     continue;
 
@@ -52,22 +55,28 @@ namespace AStar
         public override bool CheckNode(AStarNode node)
         {
             var pNode = (AStarNodePlanning)node;
-            ApplyNode(pNode);
-
-            return pNode.Current == Target;
-        }
-
-        private void ApplyNode(AStarNodePlanning node)
-        {
-            var action = GOAPContainer.GetAction(node.ID);
+            var action = GOAPContainer.GetAction(pNode.ID);
 
             if (action == null)
-                return;
+                return false;
 
-            Target = action.ApplyPreconditions(Target);
+            Temp = pNode.Current.Copy();
+
+            UpdateTemp(Temp);
             Temp = action.ApplyEffects(Temp);
+            Target = action.ApplyPreconditions(Target);
 
-            node.Current = Temp.Copy();
+            pNode.Current = Temp.Copy();
+
+            return pNode.Current.Satisfies(Target);
+        }
+
+        private void UpdateTemp(WorldState temp)
+        {
+            for (int i = 0; i < WorldState.SymbolCount; i++)
+                if (Target.Symbols[i] == STATE_SYMBOL.SATISFIED)
+                    if (Temp.Symbols[i] != STATE_SYMBOL.SATISFIED)
+                        Temp.Symbols[i] = Current.Symbols[i];
         }
     }
 }

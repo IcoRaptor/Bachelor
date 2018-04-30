@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <AgentSet>
-
-    <agent id="TestAgent">
+    <agent id="Adult">
         <actions>
-            <action>TestAction</action>
+            <action>Work</action>
+            <action>GoToWork</action>
+            <action>GoToHome</action>
+            <action>Sleep</action>
+            <action>GoToStore</action>
+            <action>BuyFood</action>
+            <action>Eat</action>
+            <action>GoToBar</action>
+            <action>Drink</action>
         </actions>
         <goals>
-            <goal>TestGoal</goal>
+            <goal>Working</goal>
+            <goal>Sleeping</goal>
+            <goal>Eating</goal>
+            <goal>HavingFun</goal>
         </goals>
     </agent>
-
 </AgentSet>

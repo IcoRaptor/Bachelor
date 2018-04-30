@@ -7,7 +7,7 @@
     {
         #region Variables
 
-        public const int NUM_SYMBOLS = 3;
+        public static readonly int SymbolCount = GOAPResolver.SymbolCount;
 
         #endregion
 
@@ -26,33 +26,19 @@
 
         public WorldState(STATE_SYMBOL[] symbols)
         {
-            if (symbols.Length != NUM_SYMBOLS)
+            if (symbols.Length != SymbolCount)
             {
                 Init();
                 return;
             }
 
-            Symbols = new STATE_SYMBOL[NUM_SYMBOLS];
+            Symbols = new STATE_SYMBOL[SymbolCount];
 
-            for (int i = 0; i < NUM_SYMBOLS; i++)
+            for (int i = 0; i < SymbolCount; i++)
                 Symbols[i] = symbols[i];
         }
 
         #endregion
-
-        /// <summary>
-        /// Returns the number of unsatisfied symbols
-        /// </summary>
-        public int GetNumberOfUnsatisfiedSymbols()
-        {
-            int num = 0;
-
-            foreach (var symbol in Symbols)
-                if (symbol == STATE_SYMBOL.ERROR)
-                    num++;
-
-            return num;
-        }
 
         /// <summary>
         /// Returns the number of differences between the states
@@ -69,45 +55,27 @@
             return num;
         }
 
-        #region Operators
-
-        public static bool operator ==(WorldState a, WorldState b)
+        public bool Satisfies(WorldState other)
         {
-            var aNull = Equals(a, null);
-            var bNull = Equals(b, null);
+            STATE_SYMBOL[] symbols = other.Symbols;
 
-            if (aNull || bNull)
-                return aNull == bNull;
-
-            STATE_SYMBOL[] aSymbols = a.Symbols;
-            STATE_SYMBOL[] bSymbols = b.Symbols;
-
-            if (aSymbols.Length != bSymbols.Length)
+            if (Symbols.Length != symbols.Length)
                 return false;
 
-            for (int i = 0; i < aSymbols.Length; i++)
-                if (aSymbols[i] != bSymbols[i])
+            for (int i = 0; i < Symbols.Length; i++)
+            {
+                if (Symbols[i] == STATE_SYMBOL.UNSET ||
+                    symbols[i] == STATE_SYMBOL.UNSET)
+                {
+                    continue;
+                }
+
+                if (Symbols[i] != symbols[i])
                     return false;
+            }
 
             return true;
         }
-
-        public static bool operator !=(WorldState a, WorldState b)
-        {
-            STATE_SYMBOL[] aSymbols = a.Symbols;
-            STATE_SYMBOL[] bSymbols = b.Symbols;
-
-            if (aSymbols.Length != bSymbols.Length)
-                return true;
-
-            for (int i = 0; i < aSymbols.Length;)
-                if (aSymbols[i] != bSymbols[i])
-                    return true;
-
-            return false;
-        }
-
-        #endregion
 
         public WorldState Copy()
         {
@@ -116,9 +84,9 @@
 
         private void Init()
         {
-            Symbols = new STATE_SYMBOL[NUM_SYMBOLS];
+            Symbols = new STATE_SYMBOL[SymbolCount];
 
-            for (var i = 0; i < NUM_SYMBOLS; i++)
+            for (var i = 0; i < SymbolCount; i++)
                 Symbols[i] = STATE_SYMBOL.UNSET;
         }
 
@@ -132,14 +100,14 @@
             return s;
         }
 
-        public override int GetHashCode()
-        {
-            return Symbols.GetHashCode();
-        }
-
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Symbols.GetHashCode();
         }
     }
 }

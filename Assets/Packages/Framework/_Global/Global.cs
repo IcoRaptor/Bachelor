@@ -6,7 +6,7 @@ public enum GAME_STATE
     DEFAULT,
     SHUTDOWN,
     MAIN_SCENE,
-    TOWN_1,
+    TOWN,
 }
 
 /// <summary>

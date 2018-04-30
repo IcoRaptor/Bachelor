@@ -1,26 +1,123 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <ActionSet>
-
 <!--
-    Num Symbols     3
-    UNSET           0
-    SATISFIED       1
+    WorldState Symbols: working, atHome, rested, full, happy, atWork, atStore, hasFood, hasMoney, atBar
 -->
-
-    <action id="TestAction">
-        <dialog>I'm currently testing this action.</dialog>
-        <cost>10</cost>
-        <time>60</time>
-        <preconds>
-            <state symbol="test1">1</state>
-            <state symbol="test2">0</state>
-            <state symbol="test3">0</state>
-        </preconds>
+    <action id="Work">
+        <dialog>I'm currently working.</dialog>
+        <cost>100</cost>
+        <time>360</time>
+        <conditions>
+            <symbol>atWork</symbol>
+        </conditions>
         <effects>
-            <state symbol="test1">0</state>
-            <state symbol="test2">0</state>
-            <state symbol="test3">1</state>
+            <symbol>working</symbol>
+            <symbol>hasMoney</symbol>
+        </effects>
+    </action> 
+
+    <action id="GoToWork">
+        <dialog>I'm on my way to work.</dialog>
+        <cost>30</cost>
+        <time>0</time>
+        <conditions></conditions>
+        <effects>
+            <symbol>atWork</symbol>
+        </effects>
+    </action> 
+
+    <action id="Sleep">
+        <dialog>Zzzzz...</dialog>
+        <cost>70</cost>
+        <time>420</time>
+        <conditions>
+            <symbol>atHome</symbol>
+        </conditions>
+        <effects>
+            <symbol>rested</symbol>
+        </effects>
+    </action> 
+
+    <action id="Nap">
+        <dialog>Zzzzz...</dialog>
+        <cost>20</cost>
+        <time>120</time>
+        <conditions>
+            <symbol>atHome</symbol>
+        </conditions>
+        <effects>
+            <symbol>rested</symbol>
+        </effects>
+    </action> 
+
+     <action id="GoToHome">
+        <dialog>I'm on my way home.</dialog>
+        <cost>30</cost>
+        <time>0</time>
+        <conditions></conditions>
+        <effects>
+            <symbol>atHome</symbol>
+        </effects>
+    </action> 
+
+    <action id="Eat">
+        <dialog>I'm eating.</dialog>
+        <cost>50</cost>
+        <time>60</time>
+        <conditions>
+            <symbol>hasFood</symbol>
+            <symbol>atHome</symbol>      
+        </conditions>
+        <effects>
+            <symbol>full</symbol>
+        </effects>
+    </action> 
+
+    <action id="GoToStore">
+        <dialog>I'm on my way to the store.</dialog>
+        <cost>30</cost>
+        <time>0</time>
+        <conditions>
+            <symbol>hasMoney</symbol>
+        </conditions>
+        <effects>
+            <symbol>atStore</symbol>
         </effects>
     </action>
-    
+
+    <action id="BuyFood">
+        <dialog>Hmm... what will I make for lunch?</dialog>
+        <cost>50</cost>
+        <time>30</time>
+        <conditions>
+            <symbol>atStore</symbol>
+        </conditions>
+        <effects>
+            <symbol>hasFood</symbol>
+        </effects>
+    </action>
+
+    <action id="GoToBar">
+        <dialog>I'm on my way to the bar.</dialog>
+        <cost>30</cost>
+        <time>0</time>
+        <conditions>
+            <symbol>hasMoney</symbol>
+        </conditions>
+        <effects>
+            <symbol>atBar</symbol>
+        </effects>
+    </action>
+
+    <action id="Drink">
+        <dialog>*gulp*</dialog>
+        <cost>50</cost>
+        <time>60</time>
+        <conditions>
+            <symbol>atBar</symbol>
+        </conditions>
+        <effects>
+            <symbol>happy</symbol>
+        </effects>
+    </action>
 </ActionSet>

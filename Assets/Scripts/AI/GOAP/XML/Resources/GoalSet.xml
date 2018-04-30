@@ -1,20 +1,42 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <GoalSet>
-
 <!--
-    Num Symbols     3
-    UNSET           0
-    SATISFIED       1
+    WorldState Symbols:     working, rested, full, happy
+    Relevance Symbols:      sleep, money, hunger, fun
 -->
-
-    <goal id="TestGoal">
+    <goal id="Working">
         <relevance>
+            <symbol>money</symbol>
         </relevance>
-        <states>
-            <state symbol="test1">1</state>
-            <state symbol="test2">1</state>
-            <state symbol="test3">1</state>
-        </states>
+        <target>
+            <symbol>working</symbol>
+        </target>
     </goal>
 
+    <goal id="Sleeping">
+        <relevance>
+            <symbol>sleep</symbol>
+        </relevance>
+        <target>
+            <symbol>rested</symbol>
+        </target>
+    </goal>
+
+    <goal id="Eating">
+        <relevance>
+            <symbol>hunger</symbol>
+        </relevance>
+        <target>
+            <symbol>full</symbol>
+        </target>
+    </goal>
+
+    <goal id="HavingFun">
+        <relevance>
+            <symbol>fun</symbol>
+        </relevance>
+        <target>
+            <symbol>happy</symbol>
+        </target>
+    </goal>
 </GoalSet>

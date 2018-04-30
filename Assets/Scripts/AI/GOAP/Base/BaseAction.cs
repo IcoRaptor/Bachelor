@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace AI.GOAP
 {
@@ -33,14 +34,17 @@ namespace AI.GOAP
 
         public abstract bool CheckContext();
 
-        public abstract bool Validate();
+        public virtual bool Validate(WorldState current)
+        {
+            return CheckPreconditions(current);
+        }
 
         public virtual WorldState ApplyEffects(WorldState state)
         {
             var temp = state.Copy();
 
-            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
-                if (Effects.Symbols[i] == STATE_SYMBOL.SATISFIED)
+            for (int i = 0; i < WorldState.SymbolCount; i++)
+                if (Effects.Symbols[i] != STATE_SYMBOL.UNSET)
                     temp.Symbols[i] = Effects.Symbols[i];
 
             return temp;
@@ -50,16 +54,16 @@ namespace AI.GOAP
         {
             var temp = state.Copy();
 
-            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
-                if (Preconditions.Symbols[i] == STATE_SYMBOL.ERROR)
-                    temp.Symbols[i] = Preconditions.Symbols[i];
+            for (int i = 0; i < WorldState.SymbolCount; i++)
+                if (Preconditions.Symbols[i] == STATE_SYMBOL.SATISFIED)
+                    temp.Symbols[i] = STATE_SYMBOL.SATISFIED;
 
             return temp;
         }
 
         public virtual bool CheckPreconditions(WorldState state)
         {
-            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+            for (int i = 0; i < WorldState.SymbolCount; i++)
             {
                 var s = Preconditions.Symbols[i];
 
@@ -76,6 +80,12 @@ namespace AI.GOAP
         public virtual void Activate()
         {
             _active = true;
+            Debug.LogFormat(
+                "{0}, Cost: {1}, Time: {2}\n{3}",
+                GetType().ToString().Split('.')[2],
+                Cost,
+                TimeInMinutes,
+                Dialog);
         }
 
         public virtual void Deactivate()
@@ -86,6 +96,16 @@ namespace AI.GOAP
         public virtual bool IsComplete()
         {
             return _complete;
+        }
+
+        protected void Setup(BaseAction action)
+        {
+            action.ID = ID;
+            action.Dialog = Dialog;
+            action.Cost = Cost;
+            action.TimeInMinutes = TimeInMinutes;
+            action.Effects = Effects.Copy();
+            action.Preconditions = Preconditions.Copy();
         }
 
         public override bool Equals(object obj)

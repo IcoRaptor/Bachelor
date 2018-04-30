@@ -44,9 +44,9 @@ namespace AI.GOAP
             _goalCache = new Dictionary<string, BaseGoal>();
             _agentCache = new Dictionary<string, GOAPAgent>();
 
-            _effectsTable = new List<BaseAction>[WorldState.NUM_SYMBOLS];
+            _effectsTable = new List<BaseAction>[WorldState.SymbolCount];
 
-            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+            for (int i = 0; i < WorldState.SymbolCount; i++)
                 _effectsTable[i] = new List<BaseAction>();
 
             Initialized = true;
@@ -59,7 +59,7 @@ namespace AI.GOAP
         {
             _actionCache.Add(action.ID, action);
 
-            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+            for (int i = 0; i < WorldState.SymbolCount; i++)
                 if (action.Effects.Symbols[i] == STATE_SYMBOL.SATISFIED)
                     _effectsTable[i].Add(action);
         }
@@ -153,9 +153,9 @@ namespace AI.GOAP
             List<BaseAction> allActions = new List<BaseAction>();
 
             // Get all fitting actions
-            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
+            for (int i = 0; i < WorldState.SymbolCount; i++)
             {
-                if (state.Symbols[i] != STATE_SYMBOL.ERROR)
+                if (state.Symbols[i] != STATE_SYMBOL.UNSATISFIED)
                     continue;
 
                 foreach (var action in _effectsTable[i])

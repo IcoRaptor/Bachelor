@@ -1,5 +1,6 @@
 ﻿using Framework.Debugging;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using UnityEngine;
@@ -35,14 +36,8 @@ namespace AI.GOAP
             return true;
         }
 
-        /// <summary>
-        /// Reads the specified XML file
-        /// </summary>
-        public static bool ReadFile(XmlFileInfo info, XML_TYPE type)
+        private static bool ReadFile(XmlFileInfo info, XML_TYPE type)
         {
-            if (info == null)
-                return false;
-
 #if UNITY_EDITOR
             return ReadEditor(info, type);
 #else
@@ -132,17 +127,30 @@ namespace AI.GOAP
             {
                 string id = goalNode.Attributes[Strings.ATTR_ID].Value;
 
-                // TODO: discontentment, target
+                var relevanceList = goalNode.ChildNodes.Item(0).ChildNodes;
+                var targetList = goalNode.ChildNodes.Item(1).ChildNodes;
 
-                var relevance = goalNode.ChildNodes.Item(0).ChildNodes;
-                var target = goalNode.ChildNodes.Item(1).ChildNodes;
+                var indices = ReadRelevanceIndices(relevanceList);
+                var target = ReadWorldState(targetList);
 
                 BaseGoal goal = null;
 
                 switch (id)
                 {
-                    case Strings.GOAL_TEST:
-                        goal = new TestGoal();
+                    case Strings.GOAL_WORKING:
+                        goal = new WorkingGoal();
+                        break;
+
+                    case Strings.GOAL_SLEEPING:
+                        goal = new SleepingGoal();
+                        break;
+
+                    case Strings.GOAL_EATING:
+                        goal = new EatingGoal();
+                        break;
+
+                    case Strings.GOAL_HAVING_FUN:
+                        goal = new HavingFunGoal();
                         break;
 
                     default:
@@ -153,6 +161,8 @@ namespace AI.GOAP
                 }
 
                 goal.ID = id;
+                goal.Target = target;
+                goal.RelevanceIndices = indices;
 
                 GOAPContainer.AddGoal(goal);
             }
@@ -175,25 +185,51 @@ namespace AI.GOAP
                 var conditionList = actionNode.ChildNodes.Item(3).ChildNodes;
                 var effectList = actionNode.ChildNodes.Item(4).ChildNodes;
 
-                var conditions = new WorldState();
-                var effects = new WorldState();
-
-                for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
-                {
-                    var attribNode = conditionList.Item(i);
-                    var attrib = attribNode.Attributes[Strings.ATTR_SYMBOL].Value;
-                    var symbol = GOAPResolver.GetSymbolFromAttribute(attrib);
-
-                    if (symbol != STATE_SYMBOL.ERROR)
-                        conditions.Symbols[i] = symbol;
-                }
+                var conditions = ReadWorldState(conditionList);
+                var effects = ReadWorldState(effectList);
 
                 BaseAction action = null;
 
                 switch (id)
                 {
-                    case Strings.ACTION_TEST:
-                        action = new TestAction();
+                    case Strings.ACTION_WORK:
+                        action = new WorkAction();
+                        break;
+
+                    case Strings.ACTION_GO_TO_WORK:
+                        action = new GoToWorkAction();
+                        break;
+
+                    case Strings.ACTION_GO_TO_HOME:
+                        action = new GoToHomeAction();
+                        break;
+
+                    case Strings.ACTION_SLEEP:
+                        action = new SleepAction();
+                        break;
+
+                    case Strings.ACTION_NAP:
+                        action = new NapAction();
+                        break;
+
+                    case Strings.ACTION_EAT:
+                        action = new EatAction();
+                        break;
+
+                    case Strings.ACTION_GO_TO_STORE:
+                        action = new GoToStoreAction();
+                        break;
+
+                    case Strings.ACTION_BUY_FOOD:
+                        action = new BuyFoodAction();
+                        break;
+
+                    case Strings.ACTION_GO_TO_BAR:
+                        action = new GoToBarAction();
+                        break;
+
+                    case Strings.ACTION_DRINK:
+                        action = new DrinkAction();
                         break;
 
                     default:
@@ -207,6 +243,8 @@ namespace AI.GOAP
                 action.Dialog = dialog;
                 action.Cost = cost;
                 action.TimeInMinutes = time;
+                action.Preconditions = conditions;
+                action.Effects = effects;
 
                 GOAPContainer.AddAction(action);
             }
@@ -251,6 +289,40 @@ namespace AI.GOAP
             }
 
             return true;
+        }
+
+        private static int[] ReadRelevanceIndices(XmlNodeList list)
+        {
+            List<int> indices = new List<int>();
+
+            foreach (XmlNode item in list)
+            {
+                string id = item.InnerText;
+                int index = GOAPResolver.GetIndexFromSymbol(id, RESOLVE.DISCONTENTMENT);
+
+                if (index != -1)
+                    indices.Add(index);
+            }
+
+            return indices.ToArray();
+        }
+
+        private static WorldState ReadWorldState(XmlNodeList list)
+        {
+            var state = new WorldState();
+
+            foreach (XmlNode item in list)
+            {
+                string id = item.InnerText;
+                int index = GOAPResolver.GetIndexFromSymbol(id, RESOLVE.WORLD_STATE);
+
+                if (index == -1)
+                    continue;
+
+                state.Symbols[index] = STATE_SYMBOL.SATISFIED;
+            }
+
+            return state;
         }
 
         private static void DestroyFile(TextAsset file)

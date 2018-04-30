@@ -38,8 +38,10 @@ GameObject:
   - component: {fileID: 4806681497824250}
   - component: {fileID: 212897499489792008}
   - component: {fileID: 95942022461274322}
+  - component: {fileID: 61807171591058678}
   - component: {fileID: 50283377378789508}
   - component: {fileID: 114175779160392036}
+  - component: {fileID: 114757831664282596}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -119,6 +121,31 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.25}
   m_EdgeRadius: 0
+--- !u!61 &61807171591058678
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1876081978965624}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.28, y: 1.28}
+    newSize: {x: 0.32, y: 0.32}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.28, y: 1.28}
+  m_EdgeRadius: 0
 --- !u!95 &95942022461274322
 Animator:
   serializedVersion: 3
@@ -148,6 +175,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _walkSpeed: 6
+--- !u!114 &114757831664282596
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1876081978965624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd34c5a2790e714419ea3d2618b4997d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114843780731033112
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -74,7 +74,7 @@ namespace Framework
         /// <summary>
         /// Can be used for preloading
         /// </summary>
-        public void WakeUp() { }
+        public virtual void WakeUp() { }
 
         private void OnDestroy()
         {

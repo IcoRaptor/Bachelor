@@ -16,11 +16,12 @@ namespace AI.GOAP
         public WorldState Current { get; set; }
 
         public string ID { get; set; }
-        public int Relevance { get; protected set; }
-        public bool Satisfied { get; protected set; }
-
         public AIModule Module { get; set; }
         public BaseAction[] Actions { get; set; }
+        public int[] RelevanceIndices { get; set; }
+
+        public int Relevance { get; protected set; }
+        public bool Satisfied { get; protected set; }
 
         #endregion
 
@@ -51,12 +52,12 @@ namespace AI.GOAP
             AStarMachine.Instance.RunAStar(asp);
         }
 
-        public virtual bool Validate()
+        public virtual bool Validate(WorldState current)
         {
             if (_plan == null)
                 return false;
 
-            return _plan.Validate();
+            return _plan.Validate(current);
         }
     }
 }

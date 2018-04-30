@@ -2,6 +2,7 @@
 using Framework;
 using Framework.Debugging;
 using Framework.Messaging;
+using System;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -72,20 +73,27 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
                 break;
 
             case GAME_STATE.MAIN_SCENE:
-                WakeUpSystems();
-                GOAPContainer.Init();
-                GOAPReader.ReadAll();
+                if (OldState == GAME_STATE.DEFAULT)
+                {
+                    WakeUpSystems();
+                    GOAPContainer.Init();
+                    GOAPReader.ReadAll();
+                }
 
                 if (SceneManager.GetActiveScene().buildIndex != 1)
                     SceneManager.LoadScene(1);
 
                 break;
 
-            case GAME_STATE.TOWN_1:
+            case GAME_STATE.TOWN:
+                if (SceneManager.GetActiveScene().buildIndex != 2)
+                    SceneManager.LoadScene(2);
+
+                break;
 
             default:
                 Debugger.LogFormat(LOG_TYPE.WARNING,
-                    "GameState: {0} not implemented!\n",
+                    "GameState '{0}' not implemented!\n",
                     newState);
                 break;
         }
@@ -93,10 +101,20 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
 
     private void WakeUpSystems()
     {
+        WakeUp();
+
         if (!MessagingSystem.IsAlive)
             MessagingSystem.Instance.WakeUp();
 
         if (!TimeManager.IsAlive)
             TimeManager.Instance.WakeUp();
+    }
+
+    public override void WakeUp()
+    {
+        SceneManager.activeSceneChanged += (a, b) =>
+        {
+            GC.Collect();
+        };
     }
 }

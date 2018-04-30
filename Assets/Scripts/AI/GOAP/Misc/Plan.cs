@@ -1,5 +1,6 @@
 ﻿using AStar;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace AI.GOAP
 {
@@ -32,8 +33,10 @@ namespace AI.GOAP
                     continue;
 
                 BaseAction action = GOAPContainer.GetAction(node.ID);
-                _plan.AddLast(action);
+                _plan.AddFirst(action);
             }
+
+            Debug.Log(ToString() + "\n");
         }
 
         #endregion
@@ -49,18 +52,18 @@ namespace AI.GOAP
             if (_plan.Count == 0)
                 return;
 
-            SetupAction();
+            CurrentAction.Activate();
         }
 
-        public bool Validate()
+        public bool Validate(WorldState current)
         {
             if (_plan.Count == 0)
                 return false;
 
-            if (CurrentAction.IsComplete())
+            if (CurrentAction == null || CurrentAction.IsComplete())
                 SetupAction();
 
-            return CurrentAction.Validate();
+            return CurrentAction.Validate(current);
         }
 
         private void SetupAction()
@@ -70,8 +73,16 @@ namespace AI.GOAP
 
             CurrentAction = _plan.First.Value;
             _plan.RemoveFirst();
+        }
 
-            CurrentAction.Activate();
+        public override string ToString()
+        {
+            string s = "Plan:\n";
+
+            foreach (var action in _plan)
+                s += action.ID + " ";
+
+            return s;
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public enum STATE_SYMBOL
     {
-        ERROR = -1,
+        UNSATISFIED = -1,
         UNSET,
         SATISFIED
     }
@@ -12,6 +12,12 @@
         AGENT_SET,
         GOAL_SET,
         ACTION_SET
+    }
+
+    public enum RESOLVE
+    {
+        WORLD_STATE,
+        DISCONTENTMENT
     }
 }
 

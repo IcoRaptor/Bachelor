@@ -21,7 +21,7 @@ namespace AI.GOAP
 
         public BaseGoal ActiveGoal { get; private set; }
 
-        public WorldState Current { get; set; }
+        public WorldState Current { get; private set; }
 
         #endregion
 
@@ -29,11 +29,11 @@ namespace AI.GOAP
         {
             _agent = GOAPContainer.GetAgent(_agentID);
 
-            Current = new WorldState();
             _disc = new Discontentment();
+            Current = new WorldState();
 
-            for (int i = 0; i < WorldState.NUM_SYMBOLS; i++)
-                Current.Symbols[i] = STATE_SYMBOL.ERROR;
+            for (int i = 0; i < WorldState.SymbolCount; i++)
+                Current.Symbols[i] = STATE_SYMBOL.UNSATISFIED;
 
             foreach (var goal in _agent.Goals)
             {

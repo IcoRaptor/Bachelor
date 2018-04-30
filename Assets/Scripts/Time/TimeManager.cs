@@ -38,7 +38,7 @@ public class TimeManager : SingletonAsComponent<TimeManager>
         if (GameManager.Instance.GameState < GAME_STATE.MAIN_SCENE)
             return;
 
-        _delta += Time.unscaledDeltaTime * _scale;
+        _delta += Time.deltaTime * _scale;
 
         if (_delta < 1f)
             return;

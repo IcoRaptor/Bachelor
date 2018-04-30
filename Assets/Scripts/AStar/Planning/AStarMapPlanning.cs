@@ -49,13 +49,15 @@ namespace AStar
         {
             var pRoot = (AStarNodePlanning)root;
 
-            var node = _nodeCache.ContainsKey(id) ?
+            bool useCachedNode = _nodeCache.ContainsKey(id) &&
+                _nodeCache[id].Root == pRoot;
+
+            var node = useCachedNode ?
                 _nodeCache[id] :
                 new AStarNodePlanning(id);
 
             // Initialize node
-            node.Root = pRoot;
-            node.Current = pRoot.Current;
+            node.Current = pRoot.Current.Copy();
             node.Cost = GOAPContainer.GetAction(id).Cost;
             node.H = _goal.DistanceToTarget(node);
 
