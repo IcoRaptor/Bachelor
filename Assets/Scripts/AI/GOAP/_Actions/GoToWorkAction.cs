@@ -1,6 +1,6 @@
 ﻿namespace AI.GOAP
 {
-    public class GoToWorkAction : BaseAction
+    public class GoToWorkAction : GoToAction
     {
         public override bool CheckContext()
         {

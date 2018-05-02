@@ -232,6 +232,26 @@ namespace AI.GOAP
                         action = new DrinkAction();
                         break;
 
+                    case Strings.ACTION_GO_TO_PLAYGROUND:
+                        action = new GoToPlaygroundAction();
+                        break;
+
+                    case Strings.ACTION_GO_TO_SCHOOL:
+                        action = new GoToSchoolAction();
+                        break;
+
+                    case Strings.ACTION_LEARN:
+                        action = new LearnAction();
+                        break;
+
+                    case Strings.ACTION_PLAY:
+                        action = new PlayAction();
+                        break;
+
+                    case Strings.ACTION_PATROL:
+                        action = new PatrolAction();
+                        break;
+
                     default:
                         Debugger.LogFormat(LOG_TYPE.WARNING,
                             "ActionID '{0}' is not defined.\n",
@@ -319,7 +339,7 @@ namespace AI.GOAP
                 if (index == -1)
                     continue;
 
-                state.Symbols[index] = STATE_SYMBOL.SATISFIED;
+                state[index] = STATE_SYMBOL.SATISFIED;
             }
 
             return state;

@@ -1,6 +1,6 @@
 ﻿namespace AI.GOAP
 {
-    public class GoToStoreAction : GoToAction
+    public class LearnAction : BaseAction
     {
         public override bool CheckContext()
         {
@@ -9,7 +9,7 @@
 
         public override BaseAction Copy()
         {
-            var action = new GoToStoreAction();
+            var action = new LearnAction();
             Setup(action);
 
             return action;

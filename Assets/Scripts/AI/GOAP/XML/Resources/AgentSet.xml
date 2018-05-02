@@ -19,4 +19,38 @@
             <goal>HavingFun</goal>
         </goals>
     </agent>
+
+    <agent id="Child">
+        <actions>
+            <action>GoToHome</action>
+            <action>Sleep</action>
+            <action>Nap</action>
+            <action>GoToSchool</action>
+            <action>Learn</action>
+            <action>GoToPlayground</action>
+            <action>Play</action>
+        </actions>
+        <goals>
+            <goal>Working</goal>
+            <goal>Sleeping</goal>
+            <goal>HavingFun</goal>
+        </goals>
+    </agent>
+
+    <agent id="Guard">
+        <actions>
+            <action>Patrol</action>
+            <action>GoToWork</action>
+            <action>GoToHome</action>
+            <action>Sleep</action>
+            <action>GoToStore</action>
+            <action>BuyFood</action>
+            <action>Eat</action>
+        </actions>
+        <goals>
+            <goal>Working</goal>
+            <goal>Sleeping</goal>
+            <goal>Eating</goal>
+        </goals>
+    </agent>
 </AgentSet>

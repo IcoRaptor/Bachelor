@@ -63,9 +63,7 @@ public class InteractionController : MonoBehaviour
         bool diagonal = move.x != 0 && move.y != 0;
 
         _offset.y = move.y * 1.5f;
-        _offset.x = diagonal ?
-            0 :
-            move.x * 1.5f;
+        _offset.x = diagonal ? 0 : move.x * 1.5f;
 
         _collider.offset = _offset;
     }

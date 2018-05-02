@@ -46,8 +46,8 @@ namespace AI.GOAP
             var temp = state.Copy();
 
             for (int i = 0; i < WorldState.SymbolCount; i++)
-                if (Effects.Symbols[i] != STATE_SYMBOL.UNSET)
-                    temp.Symbols[i] = Effects.Symbols[i];
+                if (Effects[i] != STATE_SYMBOL.UNSET)
+                    temp[i] = Effects[i];
 
             return temp;
         }
@@ -57,8 +57,8 @@ namespace AI.GOAP
             var temp = state.Copy();
 
             for (int i = 0; i < WorldState.SymbolCount; i++)
-                if (Preconditions.Symbols[i] == STATE_SYMBOL.SATISFIED)
-                    temp.Symbols[i] = STATE_SYMBOL.SATISFIED;
+                if (Preconditions[i] == STATE_SYMBOL.SATISFIED)
+                    temp[i] = STATE_SYMBOL.SATISFIED;
 
             return temp;
         }
@@ -67,12 +67,12 @@ namespace AI.GOAP
         {
             for (int i = 0; i < WorldState.SymbolCount; i++)
             {
-                var s = Preconditions.Symbols[i];
+                var s = Preconditions[i];
 
                 if (s == STATE_SYMBOL.UNSET)
                     continue;
 
-                if (s != state.Symbols[i])
+                if (s != state[i])
                     return false;
             }
 
@@ -83,12 +83,12 @@ namespace AI.GOAP
         {
             for (int i = 0; i < WorldState.SymbolCount; i++)
             {
-                var s = Effects.Symbols[i];
+                var s = Effects[i];
 
                 if (s == STATE_SYMBOL.UNSET)
                     continue;
 
-                if (s != state.Symbols[i])
+                if (s != state[i])
                     return true;
             }
 

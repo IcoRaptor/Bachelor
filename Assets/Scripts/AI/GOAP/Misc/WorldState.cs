@@ -9,11 +9,7 @@
 
         public static readonly int SymbolCount = GOAPResolver.SymbolCount;
 
-        #endregion
-
-        #region Properties
-
-        public STATE_SYMBOL[] Symbols { get; private set; }
+        private STATE_SYMBOL[] _symbols;
 
         #endregion
 
@@ -32,24 +28,30 @@
                 return;
             }
 
-            Symbols = new STATE_SYMBOL[SymbolCount];
+            _symbols = new STATE_SYMBOL[SymbolCount];
 
             for (int i = 0; i < SymbolCount; i++)
-                Symbols[i] = symbols[i];
+                _symbols[i] = symbols[i];
         }
 
         #endregion
 
-        /// <summary>
-        /// Returns the number of differences between the states
-        /// </summary>
+        #region Indexer
+
+        public STATE_SYMBOL this[int i]
+        {
+            get { return _symbols[i]; }
+            set { _symbols[i] = value; }
+        }
+
+        #endregion
+
         public int GetSymbolDifference(WorldState other)
         {
             int num = 0;
-            STATE_SYMBOL[] otherSymbols = other.Symbols;
 
-            for (int i = 0; i < Symbols.Length; i++)
-                if (Symbols[i] != otherSymbols[i])
+            for (int i = 0; i < SymbolCount; i++)
+                if (this[i] != other[i])
                     ++num;
 
             return num;
@@ -57,20 +59,15 @@
 
         public bool Satisfies(WorldState other)
         {
-            STATE_SYMBOL[] symbols = other.Symbols;
-
-            if (Symbols.Length != symbols.Length)
-                return false;
-
-            for (int i = 0; i < Symbols.Length; i++)
+            for (int i = 0; i < SymbolCount; i++)
             {
-                if (Symbols[i] == STATE_SYMBOL.UNSET ||
-                    symbols[i] == STATE_SYMBOL.UNSET)
+                if (this[i] == STATE_SYMBOL.UNSET ||
+                    other[i] == STATE_SYMBOL.UNSET)
                 {
                     continue;
                 }
 
-                if (Symbols[i] != symbols[i])
+                if (this[i] != other[i])
                     return false;
             }
 
@@ -79,35 +76,25 @@
 
         public WorldState Copy()
         {
-            return new WorldState(Symbols);
+            return new WorldState(_symbols);
         }
 
         private void Init()
         {
-            Symbols = new STATE_SYMBOL[SymbolCount];
+            _symbols = new STATE_SYMBOL[SymbolCount];
 
             for (var i = 0; i < SymbolCount; i++)
-                Symbols[i] = STATE_SYMBOL.UNSET;
+                this[i] = STATE_SYMBOL.UNSET;
         }
 
         public override string ToString()
         {
             string s = string.Empty;
 
-            foreach (var symbol in Symbols)
+            foreach (var symbol in _symbols)
                 s += symbol.ToString() + " ";
 
             return s;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Symbols.GetHashCode();
         }
     }
 }

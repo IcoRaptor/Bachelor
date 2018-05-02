@@ -27,12 +27,12 @@ namespace AStar
             for (int i = 0; i < WorldState.SymbolCount; i++)
             {
                 if (GOAPResolver.GetMovementActionFromIndex(i))
-                    Current.Symbols[i] = STATE_SYMBOL.UNSATISFIED;
+                    Current[i] = STATE_SYMBOL.UNSATISFIED;
 
-                if (Target.Symbols[i] != STATE_SYMBOL.SATISFIED)
+                if (Target[i] != STATE_SYMBOL.SATISFIED)
                     continue;
 
-                Temp.Symbols[i] = Current.Symbols[i];
+                Temp[i] = Current[i];
             }
         }
 
@@ -74,9 +74,9 @@ namespace AStar
         private void UpdateTemp(WorldState temp)
         {
             for (int i = 0; i < WorldState.SymbolCount; i++)
-                if (Target.Symbols[i] == STATE_SYMBOL.SATISFIED)
-                    if (Temp.Symbols[i] != STATE_SYMBOL.SATISFIED)
-                        Temp.Symbols[i] = Current.Symbols[i];
+                if (Target[i] == STATE_SYMBOL.SATISFIED)
+                    if (Temp[i] != STATE_SYMBOL.SATISFIED)
+                        Temp[i] = Current[i];
         }
     }
 }

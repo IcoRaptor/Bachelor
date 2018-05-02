@@ -33,7 +33,7 @@ namespace AI.GOAP
             Current = new WorldState();
 
             for (int i = 0; i < WorldState.SymbolCount; i++)
-                Current.Symbols[i] = STATE_SYMBOL.UNSATISFIED;
+                Current[i] = STATE_SYMBOL.UNSATISFIED;
 
             foreach (var goal in _agent.Goals)
             {

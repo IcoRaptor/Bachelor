@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <ActionSet>
 <!--
-    WorldState Symbols: working, atHome, rested, full, happy, atWork, atStore, hasFood, hasMoney, atBar
+    WorldState Symbols: 
+    
+    working, happy, rested, full, 
+    atHome, atWork, atStore, atBar, atSchool, atPlayground,
+    hasMoney, hasFood
 -->
     <action id="Work">
         <dialog>I'm currently working.</dialog>
@@ -115,6 +119,63 @@
         <time>60</time>
         <conditions>
             <symbol>atBar</symbol>
+        </conditions>
+        <effects>
+            <symbol>happy</symbol>
+        </effects>
+    </action>
+
+    <action id="GoToSchool">
+        <dialog>I'm on my way to school.</dialog>
+        <cost>30</cost>
+        <time>0</time>
+        <conditions></conditions>
+        <effects>
+            <symbol>atSchool</symbol>
+        </effects>
+    </action>
+
+    <action id="Learn">
+        <dialog>I have to study hard.</dialog>
+        <cost>70</cost>
+        <time>120</time>
+        <conditions>
+            <symbol>atSchool</symbol>
+        </conditions>
+        <effects>
+            <symbol>working</symbol>
+        </effects>
+    </action>
+
+    <action id="Patrol">
+        <dialog>I'm keeping this town safe.</dialog>
+        <cost>100</cost>
+        <time>180</time>
+        <conditions>
+            <symbol>atWork</symbol>
+        </conditions>
+        <effects>
+            <symbol>working</symbol>
+            <symbol>hasMoney</symbol>
+        </effects>
+    </action>
+
+    <action id="GoToPlayground">
+        <dialog>I'm on my way to the playground.</dialog>
+        <cost>30</cost>
+        <time>0</time>
+        <conditions></conditions>
+        <effects>
+            <symbol>atPlayground</symbol>
+        </effects>
+    </action>
+
+    <action id="Play">
+        <dialog>Yay, this is fun!</dialog>
+        <cost>70</cost>
+        <time>120</time>
+        <conditions>
+            <symbol>atPlayground</symbol>
         </conditions>
         <effects>
             <symbol>happy</symbol>

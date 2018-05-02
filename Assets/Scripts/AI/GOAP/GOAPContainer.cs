@@ -63,7 +63,7 @@ namespace AI.GOAP
             _actionCache.Add(action.ID, action);
 
             for (int i = 0; i < WorldState.SymbolCount; i++)
-                if (action.Effects.Symbols[i] == STATE_SYMBOL.SATISFIED)
+                if (action.Effects[i] == STATE_SYMBOL.SATISFIED)
                     _effectsTable[i].Add(action);
         }
 
@@ -158,7 +158,7 @@ namespace AI.GOAP
             // Get all fitting actions
             for (int i = 0; i < WorldState.SymbolCount; i++)
             {
-                if (state.Symbols[i] != STATE_SYMBOL.UNSATISFIED)
+                if (state[i] != STATE_SYMBOL.UNSATISFIED)
                     continue;
 
                 foreach (var action in _effectsTable[i])

@@ -22,12 +22,14 @@ namespace AI.GOAP
                 { Strings.STATE_AT_STORE, 6 },
                 { Strings.STATE_HAS_FOOD, 7 },
                 { Strings.STATE_HAS_MONEY, 8 },
-                { Strings.STATE_AT_BAR, 9 }
+                { Strings.STATE_AT_BAR, 9 },
+                { Strings.STATE_AT_SCHOOL, 10 },
+                { Strings.STATE_AT_PLAYGROUND, 11 },
             };
 
         private static int[] _indexOfMovementValues =
         {
-            1, 5, 6, 9
+            1, 5, 6, 9, 10, 11
         };
 
         private static Dictionary<string, int> _symbolToRelevanceIndex =
