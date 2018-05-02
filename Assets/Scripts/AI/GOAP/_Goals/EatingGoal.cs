@@ -30,7 +30,7 @@ namespace AI.GOAP
             if (result.Code != RETURN_CODE.SUCCESS)
                 return;
 
-            _plan = new Plan(result);
+            _plan = new Plan(result, Module);
 
             if (_plan.Validate(Current))
                 _plan.Execute();

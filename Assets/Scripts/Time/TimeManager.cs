@@ -28,14 +28,9 @@ public class TimeManager : SingletonAsComponent<TimeManager>
 
     #endregion
 
-    private void Awake()
-    {
-        _gameTime = GameTime.InitialTime;
-    }
-
     private void Update()
     {
-        if (GameManager.Instance.GameState < GAME_STATE.MAIN_SCENE)
+        if (GameManager.Instance.GameState <= GAME_STATE.DEFAULT)
             return;
 
         _delta += Time.deltaTime * _scale;
@@ -115,5 +110,10 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     {
         string time = _gameTime.TimeString;
         MessagingSystem.Instance.QueueMessage(new TimeTextMessage(time));
+    }
+
+    public override void WakeUp()
+    {
+        _gameTime = GameTime.InitialTime;
     }
 }

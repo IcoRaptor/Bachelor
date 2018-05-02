@@ -27,6 +27,11 @@ namespace AStar
 
         public AStarResult Result { get; private set; }
 
+        public bool Finished
+        {
+            get { return _running == false; }
+        }
+
         #endregion
 
         #region Constructors
@@ -53,14 +58,6 @@ namespace AStar
             Debugger.LogFormat(LOG_TYPE.LOG,
                 "Solver finished\n{0} ms",
                 _stopwatch.ElapsedMilliseconds);
-        }
-
-        /// <summary>
-        /// Is the execution complete
-        /// </summary>
-        public bool Finished()
-        {
-            return _running == false;
         }
 
         /// <summary>

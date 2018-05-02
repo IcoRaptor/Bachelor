@@ -10,7 +10,14 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D _rb;
     private Animator _anim;
+
     private Vector2 _move;
+
+    #endregion
+
+    #region Properties
+
+    public Vector2 RawMove { get; private set; }
 
     #endregion
 
@@ -18,7 +25,9 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
+
         _move = new Vector2();
+        RawMove = new Vector2();
     }
 
     private void Update()
@@ -28,6 +37,8 @@ public class PlayerController : MonoBehaviour
 
         bool isWalking = _move != Vector2.zero;
         _anim.SetBool("isWalking", isWalking);
+
+        RawMove = _move;
 
         if (!isWalking)
             return;

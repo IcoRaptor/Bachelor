@@ -34,7 +34,7 @@ namespace AI.GOAP
         public virtual void Update()
         {
             if (_plan != null && Module != null)
-                _plan.Update(Module);
+                _plan.Update(Current);
         }
 
         public virtual void BuildPlan()

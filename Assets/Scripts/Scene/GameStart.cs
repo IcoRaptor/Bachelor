@@ -15,6 +15,7 @@ public class GameStart : MonoBehaviour
 #else
         yield return new WaitForSecondsRealtime(1.5f);
 #endif
+        GameManager.Instance.WakeUp();
         GameManager.Instance.SetGameState(GAME_STATE.MAIN_SCENE);
     }
 }

@@ -73,13 +73,6 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
                 break;
 
             case GAME_STATE.MAIN_SCENE:
-                if (OldState == GAME_STATE.DEFAULT)
-                {
-                    WakeUpSystems();
-                    GOAPContainer.Init();
-                    GOAPReader.ReadAll();
-                }
-
                 if (SceneManager.GetActiveScene().buildIndex != 1)
                     SceneManager.LoadScene(1);
 
@@ -99,22 +92,20 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
         }
     }
 
-    private void WakeUpSystems()
-    {
-        WakeUp();
-
-        if (!MessagingSystem.IsAlive)
-            MessagingSystem.Instance.WakeUp();
-
-        if (!TimeManager.IsAlive)
-            TimeManager.Instance.WakeUp();
-    }
-
     public override void WakeUp()
     {
         SceneManager.activeSceneChanged += (a, b) =>
         {
             GC.Collect();
         };
+
+        if (!MessagingSystem.IsAlive)
+            MessagingSystem.Instance.WakeUp();
+
+        if (!TimeManager.IsAlive)
+            TimeManager.Instance.WakeUp();
+
+        GOAPContainer.Init();
+        GOAPReader.ReadAll();
     }
 }

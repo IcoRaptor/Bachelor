@@ -43,15 +43,18 @@ namespace AI.GOAP
 
         #region Properties
 
-        public static int SymbolCount { get { return _symbolToStateIndex.Count; } }
+        public static int SymbolCount
+        {
+            get { return _symbolToStateIndex.Count; }
+        }
 
         #endregion
 
-        public static int GetIndexFromSymbol(string id, RESOLVE resolver)
+        public static int GetIndexFromSymbol(string id, RESOLVE resolve)
         {
             try
             {
-                switch (resolver)
+                switch (resolve)
                 {
                     case RESOLVE.WORLD_STATE:
                         return _symbolToStateIndex[id];

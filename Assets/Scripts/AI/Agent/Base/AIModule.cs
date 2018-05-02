@@ -5,26 +5,26 @@ namespace AI
 {
     public abstract class AIModule : MonoBehaviour
     {
-        #region Variables
+        #region Properties
 
-        protected Blackboard _blackboard;
-        protected WorkingMemory _memory;
+        public Blackboard Board { get; private set; }
+        public WorkingMemory Memory { get; private set; }
 
         #endregion
 
         private void Awake()
         {
-            _blackboard = GetComponentInParent<Blackboard>();
-            _memory = GetComponentInParent<WorkingMemory>();
+            Board = GetComponentInParent<Blackboard>();
+            Memory = GetComponentInParent<WorkingMemory>();
 
-            if (!_blackboard)
+            if (!Board)
             {
                 Debugger.LogFormat(LOG_TYPE.ERROR,
                    "{0}: {1} missing!\n",
                     gameObject.name, typeof(Blackboard).Name);
             }
 
-            if (!_memory)
+            if (!Memory)
             {
                 Debugger.LogFormat(LOG_TYPE.ERROR,
                    "{0}: {1} missing!\n",

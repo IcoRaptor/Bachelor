@@ -12,6 +12,7 @@ namespace AI.GOAP
         #region Variables
 
         private LinkedList<BaseAction> _plan;
+        private AIModule _module;
 
         #endregion
 
@@ -23,9 +24,10 @@ namespace AI.GOAP
 
         #region Constructors
 
-        public Plan(AStarResult result)
+        public Plan(AStarResult result, AIModule module)
         {
             _plan = new LinkedList<BaseAction>();
+            _module = module;
 
             foreach (var node in result.Nodes)
             {
@@ -41,10 +43,23 @@ namespace AI.GOAP
 
         #endregion
 
-        public void Update(AIModule module)
+        public void Update(WorldState current)
         {
-            if (CurrentAction != null)
-                CurrentAction.Update(module);
+            if (CurrentAction == null)
+                return;
+
+            CurrentAction.Update(_module);
+
+            if (!CurrentAction.IsComplete())
+                return;
+
+            SetupAction();
+
+            if (!CurrentAction.Validate(current))
+                SetupAction();
+
+            if (!CurrentAction.CheckEffects(current))
+                SetupAction();
         }
 
         public void Execute()
@@ -52,7 +67,7 @@ namespace AI.GOAP
             if (_plan.Count == 0)
                 return;
 
-            CurrentAction.Activate();
+            CurrentAction.Activate(_module);
         }
 
         public bool Validate(WorldState current)
@@ -60,7 +75,10 @@ namespace AI.GOAP
             if (_plan.Count == 0)
                 return false;
 
-            if (CurrentAction == null || CurrentAction.IsComplete())
+            if (CurrentAction == null)
+                SetupAction();
+
+            if (!CurrentAction.CheckEffects(current))
                 SetupAction();
 
             return CurrentAction.Validate(current);
@@ -70,6 +88,9 @@ namespace AI.GOAP
         {
             if (_plan.Count == 0)
                 return;
+
+            if (CurrentAction != null)
+                CurrentAction.Deactivate(_module);
 
             CurrentAction = _plan.First.Value;
             _plan.RemoveFirst();

@@ -13,7 +13,7 @@ namespace AStar
 
         [SerializeField]
         [Range(1, 10)]
-        private int _updatePerSecond = 5;
+        private int _updatesPerSecond = 5;
 
         private float _delta = 0f;
 
@@ -59,7 +59,7 @@ namespace AStar
 
         private void Update()
         {
-            _delta += Time.unscaledDeltaTime * _updatePerSecond;
+            _delta += Time.unscaledDeltaTime * _updatesPerSecond;
 
             if (_delta < 1.0f)
                 return;
@@ -87,7 +87,7 @@ namespace AStar
         {
             foreach (var s in _solvers)
             {
-                if (!s.Finished())
+                if (!s.Finished)
                     continue;
 
                 _solverToCallback[s](s.Result);

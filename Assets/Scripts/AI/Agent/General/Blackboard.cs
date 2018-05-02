@@ -8,5 +8,10 @@ namespace AI
     /// </summary>
     public class Blackboard : MonoBehaviour
     {
+        #region Properties
+
+        public string Dialog { get; set; }
+
+        #endregion
     }
 }

@@ -27,22 +27,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1045136022017144
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4868017584455284}
-  - component: {fileID: 114947270594910180}
-  m_Layer: 0
-  m_Name: Interaction
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1421757920552010
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,6 +41,7 @@ GameObject:
   - component: {fileID: 114413813340207166}
   - component: {fileID: 114437763021313382}
   - component: {fileID: 114744729907215928}
+  - component: {fileID: 114864566899576418}
   m_Layer: 0
   m_Name: GOAP NPC
   m_TagString: Untagged
@@ -98,7 +83,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 4772328492016142}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
 --- !u!4 &4671389961679864
 Transform:
@@ -120,27 +105,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1421757920552010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -5, y: 3, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4671389961679864}
-  - {fileID: 4868017584455284}
   - {fileID: 4427801182685170}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4868017584455284
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1045136022017144}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4772328492016142}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23307273213502970
 MeshRenderer:
@@ -377,6 +348,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _agentID: Adult
+--- !u!114 &114864566899576418
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1421757920552010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b23be4dc112755479686cebb852e988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114868002121294164
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -386,16 +368,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 548082a83e442cd41962c34e11a2afdc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114947270594910180
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1045136022017144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b23be4dc112755479686cebb852e988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

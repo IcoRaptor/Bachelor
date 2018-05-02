@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace AI.GOAP
 {
-    public abstract class BaseAction : IGOAPImmutable<BaseAction>, IEqualityComparer<BaseAction>
+    public abstract class BaseAction :
+        IGOAPImmutable<BaseAction>,
+        IEqualityComparer<BaseAction>
     {
         #region Variables
 
@@ -77,9 +79,27 @@ namespace AI.GOAP
             return true;
         }
 
-        public virtual void Activate()
+        public virtual bool CheckEffects(WorldState state)
+        {
+            for (int i = 0; i < WorldState.SymbolCount; i++)
+            {
+                var s = Effects.Symbols[i];
+
+                if (s == STATE_SYMBOL.UNSET)
+                    continue;
+
+                if (s != state.Symbols[i])
+                    return true;
+            }
+
+            return false;
+        }
+
+        public virtual void Activate(AIModule module)
         {
             _active = true;
+            module.Board.Dialog = Dialog;
+
             Debug.LogFormat(
                 "{0}, Cost: {1}, Time: {2}\n{3}",
                 GetType().ToString().Split('.')[2],
@@ -88,9 +108,11 @@ namespace AI.GOAP
                 Dialog);
         }
 
-        public virtual void Deactivate()
+        public virtual void Deactivate(AIModule module)
         {
             _active = false;
+
+            module.Board.Dialog = string.Empty;
         }
 
         public virtual bool IsComplete()

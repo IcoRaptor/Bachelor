@@ -40,6 +40,9 @@ namespace AI.GOAP
         /// </summary>
         public static void Init()
         {
+            if (Initialized)
+                return;
+
             _actionCache = new Dictionary<string, BaseAction>();
             _goalCache = new Dictionary<string, BaseGoal>();
             _agentCache = new Dictionary<string, GOAPAgent>();
@@ -86,7 +89,7 @@ namespace AI.GOAP
         /// </summary>
         public static BaseAction GetAction(string id)
         {
-            // Check for Root
+            // Check root
             if (id.Length == Strings.ROOT_NODE.Length)
                 if (string.CompareOrdinal(id, Strings.ROOT_NODE) == 0)
                     return null;
