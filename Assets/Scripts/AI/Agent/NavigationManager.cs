@@ -17,7 +17,7 @@ namespace AI
 
         #endregion
 
-        private void Awake()
+        private void Start()
         {
             _blackboard = GetComponentInParent<Blackboard>();
             _dest = GetComponent<AIDestinationSetter>();
@@ -32,6 +32,11 @@ namespace AI
         }
 
         private void Update()
+        {
+            CheckInteractionInterrupt();
+        }
+
+        private void CheckInteractionInterrupt()
         {
             if (_blackboard.InteractionInterrupt)
             {
