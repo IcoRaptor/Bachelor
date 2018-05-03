@@ -29,6 +29,8 @@ public class Interactable : MonoBehaviour
         var msg = new DialogTextMessage(_blackboard.Dialog);
         MessagingSystem.Instance.QueueMessage(msg);
 
+        _blackboard.InteractionInterrupt = true;
+
         StartCoroutine(WaitForRemove());
     }
 
@@ -38,5 +40,7 @@ public class Interactable : MonoBehaviour
 
         var dialogMessage = new DialogTextMessage(string.Empty);
         MessagingSystem.Instance.QueueMessage(dialogMessage);
+
+        _blackboard.InteractionInterrupt = false;
     }
 }
