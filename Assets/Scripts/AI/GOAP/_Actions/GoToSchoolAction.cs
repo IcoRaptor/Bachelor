@@ -14,9 +14,5 @@
 
             return action;
         }
-
-        public override void Update(AIModule module)
-        {
-        }
     }
 }

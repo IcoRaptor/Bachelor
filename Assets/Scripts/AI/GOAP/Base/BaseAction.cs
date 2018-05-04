@@ -10,7 +10,6 @@ namespace AI.GOAP
         #region Variables
 
         protected bool _complete;
-        protected bool _active;
 
         #endregion
 
@@ -97,7 +96,6 @@ namespace AI.GOAP
 
         public virtual void Activate(AIModule module)
         {
-            _active = true;
             module.Board.Dialog = Dialog;
 
             Debug.LogFormat(
@@ -110,8 +108,6 @@ namespace AI.GOAP
 
         public virtual void Deactivate(AIModule module)
         {
-            _active = false;
-
             module.Board.Dialog = string.Empty;
         }
 

@@ -9,11 +9,9 @@ namespace AI
     {
         #region Variables
 
-#pragma warning disable 0414
         private Blackboard _blackboard;
         private AIDestinationSetter _dest;
         private AILerp _move;
-#pragma warning restore
 
         #endregion
 
@@ -34,6 +32,7 @@ namespace AI
         private void Update()
         {
             CheckInteractionInterrupt();
+            CheckDestinationChange();
         }
 
         private void CheckInteractionInterrupt()
@@ -47,6 +46,15 @@ namespace AI
             {
                 if (!_move.gameObject.activeSelf)
                     _move.gameObject.SetActive(true);
+            }
+        }
+
+        private void CheckDestinationChange()
+        {
+            if (_blackboard.ChangeDestination)
+            {
+                _dest.target = _blackboard.NextNavigationPoint;
+                _blackboard.ChangeDestination = false;
             }
         }
     }

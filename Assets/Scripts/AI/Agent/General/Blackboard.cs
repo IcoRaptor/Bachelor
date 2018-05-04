@@ -3,13 +3,10 @@
 namespace AI
 {
     /// <summary>
-    /// Central hub of the agent.
-    ///  Provides a number of properties
+    /// Communication hub of the agent.
     /// </summary>
     public class Blackboard : MonoBehaviour
     {
-        #region Interactable
-
         /// <summary>
         /// Dialog option of the active action
         /// </summary>
@@ -20,6 +17,14 @@ namespace AI
         /// </summary>
         public bool InteractionInterrupt { get; set; }
 
-        #endregion
+        /// <summary>
+        /// The next navigation point
+        /// </summary>
+        public Transform NextNavigationPoint { get; set; }
+
+        /// <summary>
+        /// Is a new navigation point available
+        /// </summary>
+        public bool ChangeDestination { get; set; }
     }
 }
