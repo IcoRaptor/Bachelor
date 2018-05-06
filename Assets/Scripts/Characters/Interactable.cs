@@ -26,6 +26,9 @@ public class Interactable : MonoBehaviour
 
     public void Interact()
     {
+        if (_blackboard.Dialog.Length == 0)
+            return;
+
         var msg = new DialogTextMessage(_blackboard.Dialog);
         MessagingSystem.Instance.QueueMessage(msg);
 
