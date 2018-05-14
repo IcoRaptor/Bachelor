@@ -6,13 +6,5 @@
         {
             return true;
         }
-
-        public override BaseAction Copy()
-        {
-            var action = new GoToPlaygroundAction();
-            Setup(action);
-
-            return action;
-        }
     }
 }

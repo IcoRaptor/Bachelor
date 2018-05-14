@@ -6,13 +6,5 @@
         {
             return true;
         }
-
-        public override BaseAction Copy()
-        {
-            var action = new GoToSchoolAction();
-            Setup(action);
-
-            return action;
-        }
     }
 }

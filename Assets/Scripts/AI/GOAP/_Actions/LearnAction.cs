@@ -7,14 +7,6 @@
             return true;
         }
 
-        public override BaseAction Copy()
-        {
-            var action = new LearnAction();
-            Setup(action);
-
-            return action;
-        }
-
         public override void Update(AIModule module)
         {
         }

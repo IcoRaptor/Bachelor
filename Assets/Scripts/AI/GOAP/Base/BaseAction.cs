@@ -4,7 +4,6 @@ using UnityEngine;
 namespace AI.GOAP
 {
     public abstract class BaseAction :
-        IGOAPImmutable<BaseAction>,
         IEqualityComparer<BaseAction>
     {
         #region Variables
@@ -28,8 +27,6 @@ namespace AI.GOAP
         public WorldState Effects { get; set; }
 
         #endregion
-
-        public abstract BaseAction Copy();
 
         public abstract void Update(AIModule module);
 
@@ -114,16 +111,6 @@ namespace AI.GOAP
         public virtual bool IsComplete()
         {
             return _complete;
-        }
-
-        protected void Setup(BaseAction action)
-        {
-            action.ID = ID;
-            action.Dialog = Dialog;
-            action.Cost = Cost;
-            action.TimeInMinutes = TimeInMinutes;
-            action.Effects = Effects.Copy();
-            action.Preconditions = Preconditions.Copy();
         }
 
         public override bool Equals(object obj)

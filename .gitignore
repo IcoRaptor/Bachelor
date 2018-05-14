@@ -25,3 +25,5 @@ sysinfo.txt
 \.vs/Bachelor/v15/Server/sqlite3/
 
 *.db
+
+\.vs/Bachelor/DesignTimeBuild/\.dtbcache

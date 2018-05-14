@@ -96,7 +96,7 @@ namespace AI.GOAP
 
             try
             {
-                return _actionCache[id].Copy();
+                return _actionCache[id];
             }
             catch
             {
@@ -162,7 +162,7 @@ namespace AI.GOAP
                     continue;
 
                 foreach (var action in _effectsTable[i])
-                    allActions.Add(action.Copy());
+                    allActions.Add(action);
             }
 
             // Remove unavailable actions

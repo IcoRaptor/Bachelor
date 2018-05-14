@@ -21,9 +21,6 @@
             for (int i = 0; i < agent.Goals.Length; i++)
                 agent.Goals[i] = agent.Goals[i].Copy();
 
-            for (int i = 0; i < agent.Actions.Length; i++)
-                agent.Actions[i] = agent.Actions[i].Copy();
-
             return agent;
         }
     }

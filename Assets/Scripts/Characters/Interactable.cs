@@ -8,6 +8,8 @@ public class Interactable : MonoBehaviour
 {
     #region Variables
 
+    private static bool _canInteract = true;
+
     private Blackboard _blackboard;
 
     #endregion
@@ -26,13 +28,14 @@ public class Interactable : MonoBehaviour
 
     public void Interact()
     {
-        if (_blackboard.Dialog.Length == 0)
+        if (!_canInteract || _blackboard.Dialog.Length == 0)
             return;
 
         var msg = new DialogTextMessage(_blackboard.Dialog);
         MessagingSystem.Instance.QueueMessage(msg);
 
         _blackboard.InteractionInterrupt = true;
+        _canInteract = false;
 
         StartCoroutine(WaitForRemove());
     }
@@ -45,5 +48,6 @@ public class Interactable : MonoBehaviour
         MessagingSystem.Instance.QueueMessage(dialogMessage);
 
         _blackboard.InteractionInterrupt = false;
+        _canInteract = true;
     }
 }
