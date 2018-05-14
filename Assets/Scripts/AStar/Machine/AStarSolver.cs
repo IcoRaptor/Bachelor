@@ -53,8 +53,8 @@ namespace AStar
         public void Dispose()
         {
             _running = false;
-
             _stopwatch.Stop();
+
             Debugger.LogFormat(LOG_TYPE.LOG,
                 "Solver finished\n{0} ms",
                 _stopwatch.ElapsedMilliseconds);
@@ -117,16 +117,6 @@ namespace AStar
             }
         }
 
-        private void HandleGoalNode(AStarNode goalNode)
-        {
-            // Set solution
-            _storage.AddNodeToClosedList(goalNode);
-            goalNode.SolutionNode = true;
-
-            Result.Code = RETURN_CODE.SUCCESS;
-            Result.Nodes = _storage.GetFinalPath();
-        }
-
         private void ProcessNeighbours(AStarNode root)
         {
             // Get all neighbours connected to the node
@@ -150,9 +140,17 @@ namespace AStar
             }
         }
 
+        private void HandleGoalNode(AStarNode goalNode)
+        {
+            _storage.AddNodeToClosedList(goalNode);
+            goalNode.SolutionNode = true;
+
+            Result.Code = RETURN_CODE.SUCCESS;
+            Result.Nodes = _storage.GetFinalPath();
+        }
+
         private void HandleInitialNode(AStarNode current, AStarNode root)
         {
-            // Setup node
             current.Root = root;
             current.G = root.G + current.Cost;
             current.Priority = current.G + current.H;

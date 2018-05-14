@@ -18,25 +18,6 @@ public class GlobalInput : MonoBehaviour
 
         if (_Input_Shift_Minus)
             TimeManager.Instance.AdjustTimeScale(Time.deltaTime * -10f);
-
-#if UNITY_EDITOR
-        if (_Input_T_Down)
-            TimerTest();
-#endif
-    }
-
-    private void TimerTest()
-    {
-        Debug.LogFormat(
-               "Timer started... Execution in 10 minutes!\n{0}",
-               TimeManager.Instance.GetTimeStamp().TimeString);
-
-        Timer.StartNew(0, 10, () =>
-        {
-            Debug.LogFormat(
-                "Timer finished.\n{0}",
-                TimeManager.Instance.GetTimeStamp().TimeString);
-        });
     }
 
     #region Input
@@ -72,11 +53,6 @@ public class GlobalInput : MonoBehaviour
             return Input.GetKey(KeyCode.LeftShift) &&
                 Input.GetKey(KeyCode.KeypadMinus);
         }
-    }
-
-    private bool _Input_T_Down
-    {
-        get { return Input.GetKeyDown(KeyCode.T); }
     }
 
     #endregion

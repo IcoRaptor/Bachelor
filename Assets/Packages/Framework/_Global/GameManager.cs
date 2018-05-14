@@ -44,9 +44,9 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
     {
         if (_gameState != newState)
         {
-            OnGameStateChange(newState);
             _oldState = _gameState;
             _gameState = newState;
+            OnGameStateChange(newState);
         }
         else
         {
@@ -64,14 +64,6 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
     {
         switch (newState)
         {
-            case GAME_STATE.SHUTDOWN:
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#else
-                UnityEngine.Application.Quit();
-#endif
-                break;
-
             case GAME_STATE.MAIN_SCENE:
                 if (SceneManager.GetActiveScene().buildIndex != 1)
                     SceneManager.LoadScene(1);
@@ -82,6 +74,14 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
                 if (SceneManager.GetActiveScene().buildIndex != 2)
                     SceneManager.LoadScene(2);
 
+                break;
+
+            case GAME_STATE.SHUTDOWN:
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                UnityEngine.Application.Quit();
+#endif
                 break;
 
             default:
@@ -96,6 +96,7 @@ public sealed class GameManager : SingletonAsComponent<GameManager>
     {
         SceneManager.activeSceneChanged += (a, b) =>
         {
+            TimeManager.Instance.Clear();
             GC.Collect();
         };
 

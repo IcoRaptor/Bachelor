@@ -116,4 +116,11 @@ public class TimeManager : SingletonAsComponent<TimeManager>
     {
         _gameTime = GameTime.InitialTime;
     }
+
+    public void Clear()
+    {
+        _timers.Clear();
+        _timersToAdd.Clear();
+        _timersToRemove.Clear();
+    }
 }
