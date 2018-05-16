@@ -39,14 +39,14 @@ namespace AI
         {
             if (_blackboard.InteractionInterrupt)
             {
-                if (_move.gameObject.activeSelf)
-                    _move.gameObject.SetActive(false);
+                if (_move.isActiveAndEnabled)
+                    _move.enabled = false;
 
                 return;
             }
 
-            if (!_move.gameObject.activeSelf)
-                _move.gameObject.SetActive(true);
+            if (!_move.isActiveAndEnabled)
+                _move.enabled = true;
         }
 
         private void CheckDestinationChange()

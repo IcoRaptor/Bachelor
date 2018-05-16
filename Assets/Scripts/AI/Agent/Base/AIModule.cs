@@ -31,5 +31,7 @@ namespace AI
                     gameObject.name, typeof(WorkingMemory).Name);
             }
         }
+
+        public abstract void Abort();
     }
 }

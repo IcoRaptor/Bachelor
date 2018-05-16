@@ -266,6 +266,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83da369380ab0fa4b9c95a25b97ea473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _home: {fileID: 0}
+  _patrolPoints: []
 --- !u!114 &114441008176567684
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -283,7 +285,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1584855607172072}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 847a14d4dc9cc43679ab34fc78e0182f, type: 3}
   m_Name: 
@@ -292,7 +294,7 @@ MonoBehaviour:
   repathRate: 1
   canSearch: 1
   canMove: 1
-  speed: 1.5
+  speed: 2.5
   enableRotation: 1
   rotationIn2D: 1
   rotationSpeed: 5
@@ -315,8 +317,8 @@ MonoBehaviour:
   detailedGizmos: 0
   startEndModifier:
     addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
+    exactStartPoint: 4
+    exactEndPoint: 0
     useRaycasting: 0
     mask:
       serializedVersion: 2

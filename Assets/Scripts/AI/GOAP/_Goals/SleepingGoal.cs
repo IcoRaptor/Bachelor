@@ -1,5 +1,4 @@
 ﻿using AStar;
-using UnityEngine;
 
 namespace AI.GOAP
 {
@@ -11,13 +10,9 @@ namespace AI.GOAP
             {
                 ID = ID,
                 Actions = Actions,
-                Target = Target.Copy()
+                Target = Target.Copy(),
+                RelevanceIndices = RelevanceIndices
             };
-        }
-
-        public override void UpdateRelevance(Discontentment disc)
-        {
-            Relevance = 2;
         }
 
         protected override void OnFinished(AStarResult result)
@@ -25,15 +20,14 @@ namespace AI.GOAP
             if (!Module)
                 return;
 
-            Debug.LogFormat("OnFinished\n{0}", result.Code);
-
             if (result.Code != RETURN_CODE.SUCCESS)
+            {
+                Abort = true;
                 return;
+            }
 
             _plan = new Plan(result, Module);
-
-            if (_plan.Validate(Current))
-                _plan.Execute();
+            _plan.Execute();
         }
     }
 }

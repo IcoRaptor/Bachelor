@@ -20,6 +20,9 @@ namespace AI.GOAP
         public BaseAction[] Actions { get; set; }
         public int[] RelevanceIndices { get; set; }
 
+        public bool Skip { get; set; }
+        public bool Abort { get; set; }
+
         public int Relevance { get; protected set; }
         public bool Satisfied { get; protected set; }
 
@@ -27,14 +30,23 @@ namespace AI.GOAP
 
         public abstract BaseGoal Copy();
 
-        public abstract void UpdateRelevance(Discontentment disc);
-
         protected abstract void OnFinished(AStarResult result);
+
+        public virtual void UpdateRelevance(Discontentment disc)
+        {
+            foreach (var index in RelevanceIndices)
+                Relevance += disc[index];
+        }
 
         public virtual void Update()
         {
             if (_plan != null && Module != null)
+            {
                 _plan.Update(Current);
+
+                if (_plan.Finished)
+                    Satisfied = true;
+            }
         }
 
         public virtual void BuildPlan()
@@ -50,14 +62,6 @@ namespace AI.GOAP
             };
 
             AStarMachine.Instance.RunAStar(asp);
-        }
-
-        public virtual bool Validate(WorldState current)
-        {
-            if (_plan == null)
-                return false;
-
-            return _plan.Validate(current);
         }
     }
 }

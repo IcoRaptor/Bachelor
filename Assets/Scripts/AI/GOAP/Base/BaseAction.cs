@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace AI.GOAP
 {
     public abstract class BaseAction :
+        IGOAPImmutable<BaseAction>,
         IEqualityComparer<BaseAction>
     {
         #region Variables
@@ -25,6 +25,8 @@ namespace AI.GOAP
         public WorldState Preconditions { get; set; }
 
         public WorldState Effects { get; set; }
+
+        public bool LastAction { get; set; }
 
         #endregion
 
@@ -95,17 +97,22 @@ namespace AI.GOAP
         {
             module.Board.Dialog = Dialog;
 
-            Debug.LogFormat(
-                "{0}, Cost: {1}, Time: {2}\n{3}",
-                GetType().ToString().Split('.')[2],
-                Cost,
-                TimeInMinutes,
-                Dialog);
+            if (TimeInMinutes > 0)
+            {
+                int hours = TimeInMinutes / 60;
+                int minutes = TimeInMinutes % 60;
+
+                Timer.StartNew(hours, minutes, () =>
+                {
+                    _complete = true;
+                });
+            }
         }
 
-        public virtual void Deactivate(AIModule module)
+        public virtual WorldState Deactivate(AIModule module, WorldState current)
         {
             module.Board.Dialog = string.Empty;
+            return ApplyEffects(current);
         }
 
         public virtual bool IsComplete()
@@ -136,6 +143,19 @@ namespace AI.GOAP
         public int GetHashCode(BaseAction obj)
         {
             return obj.GetHashCode();
+        }
+
+        public abstract BaseAction Copy();
+
+        protected void Setup(BaseAction action)
+        {
+            action.Cost = Cost;
+            action.Dialog = Dialog;
+            action.Effects = Effects;
+            action.ID = ID;
+            action.Preconditions = Preconditions;
+            action.TimeInMinutes = TimeInMinutes;
+            LastAction = false;
         }
     }
 }

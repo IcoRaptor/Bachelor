@@ -48,6 +48,23 @@ namespace AI.GOAP
         private void Update()
         {
             ActiveGoal.Update();
+
+            if (ActiveGoal.Satisfied || ActiveGoal.Abort)
+            {
+                ActiveGoal.Skip = true;
+
+                if (ActiveGoal.Satisfied)
+                    foreach (var index in ActiveGoal.RelevanceIndices)
+                        _disc.ClearValue(index);
+
+                UpdateGoals();
+                ActiveGoal.BuildPlan();
+            }
+        }
+
+        public override void Abort()
+        {
+            ActiveGoal.Abort = true;
         }
 
         private void UpdateGoals()
@@ -56,6 +73,7 @@ namespace AI.GOAP
             {
                 goal.Current = Current;
                 goal.UpdateRelevance(_disc);
+                goal.Abort = false;
             }
 
             int highest = int.MinValue;
@@ -63,6 +81,12 @@ namespace AI.GOAP
 
             for (int i = 0; i < _agent.Goals.Length; i++)
             {
+                if (_agent.Goals[i].Skip)
+                {
+                    _agent.Goals[i].Skip = false;
+                    continue;
+                }
+
                 int relevance = _agent.Goals[i].Relevance;
 
                 if (highest < relevance)

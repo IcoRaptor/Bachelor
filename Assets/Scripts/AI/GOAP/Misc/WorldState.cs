@@ -7,7 +7,7 @@
     {
         #region Variables
 
-        public static readonly int SymbolCount = GOAPResolver.SymbolCount;
+        public static readonly int SymbolCount = GOAPResolver.StateCount;
 
         private STATE_SYMBOL[] _symbols;
 

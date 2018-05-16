@@ -152,7 +152,6 @@
         <cost>100</cost>
         <time>180</time>
         <conditions>
-            <symbol>atWork</symbol>
         </conditions>
         <effects>
             <symbol>working</symbol>

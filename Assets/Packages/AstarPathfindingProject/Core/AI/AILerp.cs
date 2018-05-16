@@ -266,10 +266,7 @@ namespace Pathfinding
             base.Awake();
             //This is a simple optimization, cache the transform component lookup
 
-            tr = transform;
-
-            while (tr.parent != null)
-                tr = tr.parent;
+            tr = transform.parent;
 
             seeker = GetComponent<Seeker>();
 

@@ -1,6 +1,5 @@
 ﻿using AStar;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace AI.GOAP
 {
@@ -19,6 +18,7 @@ namespace AI.GOAP
         #region Properties
 
         public BaseAction CurrentAction { get; private set; }
+        public bool Finished { get; private set; }
 
         #endregion
 
@@ -29,6 +29,8 @@ namespace AI.GOAP
             _plan = new LinkedList<BaseAction>();
             _module = module;
 
+            _module.Board.Dialog = string.Empty;
+
             foreach (var node in result.Nodes)
             {
                 if (node.Root == null)
@@ -38,7 +40,8 @@ namespace AI.GOAP
                 _plan.AddFirst(action);
             }
 
-            Debug.Log(ToString() + "\n");
+            var dummy = new WorldState();
+            SetupNewAction(ref dummy);
         }
 
         #endregion
@@ -50,50 +53,50 @@ namespace AI.GOAP
 
             CurrentAction.Update(_module);
 
-            if (!CurrentAction.IsComplete())
-                return;
+            if (CurrentAction.IsComplete())
+            {
+                SetupNewAction(ref current);
 
-            SetupAction();
+                if (CurrentAction == null)
+                    return;
 
-            if (!CurrentAction.Validate(current))
-                SetupAction();
+                if (!CurrentAction.Validate(current))
+                {
+                    _module.Abort();
+                    return;
+                }
 
-            if (!CurrentAction.CheckEffects(current))
-                SetupAction();
+                if (!CurrentAction.CheckEffects(current))
+                    SetupNewAction(ref current);
+
+                CurrentAction.Activate(_module);
+            }
         }
 
         public void Execute()
         {
-            if (_plan.Count == 0)
-                return;
-
             CurrentAction.Activate(_module);
         }
 
-        public bool Validate(WorldState current)
+        private void SetupNewAction(ref WorldState current)
         {
-            if (_plan.Count == 0)
-                return false;
-
-            if (CurrentAction == null)
-                SetupAction();
-
-            if (!CurrentAction.CheckEffects(current))
-                SetupAction();
-
-            return CurrentAction.Validate(current);
-        }
-
-        private void SetupAction()
-        {
-            if (_plan.Count == 0)
-                return;
-
             if (CurrentAction != null)
-                CurrentAction.Deactivate(_module);
+            {
+                current = CurrentAction.Deactivate(_module, current);
+
+                if (CurrentAction.LastAction)
+                {
+                    Finished = true;
+                    CurrentAction = null;
+                    return;
+                }
+            }
 
             CurrentAction = _plan.First.Value;
             _plan.RemoveFirst();
+
+            if (_plan.First == null)
+                CurrentAction.LastAction = true;
         }
 
         public override string ToString()

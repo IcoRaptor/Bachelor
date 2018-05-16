@@ -1,7 +1,0 @@
-﻿using UnityEngine;
-
-public struct WorkingMemoryFact
-{
-    public GameObject obj;
-    public float relevance;
-}

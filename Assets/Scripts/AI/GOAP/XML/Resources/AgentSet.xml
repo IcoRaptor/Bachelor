@@ -40,7 +40,6 @@
     <agent id="Guard">
         <actions>
             <action>Patrol</action>
-            <action>GoToWork</action>
             <action>GoToHome</action>
             <action>Sleep</action>
             <action>GoToStore</action>

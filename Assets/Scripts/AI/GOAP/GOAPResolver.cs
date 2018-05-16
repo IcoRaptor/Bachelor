@@ -45,9 +45,14 @@ namespace AI.GOAP
 
         #region Properties
 
-        public static int SymbolCount
+        public static int StateCount
         {
             get { return _symbolToStateIndex.Count; }
+        }
+
+        public static int RelevanceCount
+        {
+            get { return _symbolToRelevanceIndex.Count; }
         }
 
         #endregion

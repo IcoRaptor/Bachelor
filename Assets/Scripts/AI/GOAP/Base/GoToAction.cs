@@ -6,7 +6,7 @@ namespace AI.GOAP
     {
         #region Variables
 
-        private const float _MAX_DIST = 0.005f;
+        protected const float _MAX_DIST = 10f;
 
         protected Transform _target;
 
@@ -32,12 +32,12 @@ namespace AI.GOAP
                 _complete = true;
         }
 
-        public override void Deactivate(AIModule module)
+        public override WorldState Deactivate(AIModule module, WorldState current)
         {
             module.Board.NextNavigationPoint = null;
             module.Board.ChangeDestination = true;
 
-            base.Deactivate(module);
+            return base.Deactivate(module, current);
         }
     }
 }

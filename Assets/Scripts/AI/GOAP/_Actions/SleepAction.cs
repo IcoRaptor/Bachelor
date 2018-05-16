@@ -4,7 +4,16 @@
     {
         public override bool CheckContext()
         {
-            return true;
+            uint hour = TimeManager.Instance.GetTimeStamp().Hours;
+            return hour > 21;
+        }
+
+        public override BaseAction Copy()
+        {
+            var action = new SleepAction();
+            Setup(action);
+
+            return action;
         }
 
         public override void Update(AIModule module)

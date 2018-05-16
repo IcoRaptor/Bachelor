@@ -54,10 +54,6 @@ namespace AStar
         {
             _running = false;
             _stopwatch.Stop();
-
-            Debugger.LogFormat(LOG_TYPE.LOG,
-                "Solver finished\n{0} ms",
-                _stopwatch.ElapsedMilliseconds);
         }
 
         /// <summary>
